@@ -1,0 +1,303 @@
+<?page title="Practice"?>
+<window id="win" width="100%"
+	height="2000px" apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('org.strasa.web.analysis.linkagemapping.view.Index')">
+
+	<tabbox height="100%">
+		<tabs>
+			<tab label="Input" closable="false" />
+			<tab label="Results" closable="false" />
+			<tab label="Graphs" closable="false" />
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<tabbox id="tb" width="100%" mold="accordion" >
+				    <tabs>
+				        <tab label="Load Data" />
+				        <tab label="Data Quality Check" />
+				        <tab label="Analysis:" />
+				    </tabs>
+					<tabpanels>
+						<tabpanel>
+							Cross Type:
+							<combobox id="crosstype" model="@load(vm.ecotypeList)"
+								selectedItem="@bind(vm.chosenEcotype)" autodrop="true">
+								<template name="model">
+									<comboitem label="@load(each.ecotype)" />
+								</template>
+							</combobox>
+			
+							BC:
+							<doublespinner id="db10"
+								value="@load(vm.chosenEcotype.id)" step="0.1" />
+							F:
+							<doublespinner id="db11" value="2" step="0.1" />
+							<separator bar = "false"/>
+							Data Format:
+							<combobox id="dataformat"
+								model="@load(vm.dataFormatList)"
+								selectedIndex="@bind(vm.chosenDataFormat)" visible="true"
+								autodrop="true" onChange="@command('visibility',selected = self.selectedIndex)">
+								 
+								<template name="model">
+									<comboitem value="@load(each)" label="@load(each)" />		
+								</template>								
+							</combobox>
+							<separator bar = "false"/>
+							<div id="phenobox"></div>
+							<div id = "datagroupbox"></div>
+							<div id = "crossgroupbox"></div>
+							<div id = "inputbox"></div>
+							<button id="uploadButton" label="Load"
+								onClick="@command('uploadFiles')" />
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+							Data Preview
+							<div id="datagrid"></div>
+							<separator bar = "false"/>
+							<grid id="sampledata"></grid>
+							</tabpanel>
+							
+						<tabpanel>
+							<radiogroup id = "datacheck1group"/>
+							<checkbox id="datacheck1" label="Manage Missing data" onCheck="@command('missingDataCheck')" />
+							<separator bar = "false"/>
+							<radio id= "delete" radiogroup="datacheck1group" label="Delete   "/>
+							<doublespinner id="db9" value="0.10" step="0.1" />
+							<radio id = "impute"  radiogroup="datacheck1group" label="Impute  " />
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+							<checkbox id="datacheck2"
+								label="Test for segregation distortion" onCheck="@command('aggregationCheck')"/>
+							<separator bar = "false"/>
+							Level of Significance:
+							<doublespinner id="db8" value="0.05" step="0.1" />
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+							<checkbox id="datacheck3" label="Compare Genotypes" onCheck="@command('genotypeCheck')" />
+							<separator bar = "false"/>
+							Cut-off proportion of matching genotypes:
+							<doublespinner id="db7" value="0.05" step="0.1" />
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+							<checkbox id="datacheck4" label="Check marker order" onCheck="@command('markerCheck')"/>
+							<separator bar = "false"/>
+							Threshold:
+							<doublespinner id="db6" value="4" step="0.1" />
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+							<checkbox id="datacheck5"
+								label="Identify likely genotyping errors" onCheck="@command('errorCheck')"/>
+							<separator bar = "false"/>
+							Cut-off
+							<doublespinner id="db5" value="4" step="0.1" />
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+							<button label="Run" onClick="@command('getData')"/>
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+			
+						</tabpanel>
+						
+						<tabpanel>
+							Trait type:
+							<combobox id="traitType" model="@load(vm.traitType)"
+								autodrop="true" selectedItem="@bind(vm.selectedTraitType)" >
+								<template name="model">
+									<comboitem label="${each}" />
+								</template>
+							</combobox>
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+							<hlayout>
+								Traits:
+								<groupbox closable="true" sclass="z-demo-config"
+									width="100px" height="110px">
+									<vlayout>
+										<checkbox id="trait1" label="Yield" />
+										<checkbox id="trait2" label="Pitht" />
+										<checkbox id="trait3" label="Awit" />
+										<checkbox id="trait4" label="Awwd" />
+									</vlayout>
+								</groupbox>
+							</hlayout>
+							<separator bar = "false"/>
+							<separator bar = "false"/>
+							Mapping Method:
+							<combobox id="mapMethod" model="@load(vm.mapMethod)"
+								selectedItem="@bind(vm.chosenMapping)" autodrop="true"
+								onChange="@command('mappingVisibility')">
+								<template name="model">
+									<comboitem label="${each}" />
+								</template>
+							</combobox>
+			
+							<separator bar = "false"/>
+							<groupbox closable="true" sclass="z-demo-config"
+								width="410px" height="190px" visible="@load(vm.mapping2)">
+								Options:
+								<radiogroup id = "thresholdPValue"/>
+								
+								<separator bar = "false"/>
+								<checkbox id="hpresent"
+									label="Heterozygotes Present" />
+								<separator bar = "false"/>
+								Step:
+								<doublespinner id="db1" value="10" step="0.1" />
+								<separator bar = "false"/>
+								Window Size:
+								<doublespinner id="db2" value="20" step="0.1" />
+								<separator bar = "false"/>
+								Minimum Distance:
+								<doublespinner id="db3" value="10" step="0.1" />
+								<separator bar = "false"/>
+								Threshold for p-value:
+								<radio label="Li and Ji" radiogroup = "thresholdPValue" id = "Liji"/>
+								<radio label="Numerical " radiogroup = "thresholdPValue" id = "numerical"/>
+								<doublespinner id="db4" value="0.10" step="0.1" />
+							</groupbox>
+			
+							<separator bar = "false"/>
+							<groupbox closable="true" sclass="z-demo-config"
+								width="410px" height="135px" visible="@load(vm.mapping1)">
+								Options:
+								<separator bar = "false"/>
+								No. Of Permutations:
+								<doublespinner id="db12" value="100" step="0.1" />
+								<separator bar = "false"/>
+								Phenotype Model :
+								<combobox id="pModel" model="@load(vm.pModel)"
+									autodrop="true" selectedItem="@bind(vm.comboboxMapping)">
+									<template name="model">
+										<comboitem label="${each}" />
+									</template>
+								</combobox>
+								<separator bar = "false"/>
+								Method:
+								<combobox id="pMethodList" model="@load(vm.pMethod)"
+									autodrop="true" selectedItem="@bind(vm.coboboxmapping2)">
+									<template name="model">
+										<comboitem label="${each}" />
+									</template>
+								</combobox>
+							</groupbox>
+							<separator bar = "false"/>
+							<groupbox closable="true" sclass="z-demo-config"
+								width="410px" height="160px" visible="@load(vm.mapping3)">
+								Options:
+								<separator bar = "false"/>
+								Step Size:
+								<doublespinner id="db13" value="5.0" step="1.0" />
+								<separator bar = "false"/>
+								Window Size:
+								<doublespinner id="db14" value="25.0" step="1.0" />
+								<separator bar = "false"/>
+								<radiogroup id = "Model"/>
+								Model:
+								<radio label="additive" radiogroup = "Model" id = "additive"/>
+								<radio label="dominance" radiogroup = "Model" id = "dominance"/>
+								<separator bar = "false"/>
+								Algorithm:
+								<radiogroup id = "Algorithm"/>
+								<radio label="ML" radiogroup = "Algorithm" id = "ML"/>
+								<radio label="REML" radiogroup = "Algorithm" id = "REML"/>
+							</groupbox>
+							<separator bar = "false"/>
+							<groupbox closable="true" sclass="z-demo-config"
+								width="410px" height="310px" visible="@load(vm.mapping4)">
+								Options:
+								<separator bar = "false"/>
+								Step:
+								<doublespinner id="db15" value="2" step="1.0" />
+								<separator bar = "false"/>
+								Method to find Loci:
+								<combobox id="lociMList"
+									model="@load(vm.lociMethod)" autodrop="true" selectedItem="@bind(vm.comboboxmapping3)">
+									<template name="model">
+										<comboitem label="${each}" />
+									</template>
+								</combobox>
+								<separator bar = "false"/>
+								Type of Scan:
+								<combobox id="scanTypeList"
+									model="@load(vm.scanType)" autodrop="true" selectedItem="@bind(vm.comboboxmapping4)">
+									<template name="model">
+										<comboitem label="${each}" />
+									</template>
+								</combobox>
+								<separator bar = "false"/>
+								<checkbox id="setup"
+									label="Set-up Interacting QTL Model" onCheck="@command('QTLCheck')" />
+								<separator bar = "false"/>
+								<checkbox id="setup1" label="Include Epistasis" />
+								<separator bar = "false"/>
+								<checkbox id="setup2" label="Use Dependent Prior" />
+								<separator/>
+								No. of main effects in model:
+								<doublespinner id="db16" value="0" step="0.1" />
+								<separator bar = "false"/>
+								Prior expected number of QTLs: Main Effect:
+								<textbox width="50px" id = "maineffect" value = "0"/>
+								All:
+								<textbox width="50px" id = "all" value = "0"/>
+								<separator bar = "false" />
+								Maximum Number of QTLs allowed:
+								<textbox width="100px" id = "maxnumber" value = "0"/>
+			
+							</groupbox>
+							<button label="Run" onClick="@command('getData2')" />
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+			</tabpanel>
+			<tabpanel>
+				<grid model="@load(vm.students)" id="stdnt"
+					width="100%">
+					<columns>
+						<column width="150px">Name</column>
+						<column width="150px">Address</column>
+						<column width="150px">Student No.</column>
+						<column width="150px">Course</column>
+					</columns>
+					<template name="model">
+						<row>
+							<label value="@load(each.name)" />
+							<label
+								value="@load(each.add.completeAddress)" />
+							<label value="@load(each.studentno)" />
+							<label value="@load(each.course)" />
+						</row>
+					</template>
+				</grid>
+
+			</tabpanel>
+			<tabpanel>
+				<grid model="@load(vm.programList)" id="listOfPrograms"
+					width="100%">
+					<columns>
+						<column width="150px">Id</column>
+						<column width="150px">UserId</column>
+						<column width="150px">Name</column>
+						<column width="150px">Objective</column>
+						<column width="150px">Coordinator</column>
+						<column width="150px">Leading Institute</column>
+						<column width="150px">Collaborator</column>
+					</columns>
+					<template name="model">
+						<row>
+							<label value="@load(each.id)" />
+							<label value="@load(each.userid)" />
+							<textbox width="100px" value="@bind(each.name)" />
+							<label value="@load(each.objective)" />
+							<label value="@load(each.coordinator)" />
+							<label value="@load(each.leadinginstitute)" />
+							<label value="@load(each.collaborator)" />
+						</row>
+					</template>
+				</grid>
+				<button label="Save" onClick="@command('save')" />
+ 			</tabpanel> 
+		</tabpanels>
+	</tabbox>
+</window>

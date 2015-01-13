@@ -1,0 +1,29 @@
+Statistical Tool for Agricultural Research (STAR)
+Result of Correlation Analysis
+Fri May 17 14:22:29 2013
+
+CORRELATION ANALYSIS 
+
+Pearson's product-moment correlation, Prob > |r|
+
+                        DTF        HT       LRS      GYM2    BIOMm2        HI
+DTF      coef          1.00      0.03      0.21     -0.19      0.01     -0.22
+         p-value               0.4557    0.0026    0.0000    0.7671    0.0000
+         n              800       792       200       794       792       791
+HT       coef          0.03      1.00     -0.49      0.66      0.52      0.58
+         p-value     0.4557              0.0000    0.0000    0.0000    0.0000
+         n              792       792       193       786       784       783
+LRS      coef          0.21     -0.49      1.00     -0.60     -0.13     -0.60
+         p-value     0.0026    0.0000              0.0000    0.0658    0.0000
+         n              200       193       200       199       199       198
+GYM2     coef         -0.19      0.66     -0.60      1.00      0.54      0.79
+         p-value     0.0000    0.0000    0.0000              0.0000    0.0000
+         n              794       786       199       794       790       789
+BIOMm2   coef          0.01      0.52     -0.13      0.54      1.00      0.50
+         p-value     0.7671    0.0000    0.0658    0.0000              0.0000
+         n              792       784       199       790       792       791
+HI       coef         -0.22      0.58     -0.60      0.79      0.50      1.00
+         p-value     0.0000    0.0000    0.0000    0.0000    0.0000          
+         n              791       783       198       789       791       791
+
+

@@ -1,0 +1,91 @@
+<?page title="Strasa" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+
+	<style src="/js/jquery.bxslider.css" />
+	<script src="/js/jquery.bxslider.min.js" />
+
+	<!-- 	<style>
+		body { padding: 0 0; /* 0 padding on top and bottom and 0
+		padding on right and left */
+		background image  q
+		background-image: url('images/bg3.png');
+		background-repeat:repeat-x; }
+		</style> -->
+
+	<script type="text/javascript">
+		
+		<![CDATA[
+
+		zk.afterMount(function() {
+
+		$("$slider1").bxSlider({ slideWidth: 1000, minSlides: 1,
+		maxSlides: 1, slideMargin: 10 }); });
+
+		]]>
+		
+	</script>
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.spring.security.model.AuthenticateInit')">
+	</div>
+	<hlayout sclass="z-valign-center"
+		style="background:#228B22;color:white;" height="50px">
+
+	</hlayout>
+
+	<hlayout sclass="z-valign-center"
+		style="background:#D3D3D3;color:white;" height="50px">
+
+	</hlayout>
+
+	<separator width="300px"></separator>
+
+	<div id="slider1">
+		<div class="slide">
+			<image src="images/foobar1.png"></image>
+		</div>
+		<div class="slide">
+			<image src="images/foobar2.png"></image>
+		</div>
+	</div>
+
+
+	<html style="color:red" if="${not empty param.login_error}">
+		
+		<![CDATA[ Your login attempt was not successful, try
+		again.<br/><br/> Reason:
+		${SPRING_SECURITY_LAST_EXCEPTION.message} ]]>
+		
+    		</html>
+
+
+	<html:form action="j_spring_security_check" method="POST"
+		xmlns:html="native">
+		<grid width="300px" oddRowSclass="none">
+			<rows>
+				<row>
+					User:
+					<textbox id="u" name="j_username" />
+				</row>
+				<row>
+					Password:
+					<textbox id="p" type="password" name="j_password" />
+				</row>
+				<row spans="2">
+					<hbox>
+						<button type="reset" label="Reset" />
+						<button type="submit" label="Login" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</html:form>
+
+	<hlayout sclass="z-valign-center"
+		style="background:#424040;color:white; vertical-align:middle;padding:30px"
+		height="100px">
+		<image src="images/cgiar.png"></image>
+	</hlayout>
+
+</zk>
+

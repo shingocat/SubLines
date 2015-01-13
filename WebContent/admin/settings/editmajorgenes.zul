@@ -1,0 +1,41 @@
+<zk>
+	<window id="editMajorGenesWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.admin.view.model.EditMajorGenes')">
+		<button label="Add New" onClick="@command('add')" />
+		<grid
+			model="@load(vm.rowList) @template(each.editingStatus ? 'editable' : 'noneditable')"
+			sizedByContent="true" width="95%">
+			<columns width="200px">
+				<column label="Major Genes Name" />
+				<column label="Action" width="100px"/>
+			</columns>
+			<template name="editable">
+				<row>
+					<textbox
+						value="@load(each.value.value) @save(each.value.value, before='confirm')" />
+					<cell>
+						<button image="/images/tick-small.png"
+							onClick="@command('confirm', RowStatus=each)" tooltiptext="Save" />
+						<button image="/images/cross-small.png"
+							onClick="@command('changeEditableStatus', RowStatus=each)"
+							tooltiptext="Cancel" />
+					</cell>
+				</row>
+			</template>
+			<template name="noneditable">
+				<row>
+					<label value="@load(each.value.value)" />
+					<cell>
+<!-- 						<toolbarbutton src="/images/edit16.png" -->
+<!-- 							onClick="@command('changeEditableStatus', RowStatus=each)" -->
+<!-- 							orient="vertical" tooltiptext="Edit Major Genes" /> -->
+<!-- 						<space /> -->
+						<toolbarbutton src="/images/Delete16.png"
+							onClick="@command('delete', id=each.value.id, keyName=each.value.value)"
+							orient="vertical" tooltiptext="Delete Major Genes" />
+					</cell>
+				</row>
+			</template>
+		</grid>
+	</window>
+</zk>

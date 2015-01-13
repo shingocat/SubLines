@@ -1,0 +1,19 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<grid model="@bind(vm.contrastDataListOnEnv)" sizedByContent="ture" height="300px"
+		style="overflow:auto;" emptyMessage="No data loaded...">
+		<columns children="@load(vm.contrastColumnListOnEnv)">
+			<template name="children">
+				<column label="@load(each)" />
+			</template>
+		</columns>
+		<template name="model">
+			<row>
+				<label forEach="${each}" value="${each}" />
+			</row>
+		</template>
+		<!-- <rows children="@bind(vm.contrastCSVData)"> <template name="children" 
+			var="data"> <row height="15px"> <label forEach="${data}" value="${each}" 
+			/> </row> </template> </rows> -->
+	</grid>
+</zk>

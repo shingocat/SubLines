@@ -1,0 +1,17 @@
+<?link rel="stylesheet" type="text/css" href="css/main.css"?>
+<zk>
+    <borderlayout hflex="1" vflex="1">
+        <north height="50px" border="none" sclass="myheaderwithgreen">
+            <include src="template/header.zul" />
+        </north>
+        <west width="260px" border="none" collapsible="true" splittable="true"  vflex="1" >
+              <include src="template/sidebar.zul" />
+        </west>
+ 		<center id="mainContentPage" autoscroll="true" border="none" self="@insert(content)">
+			<!-- the main content will be insert to here -->
+		</center>
+        <south height="50px" border="none">
+              <include src="template/footer.zul" />
+        </south>
+    </borderlayout>
+</zk>

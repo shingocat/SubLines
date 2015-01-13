@@ -1,0 +1,142 @@
+
+DATA FILE: E:/Program Files/PBTools1.2.1/Projects/Demo/Data/Lecture/john_alpha.csv
+
+SINGLE-ENVIRONMENT ANALYSIS
+
+DESIGN: Alpha-Lattice
+
+==============================
+GENOTYPE AS: Fixed
+==============================
+
+------------------------------
+RESPONSE VARIABLE: yield
+------------------------------
+
+Data Summary:
+
+Number of observations read:  72 
+Number of observations used:  72 
+
+ Factors   Number of Levels   Levels               
+ gen       24                 G01  G02  G03 ... G24
+ block     6                  B1  B2  B3 ... B6    
+ rep       3                  R1  R2  R3           
+
+Variance Components Table:
+
+     Groups   Variance  Std.Dev.
+1 block:rep 0.06194373 0.2488850
+2       rep 0.11394728 0.3375608
+3  Residual 0.08522518 0.2919335
+
+Testing for the Significance of Genotypic Effect:
+
+Models:
+model2: yield ~ 1 + (1|rep/block)
+model1: yield ~ 1 + gen + (1|rep/block)
+
+       Df     AIC    BIC  logLik  Chisq Chi Df Pr(>Chisq)
+model2  4 125.936 135.04 -58.968                         
+model1 27  81.707 143.18 -13.854 90.229     23  6.506e-10
+
+    Df   Sum Sq   Mean Sq  F value p-value
+gen 23 10.67864 0.4642887 5.447788  0.0000
+
+Genotype LSMeans and Standard Errors:
+
+   gen   LSMean StdErrMean
+1  G01 5.107700  0.2760699
+2  G02 4.478532  0.2760699
+3  G03 3.499199  0.2760699
+4  G04 4.490094  0.2760699
+5  G05 5.037210  0.2760097
+6  G06 4.536662  0.2760097
+7  G07 4.111136  0.2760699
+8  G08 4.527633  0.2760699
+9  G09 3.502181  0.2760097
+10 G10 4.373200  0.2760699
+11 G11 4.283264  0.2760699
+12 G12 4.755277  0.2760699
+13 G13 4.757913  0.2760097
+14 G14 4.775662  0.2760097
+15 G15 4.969111  0.2760097
+16 G16 4.730131  0.2760699
+17 G17 4.602613  0.2760097
+18 G18 4.361692  0.2760699
+19 G19 4.840328  0.2760097
+20 G20 4.039985  0.2760097
+21 G21 4.795007  0.2760097
+22 G22 4.527545  0.2760097
+23 G23 4.252449  0.2760097
+24 G24 4.153874  0.2760699
+
+==============================
+GENOTYPE AS: Random
+==============================
+
+------------------------------
+RESPONSE VARIABLE: yield
+------------------------------
+
+Data Summary:
+
+Number of observations read:  72 
+Number of observations used:  72 
+
+ Factors   Number of Levels   Levels               
+ gen       24                 G01  G02  G03 ... G24
+ block     6                  B1  B2  B3 ... B6    
+ rep       3                  R1  R2  R3           
+
+Variance Components Table:
+
+     Groups   Variance  Std.Dev.
+1       gen 0.14290199 0.3780238
+2 block:rep 0.07021833 0.2649874
+3       rep 0.11271901 0.3357365
+4  Residual 0.08161716 0.2856872
+
+Predicted means:
+
+   gen    Means
+1  G01 4.980700
+2  G02 4.484479
+3  G03 3.694954
+4  G04 4.485642
+5  G05 4.954467
+6  G06 4.524157
+7  G07 4.170569
+8  G08 4.541746
+9  G09 3.669585
+10 G10 4.390144
+11 G11 4.283082
+12 G12 4.705275
+13 G13 4.711182
+14 G14 4.722917
+15 G15 4.904216
+16 G16 4.680481
+17 G17 4.557595
+18 G18 4.369336
+19 G19 4.769093
+20 G20 4.140548
+21 G21 4.735649
+22 G22 4.503605
+23 G23 4.302519
+24 G24 4.226459
+
+Heritability:
+     
+0.84 
+
+Testing for the Significance of Genotypic Variance:
+Models:
+model2: yield ~ 1 + (1|rep/block)
+model1: yield ~ 1 + (1|rep/block) + (1|gen)
+
+       Df    AIC    BIC  logLik  Chisq Chi Df Pr(>Chisq)
+model2  4 125.94 135.04 -58.968                         
+model1  5 104.50 115.89 -47.252 23.432      1  1.294e-06
+
+
+==============================

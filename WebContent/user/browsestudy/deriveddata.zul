@@ -1,0 +1,9 @@
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.DerivedData')">
+		<tabbox id="dataTabBox" height="100%">
+			<tabs id="dataTabs" />
+			<tabpanels id="dataPanels" width="100%" />
+		</tabbox>
+	</window>
+</zk>

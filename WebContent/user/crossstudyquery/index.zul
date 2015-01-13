@@ -1,0 +1,16 @@
+<zk>
+
+	<div id="mainCrossStudyWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.crossstudyquery.view.model.Index')"
+		height="98%" width="98%" align="left">
+		<separator height="5px"></separator>
+		<div sclass="page-header">
+			<label value="Across Study Query" />
+			<!-- <a label="overview &amp; stats" iconSclass="z-icon-angle-double-right" sclass="subtitle"/> -->
+		</div>
+		<tabbox id="tabBox" sclass="page-content">
+			<tabs id="tabs" />
+			<tabpanels id="tabPanels" />
+		</tabbox>
+	</div>
+</zk>

@@ -1,0 +1,78 @@
+<?page title="Strasa" contentType="text/html;charset=UTF-8"?>
+<?link href="/theme/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"?>
+<?link href="/theme/css/fonts.css" rel="stylesheet" type="text/css"?>
+ <?link href="/theme/less/index.css.dsp" rel="stylesheet" type="text/css"?> 
+ <?link href="/theme/css/main.css" rel="stylesheet" type="text/css"?>
+
+<zk xmlns:n="native">
+<!-- 	<style src="/theme/css/main.css" />
+	<style src="/theme/bootstrap/css/bootstrap.css" /> -->
+	<separator height="150px"></separator>
+
+
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.spring.security.model.AuthenticateInit')"
+		align="center" class="login-box">
+
+		<label value="Sign in to access DMAS"
+			class="login-header-main">
+		</label>
+
+		<html:form action="j_spring_security_check" method="POST"
+			xmlns:html="native">
+			<grid oddRowSclass="none" zclass="none" height="100px"
+				width="350px">
+				<columns>
+					<column label="" width="100px" />
+					<column label="" hflex="100px" />
+
+				</columns>
+				<rows>
+					<row zclass="none" height="50px">
+						<label value="Username"></label>
+						<textbox id="u" name="j_username" width="200px" />
+
+					</row>
+					<row zclass="none">
+						<label value="Password"></label>
+						<textbox id="p" type="password" width="200px"
+							name="j_password" />
+					</row>
+				</rows>
+			</grid>
+			<separator width="200px"></separator>
+			<div align="center" width="300px">
+				<hbox>
+					<button type="reset" label="Reset" sclass="btn-danger"
+						 image="images/reset.png" />
+					<button type="submit" label="Login"
+						image="images/login.png" sclass="btn-success" />
+				</hbox>
+
+				<toolbarbutton label="Create an account"
+					style="color:#336633; font-size: 12px;" href="registration.zul" />
+				<space width="10px"></space>
+				<toolbarbutton label="Forgot Password"
+					style="color:#336633; font-size: 12px;" />
+			</div>
+		</html:form>
+
+	</div>
+	<div align="center">
+
+		<html style="color:red" if="${not empty param.login_error}">
+
+
+
+			
+			<![CDATA[ Your login attempt was not successful, try
+			again.<br/><br/> Reason:
+			${SPRING_SECURITY_LAST_EXCEPTION.message} ]]>
+			
+			
+					
+
+    	</html>
+	</div>
+</zk>
+

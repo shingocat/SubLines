@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BrowseGermplasm">
+	<select id="getGermplasmByKeyCharacteristicsAbiotic" resultType="GermplasmModel"
+		parameterType="int">
+		select distinct t1.id,t1.gid,t1.germplasmname as germplasmname
+		,t1.breeder as
+		breeder
+		,t1.othername as othername
+		,t3.germplasmtype as
+		remarks
+		from
+		germplasm as t1 left join
+		germplasmcharacteristics as t2 on
+		t1.germplasmname=t2.germplasmname
+		left join germplasmtype as t3 on
+		t1.germplasmtypeid=t3.id
+		where t2.attribute='Abiotic' and
+		t2.keyvalue in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+
+	</select>
+
+	<select id="getGermplasmByKeyCharacteristicsBiotic" resultType="GermplasmModel"
+		parameterType="int">
+		select distinct t1.id,t1.gid,t1.germplasmname as germplasmname
+		,t1.breeder as
+		breeder
+		,t1.othername as othername
+		,t3.germplasmtype as
+		remarks
+		from
+		germplasm as t1 left join
+		germplasmcharacteristics as t2 on
+		t1.germplasmname=t2.germplasmname
+		left join germplasmtype as t3 on
+		t1.germplasmtypeid=t3.id
+		where t2.attribute='Biotic' and
+		t2.keyvalue in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+
+	</select>
+
+	<select id="getGermplasmByKeyCharacteristicsGrainQuality"
+		resultType="GermplasmModel" parameterType="int">
+		select distinct t1.id,t1.gid,t1.germplasmname as germplasmname
+		,t1.breeder as
+		breeder
+		,t1.othername as othername
+		,t3.germplasmtype as
+		remarks
+		from
+		germplasm as t1 left join
+		germplasmcharacteristics as t2 on
+		t1.germplasmname=t2.germplasmname
+		left join germplasmtype as t3 on
+		t1.germplasmtypeid=t3.id
+		where t2.attribute='Grain Quality' and
+		t2.keyvalue in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+
+	</select>
+
+	<select id="getGermplasmByNameEqual" resultType="GermplasmModel"
+		parameterType="int">
+		select distinct t1.id,t1.gid,t1.germplasmname as
+		germplasmname
+		,t1.breeder as
+		breeder
+		,t1.othername as othername
+		,t3.germplasmtype as
+		remarks
+		from
+		germplasm as t1 left join
+		germplasmcharacteristics as t2 on
+		t1.germplasmname=t2.germplasmname
+		left join germplasmtype as t3 on
+		t1.germplasmtypeid=t3.id
+		where
+		t1.germplasmname=#{gname}
+
+	</select>
+
+	<select id="getGermplasmByNameLike" resultType="GermplasmModel"
+		parameterType="int">
+		select distinct t1.id,t1.gid,t1.germplasmname as
+		germplasmname
+		,t1.breeder as
+		breeder
+		,t1.othername as othername
+		,t3.germplasmtype as
+		remarks
+		from
+		germplasm as t1 left join
+		germplasmcharacteristics as t2 on
+		t1.germplasmname=t2.germplasmname
+		left join germplasmtype as t3 on
+		t1.germplasmtypeid=t3.id
+		where
+		t1.germplasmname like #{gname}
+
+	</select>
+
+	<select id="getGermplasmByType" resultType="GermplasmModel"
+		parameterType="int">
+		select distinct t1.id,t1.gid,t1.germplasmname as
+		germplasmname
+		,t1.breeder as
+		breeder
+		,t1.othername as othername
+		,t3.germplasmtype as
+		remarks
+		from
+		germplasm as t1 left join
+		germplasmcharacteristics as t2 on
+		t1.germplasmname=t2.germplasmname
+		left join germplasmtype as t3 on
+		t1.germplasmtypeid=t3.id
+		where
+		t1.germplasmtypeid= #{id}
+
+	</select>
+
+	<select id="getGermplasmByKeyCharacteristicsMajorGenes"
+		resultType="GermplasmModel" parameterType="int">
+		select distinct t1.id,t1.gid,t1.germplasmname as germplasmname
+		,t1.breeder as
+		breeder
+		,t1.othername as othername
+		,t3.germplasmtype as
+		remarks
+		from
+		germplasm as t1 left join
+		germplasmcharacteristics as t2 on
+		t1.germplasmname=t2.germplasmname
+		left join germplasmtype as t3 on
+		t1.germplasmtypeid=t3.id
+		where t2.attribute='Major Genes' and
+		t2.keyvalue
+		in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+
+	</select>
+
+
+	<select id="getGermplasmByKeyCharacteristics" resultType="GermplasmModel"
+		parameterType="KeyCharacteristicQueryModel">
+		select germplasmname as germplasmname  from
+		germplasmcharacteristics where keyvalue in
+
+		<foreach item="item" index="index" collection="keyValues" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		group by germplasmname having count(germplasmname)=#{countKeyCriteria}
+
+	</select>
+	
+	
+	
+	
+	<select id="getGermplasmByKeyCharacteristicsQuery" resultType="GermplasmModel"
+		parameterType="int">
+		select distinct t1.id,t1.gid,t1.germplasmname as germplasmname
+		,t1.breeder as
+		breeder
+		,t1.othername as othername
+		,t3.germplasmtype as
+		remarks
+		from
+		germplasm as t1 left join
+		germplasmcharacteristics as t2 on
+		t1.germplasmname=t2.germplasmname
+		left join germplasmtype as t3 on
+		t1.germplasmtypeid=t3.id
+		where t1.germplasmname in
+
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		
+
+	</select>
+
+
+
+	<select id="getGermplasmKeyCharacteristicsByGermplasmName"
+		resultType="GermplasmCharacteristics" parameterType="GermplasmCharacteristics">
+		select distinct
+		germplasmname,attribute,keyvalue from germplasmcharacteristics where
+		attribute=#{attribute} and germplasmname=#{germplasmname}
+
+	</select>
+
+	<select id="getStudyWithGemrplasmTested" resultType="StudySearchResultModel"
+		parameterType="int">
+		select distinct t1.studyid as id,
+		t2.name as studyname,
+		t3.name as programname,
+		t4.name as projectname,
+		t5.studytype as
+		studytype,
+		t2.startyear as startyear,
+		t2.endyear as endyear,
+		t8.locationname as
+		locationname,
+		t8.country as country
+		from studyrawdata
+		as t1
+		left join
+		study as t2 on t1.studyid=t2.id
+		left join program as t3
+		on
+		t2.programid=t3.id
+		left join project as t4 on t2.programid=t4.id
+		left
+		join studytype as t5 on t2.studytypeid=t5.id
+		left join studysite as t6
+		on t1.studyid=t6.studyid
+		left join studylocation as t7 on
+		t1.studyid=t7.studyid
+		left join location as t8 on t7.id=t8.id
+		where
+		t1.datacolumn='GName' and t1.datavalue=#{gname}
+		union
+		select distinct
+		t1.studyid,t2.name as studyname,
+		t3.name as programname,
+		t4.name as
+		projectname,
+		t5.studytype as studytype,
+		t2.startyear as startyear,
+		t2.endyear as endyear,
+		t8.locationname as locationname,
+		t8.country as
+		country
+		from studyderiveddata as t1
+		left join study as t2 on
+		t1.studyid=t2.id
+		left join program as t3 on t2.programid=t3.id
+		left join
+		project as t4 on t2.programid=t4.id
+		left join studytype as t5 on
+		t2.studytypeid=t5.id
+		left join studysite as t6 on t1.studyid=t6.studyid
+		left join studylocation as t7 on t1.studyid=t7.studyid
+		left join
+		location as t8 on t7.id=t8.id
+		where t1.datacolumn='GName' and
+		t1.datavalue=#{gname}
+	</select>
+
+</mapper>

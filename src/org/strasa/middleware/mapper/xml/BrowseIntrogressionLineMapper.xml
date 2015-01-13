@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.strasa.middleware.mapper.BrowseIntrogressionLineMapper">
+	<!--  
+	<resultMap type="IntrogressionLineModel" id="IntrogressionLineResult">
+		<id property="id" column="g_id" />
+		<result property="gId" column="g_gid" />
+		<result property="germplasmname" column="g_germplasmname" />
+		<result property="othername" column="g_othername" />
+		<result property="breeder" column="g_breeder" />
+		<result property="germplasmtypeid" column="g_germplasmtypeid" />
+		<result property="irnumber" column="g_irnumber" />
+		<result property="ircross" column="g_ircross" />
+		<result property="parentage" column="g_parentage" />
+		<result property="femaleparent" column="g_femaleparent" />
+		<result property="maleparent" column="g_maleparent" />
+		<result property="selectionhistory" column="g_selectionhistory" />
+		<result property="source" column="g_source" />
+		<result property="remarks" column="g_remarks" />
+		<result property="userid" column="g_userid" />
+		<collection property="germplasmSegmentInfo" resultMap="GermplasmSegmentResult" />
+		<collection property="segments" resultMap="SegmentResult" />
+	</resultMap>
+	-->
+	<resultMap type="SegmentModel" id="SegmentResult">
+		<id property="segmentId" column="s_id" />
+		<result property="chromosome" column="s_chromosome"
+			typeHandler="org.strasa.middleware.util.EnumChromosomeHandler" />
+		<result property="recurrentParent" column="s_recurrent_parent" />
+		<result property="donorParent" column="s_donor_parent" />
+		<result property="geneticPosition1" column="s_position_1" />
+		<result property="geneticPosition2" column="s_position_2" />
+		<result property="geneticPosition3" column="s_position_3" />
+		<result property="geneticPosition4" column="s_position_4" />
+		<result property="physicalStart" column="s_physical_start" />
+		<result property="physicalEnd" column="s_physical_End" />
+		<result property="estimatedLength" column="s_estimated_length" />
+		<result property="minimumLength" column="s_minimum_length" />
+		<result property="maximumLength" column="s_maximum_length" />
+		<result property="description" column="s_description" />
+	</resultMap>
+	<resultMap type="GermplasmTypeModel" id="GermplasmTypeResult">
+		<id property="id" column="id" />
+		<result property="germplasmtype" column="germplasmtype" />
+		<result property="description" column="description" />
+	</resultMap>
+	<resultMap type="DbUserModel" id="DbUserResult">
+		<id property="id" column="id" />
+		<result property="lastname" column="lastname" />
+		<result property="firstname" column="firstname" />
+		<result property="mi" column="mi" />
+		<result property="agency" column="agnecy" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="email" column="email" />
+		<result property="address" column="address" />
+		<result property="country" column="country" />
+		<result property="status" column="status" />
+		<result property="role" column="role" />
+		<result property="active" column="active" />
+		<result property="dateregistered" column="dateregistered" />
+	</resultMap>
+	<resultMap type="GermplasmModel" id="GermplasmResult">
+		<id property="id" column="id" />
+		<result property="gId" column="gid" />
+		<result property="germplasmname" column="germplasmname" />
+		<result property="othername" column="othername" />
+		<result property="breeder" column="breeder" />
+		<result property="germplasmtypeid" column="germplasmtypeid" />
+		<result property="irnumber" column="irnumber" />
+		<result property="ircross" column="ircross" />
+		<result property="parentage" column="parentage" />
+		<result property="femaleparent" column="femaleparent" />
+		<result property="maleparent" column="maleparent" />
+		<result property="selectionhistory" column="selectionhistory" />
+		<result property="source" column="source" />
+		<result property="remarks" column="remarks" />
+		<result property="userid" column="userid" />
+	</resultMap>
+	<resultMap type="GermplasmSegmentModel" id="GermplasmSegmentResult">
+		<id property="germplasmSementId" column="gs_id" />
+		<result property="germplasmId" column="gs_germplasm_id" />
+		<result property="segmentId" column="gs_segment_id" />
+		<result property="segmentNumber" column="gs_number" />
+		<result property="homogenous" column="gs_isHomogenous" />
+	</resultMap>
+
+	<select id="findAllIntrogressionLines" resultMap="IntrogressionLineResult">
+		select
+		g.id as g_id,
+		g.gid as g_gid,
+		g.germplasmname as g_germplasmname,
+		g.othername as g_othername,
+		g.breeder as g_breeder,
+		g.germplasmtypeid as g_germplasmtypeid,
+		g.irnumber as g_irnumber,
+		g.ircross as g_ircross,
+		g.parentage as g_parentage,
+		g.femaleparent as g_femaleparent,
+		g.maleparent as g_maleparent,
+		g.selectionhistory as g_selectionhistory,
+		g.source as g_source,
+		g.remarks as g_remarks,
+		g.userid as g_userid,
+		gs.id as gs_id,
+		gs.germplasm_id as gs_germplasm_id,
+		gs.segment_id as gs_segment_id,
+		gs.germplasm_segment_number as gs_number,
+		gs.isHomogenous as gs_isHomogenous,
+		s.segment_id as s_id,
+		s.chromosome as s_chromosome,
+		s.recurrent_parent as s_recurrent_parent,
+		s.donor_parent as s_donor_parent,
+		s.position_1 as s_position_1,
+		s.position_2 as s_position_2,
+		s.position_3 as s_position_3,
+		s.position_4 as s_position_4,
+		s.physical_start as s_physical_start,
+		s.physical_end as s_physical_end,
+		s.estimated_length as s_estimated_length,
+		s.minimum_length as s_minimum_length,
+		s.maximum_length as s_maximum_length,
+		s.description as s_description
+		from germplasm g
+		left join germplasm_segment gs on g.gid = gs.germplasm_id
+		left join segment s on gs.segment_id = s.segment_id
+		where g.germplasmtypeid = 3 or g.germplasmtypeid = 8;
+	</select>
+	<select id="findAllGermplasms" resultMap="GermplasmResult">
+		SELECT * FROM germplasm
+	</select>
+	<select id="findAllSegments" resultMap="SegmentResult">
+		SELECT * FROM segment
+	</select>
+
+</mapper>

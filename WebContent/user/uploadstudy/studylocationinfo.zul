@@ -1,0 +1,84 @@
+<zk>
+
+	<style src="../css/main.css" />
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.uploadstudy.view.model.StudyLocationInfo')">
+
+		<groupbox id="gb" mold="3d" width="100%">
+			<caption label="List of known location" />
+			<grid id="step4"
+				model="@load(vm.lstLocations) @template((vm.editable(each.userid)) ? 'update' : 'display')">
+				<columns hflex="1">
+					<column label="Location" style="color:red;" />
+					<column label="Country" />
+					<column label="Province" />
+					<column label="Region" />
+					<column label="Altitude" style="color:red;" />
+					<column label="Latitude" style="color:red;" />
+					<column label="Weather Station" style="color:red;" />
+				</columns>
+				<template name="update">
+					<row>
+						<textbox value="@bind(each.locationname)"
+							width="100%" />
+
+
+						<combobox model="@load(vm.cmbCountry)"
+							selectedItem="@bind(each.country)" width="99%"
+							style="color: #000000 !important;">
+							<template name="model" var="p1">
+								<comboitem value="@load(p1)"
+									label="@load(p1)" />
+							</template>
+						</combobox>
+						<textbox value="@bind(each.province)"
+							width="100%" style="color: #000000 !important;" />
+						<textbox value="@bind(each.region)" width="100%"
+							style="color: #000000 !important;" />
+						<textbox value="@bind(each.altitude)"
+							width="100%" style="color: #000000 !important;" />
+						<textbox value="@bind(each.latitude)"
+							width="100%" style="color: #000000 !important;" />
+						<textbox value="@bind(each.weatherstation)"
+							width="100%" style="color: #000000 !important;" />
+					</row>
+				</template>
+
+				<template name="display">
+					<row>
+						<label
+							value="@bind(each.locationname) @validator(vm.formValidator.textValidator)"
+							width="100%" style="color: #000000 !important;" />
+
+
+						<label value="@bind(each.country)" width="100%"
+							style="color: #000000 !important;" />
+
+						<label value="@bind(each.province)" width="100%"
+							style="color: #000000 !important;" />
+						<label value="@bind(each.region)" width="100%"
+							style="color: #000000 !important;" />
+						<label value="@bind(each.altitude)" width="100%"
+							style="color: #000000 !important;" />
+						<label value="@bind(each.latitude)" width="100%"
+							style="color: #000000 !important;" />
+						<label value="@bind(each.weatherstation)"
+							width="100%" style="color: #000000 !important;" />
+					</row>
+				</template>
+			</grid>
+		</groupbox>
+		<separator height="20px"></separator>
+		<div align="center">
+
+
+			<button label="Save" image="/images/save16.png"
+				onClick="@global-command('nextTab',model=vm)" sclass="btn-warning"
+				height="40px" width="150px">
+			</button>
+		</div>
+
+
+
+	</window>
+</zk>

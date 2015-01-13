@@ -1,0 +1,351 @@
+<zk>
+
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.uploadstudy.view.model.StudySiteInfo')">
+
+		<columnlayout>
+			<columnchildren width="65%" vflex="1">
+				<grid id="mainGrid" model="@load(vm.sites)"
+					emptyMessage="No study site found.">
+					<columns>
+						<column label="Site Name" style="color:red;"
+							width="16%" />
+						<column label="Site Location" style="color:red;"
+							width="23%" />
+						<column label="Year" width="8%"
+							style="color:red;" />
+						<column label="Season" width="8%"
+							style="color:red;" />
+						<column label="Eco System" style="color:red;"
+							width="16%" />
+						<column label="Soil Type" width="16%" />
+						<column label="Soil PH" width="13%" />
+					</columns>
+					<template name="model">
+						<row>
+
+
+							<textbox value="@bind(each.sitename)"
+								width="99%"
+								onClick="@command('updateDesignInfo', id=forEachStatus.index)"
+								if="${vm.uploadMode}" />
+							<bandbox value="@bind(each.sitename)"
+								instant="true" autodrop="true" unless="${vm.uploadMode}">
+								<bandpopup>
+									<vbox width="40%">
+
+										<grid
+											model="@load(vm.previousSites)"
+											emptyMessage="No previous site available."
+											sizedByContent="true" hflex="true">
+											<columns>
+												<column
+													label="Site Name" />
+												<column
+													label="Site Location" />
+												<column label="Year"
+													width="80px" />
+												<column label="Season"
+													width="80px" />
+												<column
+													label="Eco System" width="100px"/>
+												<column
+													label="Soil Type" width="100px"/>
+												<column label="Soil PH" width="80px"/>
+											</columns>
+											<template name="model">
+												<row>
+													<toolbarbutton
+														label="@load(each.sitename)" width="99%"
+														sclass="grid-link"
+														onClick="@command('setSiteRow', model = each)" />
+													<label
+														value="@bind(each.sitelocation)"
+														onClick="@command('setSiteRow', model = each)" />
+
+													<label
+														value="@bind(each.year)"
+														onClick="@command('setSiteRow', model = each)" />
+
+													<label
+														value="@bind(each.selectedEcotype.ecotype)"
+														onClick="@command('setSiteRow', model = each)" />
+
+													<label
+														value="@bind(each.soiltype)"
+														onClick="@command('setSiteRow', model = each)" />
+
+													<label
+														value="@bind(each.soilph)"
+														onClick="@command('setSiteRow', model = each)" />
+
+
+												</row>
+											</template>
+										</grid>
+									</vbox>
+								</bandpopup>
+							</bandbox>
+
+
+
+							<div width="100%">
+								<bandbox
+									id="bbox_${forEachStatus.index}"
+									value="@bind(each.selectedLocation.locationname)"
+									onChange="@command('doLocationSearch',id=forEachStatus.index)"
+									instant="true" autodrop="true"
+									onOpen="@command('autoFillBandbox', id=forEachStatus.index) "
+									onClick="@command('openBandbox', id=forEachStatus.index)"
+									width="80%">
+									<bandpopup>
+										<vbox width="40%">
+
+											<grid
+												model="@load(each.filteredLocations)"
+												emptyMessage="No location is available. Please add your location."
+												sizedByContent="true" hflex="true">
+												<columns>
+													<column
+														label="Location" />
+													<column
+														label="Country" />
+													<column
+														label="Province" />
+													<column
+														label="Region" />
+													<column
+														label="Altitude" />
+													<column
+														label="Latitude" />
+													<column
+														label="Weather Station" />
+												</columns>
+												<template
+													name="model">
+													<row>
+														<toolbarbutton
+															label="@load(each.locationname)" width="99%"
+															onClick="@command('setLocationRow', loc = each)" />
+														<label
+															value="@bind(each.country)" />
+
+														<label
+															value="@bind(each.province)" />
+
+														<label
+															value="@bind(each.region)" />
+
+														<label
+															value="@bind(each.altitude)" />
+
+														<label
+															value="@bind(each.latitude)" />
+
+														<label
+															value="@bind(each.weatherstation)" />
+
+													</row>
+												</template>
+											</grid>
+										</vbox>
+									</bandpopup>
+								</bandbox>
+								<toolbarbutton
+									id="btnadd_${forEachStatus.index}" image="/images/plus.png"
+									tooltiptext="Add New Location"
+									onClick="@command('addLocation',loc = each)"  width="10%"/>
+							</div>
+							<textbox value="@bind(each.year)"
+								 width="99%"
+								onClick="@command('updateDesignInfo', id=forEachStatus.index)"
+								inplace="@bind(each.updateMode)" />
+
+						<textbox value="@bind(each.season)"
+								width="99%"
+								onClick="@command('updateDesignInfo', id=forEachStatus.index)"
+								inplace="@bind(each.seasonEditable)" /> 
+
+							<!-- <combobox autodrop="true" onChange="@command('updateDesignInfo', id=forEachStatus.index)" inplace="@bind(each.seasonEditable)"
+								selectedItem="@bind(each.season)" width="60px" >
+								<comboitem value="DS" label="DS" />
+								<comboitem value="WS" label="WS" />
+							</combobox> -->
+
+
+
+
+							<combobox model="@load(vm.ecotypes)"
+								readonly="true" width="99%"
+								selectedItem="@bind(each.selectedEcotype)"
+								onClick="@command('updateDesignInfo', id=forEachStatus.index)">
+								<template name="model">
+									<comboitem value="@load(each.id)"
+										label="@load(each.ecotype)" />
+								</template>
+							</combobox>
+							<combobox model="@load(vm.soilTypes)"
+								width="99%" value="@bind(each.soiltype)" readonly="true">
+								<template name="model">
+									<comboitem value="@load(each)"
+										label="@load(each)" />
+								</template>
+
+							</combobox>
+							<doublespinner
+								constraint="no empty,min 4 max 12" value="@bind(each.soilph)"
+								width="99%"
+								onClick="@command('updateDesignInfo', id=forEachStatus.index)" />
+						</row>
+					</template>
+				</grid>
+				<!-- 	<label value="Red labels are mandatory fields" style="color:red"></label> -->
+			</columnchildren>
+			<columnchildren width="35%">
+				<vlayout>
+					<groupbox width="99%" mold="3d">
+						<caption label="Agronomy" />
+						<grid>
+							<columns>
+								<column />
+								<column />
+							</columns>
+							<rows>
+								<row>
+									<label value="Planting Type:"
+										style="color:red" />
+									<hlayout>
+										<combobox
+											model="@load(vm.plantingtypes)" readonly="true"
+											selectedItem="@bind(vm.selectedSitePlantingType)"
+											width="99%">
+											<template name="model">
+												<comboitem
+													value="@load(each.planting)" label="@load(each.planting)" />
+											</template>
+										</combobox>
+									</hlayout>
+								</row>
+								<row>
+									<label value="@load(vm.labelDate)"
+										style="color:red">
+									</label>
+									<datebox
+										value="@bind(vm.selectedAgroInfo.sowingdate)" width="99%"
+										format="MM/dd/yyyy" />
+								</row>
+								<row>
+									<label value="Harvest Date:"
+										style="color:red" />
+									<datebox
+										value="@bind(vm.selectedAgroInfo.harvestdate)" width="99%"
+										format="MM/dd/yyyy" />
+								</row>
+								<row>
+									Fertilization:
+									<textbox
+										value="@bind(vm.selectedAgroInfo.fertilization)" width="99%" />
+								</row>
+								<row>
+									Density:
+									<textbox
+										value="@bind(vm.selectedAgroInfo.density)" width="99%" />
+								</row>
+							</rows>
+
+						</grid>
+					</groupbox>
+					<groupbox width="99%" mold="3d">
+						<caption label="Design Information" />
+						<grid vflex="1">
+							<columns>
+								<column />
+								<column />
+							</columns>
+							<rows>
+								<row>
+									<label value="Plot Size:"
+										style="color:red" />
+
+									<textbox
+										value="@bind(vm.selectedDesignInfo.plotsize)" width="99%" />
+								</row>
+								<row>
+
+									<label value="Design Structure:"
+										style="color:red" />
+									<textbox
+										value="@bind(vm.selectedDesignInfo.designstructure)"
+										width="99%" />
+								</row>
+								<row>
+									<label value="Treatment Structure:"
+										style="color:red" />
+
+									<combobox id="cmbTreatmentStructure"
+										value="@bind(vm.selectedDesignInfo.treatmentstructure)"
+										width="99%" onChange="@command('cmbTreatmentOnChange')">
+												<comboitem label="One Factor" value = "One Factor"/>
+									<comboitem label="Two Factor Factorial" value = "Two Factor Factorial"/>
+										<comboitem label="Three Factor Factorial" value = "Three Factor Factorial"/>
+										
+									
+
+									</combobox>
+								</row>
+
+								<row>
+									Design Factor 1:
+									<textbox
+										value="@bind(vm.selectedDesignInfo.designfactor1)"
+										width="99%" />
+								</row>
+								<row id="dRow2">
+									Design Factor 2:
+									<textbox id="txtDRow2"
+										value="@bind(vm.selectedDesignInfo.designfactor2)"
+										width="99%" />
+								</row>
+								<row id="dRow3">
+									Design Factor 3:
+									<textbox id="txtDRow3"
+										value="@bind(vm.selectedDesignInfo.designfactor3)"
+										width="99%" />
+								</row>
+								<row id="dRow4">
+									Design Factor 4:
+									<textbox id="txtDRow4"
+										value="@bind(vm.selectedDesignInfo.designfactor4)"
+										width="99%" />
+								</row>
+
+							</rows>
+						</grid>
+						<div align="left">
+							<checkbox label="Apply to ALL"
+								checked="@bind(vm.applyToAll)" />
+						</div>
+
+					</groupbox>
+					<hlayout valign="middle">
+						<!-- <checkbox label="Apply to ALL"
+							checked="@bind(vm.applyToAll)" /> -->
+
+
+					</hlayout>
+				</vlayout>
+			</columnchildren>
+		</columnlayout>
+		<separator spacing="20px" />
+
+		<div align="center">
+
+			<button label="Save" image="/images/save16.png"
+				onClick="@global-command('nextTab',model=vm)" sclass="btn-warning"
+				height="40px" width="150px">
+			</button>
+		</div>
+
+	</window>
+
+</zk>

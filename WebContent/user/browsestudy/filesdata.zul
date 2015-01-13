@@ -1,0 +1,31 @@
+<zk>
+	<style>
+		.z-toolbarbutton-cnt {
+		color: #000080; text-decoration:underline; font-size: 12px; font-weight: bold;
+
+		}
+<!-- 		.z-toolbarbutton-over .z-toolbarbutton-cnt { -->
+<!-- 		background-image:none; background-color: #cff791; -->
+
+<!-- 		} -->
+<!-- 		.z-toolbarbutton-select .z-toolbarbutton-cnt { -->
+<!-- 		background-image:none; background-color: red; -->
+
+<!-- 		} -->
+	</style>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.FilesData')">
+		<grid height="350px" model="@load(vm.files)" sizedByContent="true"
+			emptyMessage="No files were found." oddRowSclass="empty" >
+			<columns>
+				<column hflex="1"/>
+			</columns>
+			<template name="model">
+				<row>
+					<toolbarbutton label="@load(each.filename)"
+						width="99%"  onClick="@global-command('downloadFile', filePath=each.filepath, dataType=each.typeofdata)"/>
+				</row>
+			</template>
+		</grid>
+	</window>
+</zk>

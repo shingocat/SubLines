@@ -1,0 +1,101 @@
+<zk>
+
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.distributionandextension.view.model.ExtGCgrid')">
+		<groupbox mold="3d">
+			<caption label="Area by Country"></caption>
+			<vbox>
+				<hbox>
+					<vlayout>
+						<flashchart id="chart" width="800" height="350"
+							style="font-weight:bold" type="@bind(vm.type)"
+							model="@bind(vm.model)" />
+					</vlayout>
+				
+					<grid id="AreaSummaryByCountryExtension" hflex="1"
+						height="400px" model="@load(vm.areaSummaryGC)"
+						sizedByContent="true">
+						<!-- <auxhead sclass="category-center">
+							<auxheader label="Area by Country"
+							colspan="7" />
+							</auxhead> -->
+						<auxhead sclass="category-center">
+							<auxheader colspan="1">
+								<image src="/images/filter.png" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.filter.programName)"
+									onChange="@command('changeFilter')" />
+							</auxheader>
+							<auxheader colspan="1">
+								<image src="/images/filter.png" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.filter.countryExtension)"
+									onChange="@command('changeFilter')" />
+							</auxheader>
+							<auxheader colspan="1">
+								<image src="/images/filter.png" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.filter.germplasmName)"
+									onChange="@command('changeFilter')" />
+							</auxheader>
+							<auxheader label="" colspan="4">
+								<button id="btnExportId"
+									label="Export to CSV" sclass="btn-success"
+									image="/images/export16.png"
+									onClick="@global-command('exportGrid', gridId='AreaSummaryByCountryExtension', grid=AreaSummaryByCountryExtension)" />
+							</auxheader>
+						</auxhead>
+						<columns menupopup="auto">
+							<column sort="auto('programName')"
+								label="Program Name">
+							</column>
+							<column sort="auto('countryextension')"
+								label="Country Extension">
+							</column>
+							<column sort="auto('germplasmname')"
+								label="Germplasm Name">
+							</column>
+							<column sort="auto('sumPlantingArea')"
+								label="Total Planting Area">
+							</column>
+							<column
+								sort="auto('sumAmountSeedDistributed')"
+								label="Total Seeds Distributed">
+							</column>
+							<column sort="auto('sumNumFarmersAdopted')"
+								label="Total Farmers Adopted">
+							</column>
+							<column hflex="1"
+								sort="auto('sumAmountSeedsProduced')"
+								label="Total Seeds Produced">
+							</column>
+						</columns>
+						<template name="model">
+							<row>
+								<label value="@load(each.programName)" />
+								<label
+									value="@load(each.countryextension)" />
+								<div>
+									<toolbarbutton
+										label="@load(each.germplasmname)"
+										onClick="@global-command('openExtensionDataDetail', function='areaByCountry', summaryModel=each, germplasmName=each.germplasmname)"
+										class="grid-link" />
+								</div>
+								<label
+									value="@load(each.sumPlantingArea)" />
+								<label
+									value="@load(each.sumAmountSeedDistributed)" />
+								<label
+									value="@load(each.sumNumFarmersAdopted)" />
+								<label
+									value="@load(each.sumAmountSeedsProduced)" />
+							</row>
+						</template>
+					</grid>
+
+				</hbox>
+			</vbox>
+		</groupbox>
+
+	</div>
+</zk>

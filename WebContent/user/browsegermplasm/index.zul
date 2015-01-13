@@ -1,0 +1,19 @@
+<zk>
+	<div id="mainGermplasmWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.germplasmquery.view.model.Index')"
+		height="98%" width="98%" align="left">
+		<div sclass="page-header">
+			<label value="Browse Germplasm" />
+			<!-- <a label="overview &amp; stats" iconSclass="z-icon-angle-double-right" sclass="subtitle"/> -->
+		</div>
+		<tabbox id="tabBox" sclass="page-content">
+			<tabs id="tabs" />
+			<!-- 				<tab id="germplasmSearchTab" label="Browse Germplasm" image="/images/Search16a.png" /> -->
+			<!-- 			</tabs> -->
+			<tabpanels id="tabPanels" />
+			<!-- 				<tabpanel> -->
+			<!-- 					<include src="/user/browsegermplasm/browsegermplasm.zul" searchTab="germplasmSearchTab"/> -->
+			<!-- 				</tabpanel> -->
+		</tabbox>
+	</div>
+</zk>

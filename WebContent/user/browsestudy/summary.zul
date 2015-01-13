@@ -1,0 +1,87 @@
+<zk>
+
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.Summary')" zclass="none">
+	
+		<grid model="@load(vm.summary)" sizedByContent="true"
+			zclass="none">
+			<!-- 			<auxhead>
+				<auxheader label="Summary of Uploaded Studies" colspan="9"  align="center"/>
+				</auxhead> -->
+
+			<auxhead>
+				<auxheader label="" colspan="3" />
+				<auxheader label="Study Type" colspan="6"
+					align="center" />
+			</auxhead>
+			<columns>
+				<column label="Program Name" hflex="1" />
+				<column label="Project" width="100px" />
+				<column label="Study" width="100px" />
+				<column label="PVS" width="100px" />
+				<column label="OYT" width="100px" />
+				<column label="PYT" width="100px" />
+				<column label="AYT" width="100px" />
+				<column label="IAT" width="100px" />
+				<column label="Genetics" width="150px" />
+			</columns>
+			<template name="model">
+				<row>
+					<toolbarbutton label="@load(each.programName)"
+						onClick="@global-command('updateSummaryResult', summaryFilter=each)"
+						class="grid-link" />
+					<toolbarbutton label="@load(each.projectCount)"
+						onClick="@global-command('updateSummaryResult', summaryFilter=each)"
+						class="grid-link" />
+					<toolbarbutton label="@load(each.studyCount)"
+						onClick="@global-command('updateSummaryResult', summaryFilter=each)"
+						class="grid-link" />
+
+				
+					<label value="--" width="99%"
+						if="${each.countStudyPVS=='0'}" />
+					<toolbarbutton label="@load(each.countStudyPVS)"
+						unless="${each.countStudyPVS=='0'}"
+						onClick="@global-command('updateSummaryResultByStudyType', summaryFilter=each, studyTypeId=each.studyPVS)"
+						class="grid-link" />
+
+					<label value="--" width="99%"
+						if="${each.countStudyOYT=='0'}" />
+					<toolbarbutton label="@load(each.countStudyOYT)"
+						unless="${each.countStudyOYT=='0'}"
+						onClick="@global-command('updateSummaryResultByStudyType', summaryFilter=each, studyTypeId=each.studyOYT)"
+						class="grid-link" />
+
+					<label value="--" width="99%"
+						if="${each.countStudyPYT=='0'}" />
+					<toolbarbutton label="@load(each.countStudyPYT)"
+						unless="${each.countStudyPYT=='0'}"
+						onClick="@global-command('updateSummaryResultByStudyType', summaryFilter=each, studyTypeId=each.studyPYT)"
+						class="grid-link" />
+					<label value="--" width="99%"
+						if="${each.countStudyAYT=='0'}" />
+					<toolbarbutton label="@load(each.countStudyAYT)"
+						unless="${each.countStudyAYT=='0'}"
+						onClick="@global-command('updateSummaryResultByStudyType', summaryFilter=each, studyTypeId=each.studyAYT)"
+						class="grid-link" />
+
+					<label value="--" width="99%"
+						if="${each.countStudyIAT=='0'}" />
+					<toolbarbutton label="@load(each.countStudyIAT)"
+						unless="${each.countStudyIAT=='0'}"
+						onClick="@global-command('updateSummaryResultByStudyType', summaryFilter=each, studyTypeId=each.studyIAT)"
+						class="grid-link" />
+
+					<label value="--" width="99%"
+						if="${each.countStudyGenetics=='0'}" />
+					<toolbarbutton label="@load(each.countStudyGenetics)"
+						unless="${each.countStudyGenetics=='0'}"
+						onClick="@global-command('updateSummaryResultByStudyType', summaryFilter=each, studyTypeId=each.studyGenetics)"
+						class="grid-link" />
+				</row>
+			</template>
+		</grid>
+	</div>
+</zk>
+
+

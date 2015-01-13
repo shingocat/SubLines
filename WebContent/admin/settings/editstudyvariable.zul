@@ -1,0 +1,38 @@
+<zk>
+	<window id="editStudyVariableWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.admin.view.model.EditStudyVariable')">
+		<button label="Add New" onClick="@command('add')" />
+		<grid
+			model="@load(vm.rowList)"
+			sizedByContent="true" width="95%">
+			<columns width="200px">
+				<column label="Variable Code" />
+				<column label="Description"/>
+				<column label="Property"/>
+				<column label="Method"/>
+				<column label="Scale"/>
+				<column label="Apply to Filter"/>
+				<column label="Default Column"/>
+				<column label="Data Type"/>
+				<column label="Action"/>
+			</columns>
+			<template name="model">
+				<row>
+					<label value="@load(each.value.variablecode)" />
+					<label value="@load(each.value.description)" />
+					<label value="@load(each.value.property)" />
+					<label value="@load(each.value.method)" />
+					<label value="@load(each.value.scale)" />
+					<label value="@load(each.value.applytofilter)" />
+					<label value="@load(each.value.defaultcolumn)" />
+					<label value="@load(each.value.datatype)" />
+					<cell>
+						<toolbarbutton src="/images/Delete16.png"
+							onClick="@command('delete', id=each.value.id, varCode = each.value.variablecode)" orient="vertical"
+							tooltiptext="Delete Study variable" />
+					</cell>
+				</row>
+			</template>
+		</grid>
+	</window>
+</zk>

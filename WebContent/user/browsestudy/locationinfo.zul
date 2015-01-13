@@ -1,0 +1,28 @@
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.LocationInfo')">
+			<grid sizedByContent="true" vflex="1"
+				model="@load(vm.lstLocations)">
+				<columns hflex="1">
+					<column label="Location" hflex="1" />
+					<column label="Country" />
+					<column label="Province" />
+					<column label="Region" />
+					<column label="Altitude" />
+					<column label="Latitude" />
+					<column label="Weather Station" hflex="1" />
+				</columns>
+				<template name="model">
+					<row>
+						<label value="@bind(each.locationname)"/>
+						<label value="@bind(each.country)"/>
+						<label value="@bind(each.province)" />
+						<label value="@bind(each.region)" />
+						<label value="@bind(each.altitude)"/>
+						<label value="@bind(each.latitude)" />
+						<label value="@bind(each.weatherstation)"/>
+					</row>
+				</template>
+			</grid>
+	</window>
+</zk>

@@ -1,0 +1,121 @@
+<zk>
+	<window id="editReleaseInfo" apply="org.zkoss.bind.BindComposer"
+		sclass="page-content" style="padding:10px"
+		viewModel="@id('vm') @init('org.strasa.web.releaseinfo.view.model.EditReleaseInfo')">
+
+		<style src="../css/main.css" />
+		<div sclass="page-header">
+			<label value=" Update Release Information" />
+			<!-- <a label="overview &amp; stats" iconSclass="z-icon-angle-double-right" sclass="subtitle"/> -->
+		</div>
+		<tabbox id="tb">
+			<tabs>
+				<tab label="Release Information List" />
+				<tab label="Add New Record" />
+			</tabs>
+			<tabpanels width="100%">
+				<tabpanel style="overflow: auto">
+					<grid oddRowSclass="odd"
+						model="@load(vm.rowList) @template(each.editingStatus ? 'editable' : 'noneditable')"
+						sizedByContent="true" width="95%"
+						emptyMessage="No Record Found">
+						<columns width="200px">
+							<column label="Program" width="125px"
+								hflex="1" />
+							<column label="Project" width="125px"
+								hflex="1" />
+							<column label="Germplasm Name" />
+							<column label="Data Source" width="100px" />
+							<column label="Year release" width="100px" />
+							<column label="Country release"
+								width="125px" />
+							<column label="Seed Availability"
+								width="125px" />
+							<column label="Action" width="125px" />
+						</columns>
+						<template name="editable">
+							<row>
+								<combobox id="programComboBox"
+									model="@load(vm.programList)" readonly="true"
+									onChange="@command('updateLists', program=self.selectedItem)"
+									value="@load(each.program.name)"
+									selectedItem="@load(each.program) @save(each.program, before='confirm')">
+									<template name="model">
+										<comboitem
+											value="@load(each.id)" label="@load(each.name)" />
+									</template>
+								</combobox>
+
+								<combobox id="projectComboBox"
+									model="@load(vm.projectList)" width="95%"
+									value="@load(each.project.name)" readonly="true"
+									selectedItem="@load(each.project) @save(each.project, before='confirm')">
+									<template name="model">
+										<comboitem
+											value="@load(each.id)" label="@load(each.name)" />
+									</template>
+								</combobox>
+
+								<textbox
+									value="@load(each.value.germplasmname) @save(each.value.germplasmname, before='confirm')" />
+								<textbox
+									value="@load(each.value.datasource) @save(each.value.datasource, before='confirm')" />
+								<textbox
+									value="@load(each.value.yearrelease) @save(each.value.yearrelease, before='confirm')" />
+
+								<combobox model="@load(vm.cmbCountry)"
+									selectedItem="@bind(each.value.countryrelease)" width="99%">
+									<template name="model" var="p1">
+										<comboitem value="@load(p1)"
+											label="@load(p1)" />
+									</template>
+								</combobox>
+								<intbox
+									value="@load(each.value.seedavailability) @save(each.value.seedavailability, before='confirm')" />
+								<cell>
+									<button image="/images/save.png"
+										onClick="@command('confirm', RowStatus=each)"
+										tooltiptext="Save" />
+									<button
+										image="/images/cross-small.png"
+										onClick="@command('changeEditableStatus', RowStatus=each)"
+										tooltiptext="Cancel" />
+								</cell>
+							</row>
+						</template>
+						<template name="noneditable">
+							<row>
+								<label value="@load(each.program.name)" />
+								<label value="@load(each.project.name)" />
+								<label
+									value="@load(each.value.germplasmname)" />
+								<label
+									value="@load(each.value.datasource)" />
+								<label
+									value="@load(each.value.yearrelease)" />
+								<label
+									value="@load(each.value.countryrelease)" />
+								<label
+									value="@load(each.value.seedavailability)" />
+								<cell>
+									<toolbarbutton
+										src="/images/edit16.png"
+										onClick="@command('changeEditableStatus', RowStatus=each)"
+										orient="vertical" tooltiptext="Edit Release Info" />
+									<space />
+									<toolbarbutton
+										src="/images/delete.png"
+										onClick="@command('delete', id=each.value.id)"
+										orient="vertical" tooltiptext="Delete Release Info" />
+								</cell>
+							</row>
+						</template>
+					</grid>
+				</tabpanel>
+				<tabpanel style="overflow: auto">
+					<include src="/user/releaseinfo/addreleaseinfo.zul" />
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</window>
+</zk>

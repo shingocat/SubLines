@@ -1,0 +1,14 @@
+<zk xmlns:n="native">
+
+	<div id="releaseInfoBrowseWindow"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.releaseinfo.view.model.Index')"
+		height="98%" width="98%">
+		<separator height="5px"></separator>
+		<tabbox id="tabBox" sclass="page-content" >
+			<tabs id="tabs" />
+			<tabpanels id="tabPanels"/>
+		</tabbox>
+	</div>
+</zk>
+

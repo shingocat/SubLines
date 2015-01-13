@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases>
+		<typeAlias alias="StudySearchResultModel"
+			type="org.strasa.web.browsestudy.view.model.StudySearchResultModel" />
+		<typeAlias alias="StudySearchFilterModel"
+			type="org.strasa.web.browsestudy.view.model.StudySearchFilterModel" />
+		<typeAlias alias="StudyDataColumnModel"
+			type="org.strasa.web.browsestudy.view.model.StudyDataColumnModel" />
+		<typeAlias alias="CrossStudyQueryFilterModel"
+			type="org.strasa.web.crossstudyquery.view.model.CrossStudyQueryFilterModel" />
+		<typeAlias alias="GermplasmModel" type="org.strasa.middleware.model.Germplasm" />
+		<typeAlias alias="GermplasmCharacteristics"
+			type="org.strasa.middleware.model.GermplasmCharacteristics" />
+		<typeAlias alias="KeyCharacteristicQueryModel"
+			type="org.strasa.web.germplasmquery.view.model.KeyCharacteristicQueryModel" />
+		<!-- Adding by QIN MAO, For IntrogressionLine model -->
+		<!-- <typeAlias alias="IntrogressionLineModel" type="org.strasa.middleware.model.IntrogressionLine"/> -->
+
+		<typeAlias alias="SegmentModel" type="org.strasa.middleware.model.Segment" 
+			/>
+		<!-- <typeAlias alias="GermplasmTypeModel" type="org.strasa.middleware.model.GermplasmType" 
+			/> <typeAlias alias="DbUserModel" type="org.strasa.middleware.model.DbUser" 
+			/> <typeAlias alias="GermplasmSegmentModel" type="org.strasa.middleware.model.GermplasmSegment" 
+			/> -->
+	</typeAliases>
+
+
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url"
+					value="jdbc:mysql://localhost:3306/strasa?useUnicode=true&amp;characterEncoding=utf8" />
+				<property name="username" value="root" />
+				<property name="password" value="root" /> <!-- Modify by QIN MAO for local database setting -->
+			</dataSource>
+		</environment>
+	</environments>
+
+
+	<mappers>
+		<mapper resource="org/strasa/middleware/mapper/xml/BrowseStudyMapper.xml" />
+		<mapper resource="org/strasa/middleware/mapper/xml/BrowseGermplasmMapper.xml" />
+		<mapper resource="org/strasa/middleware/mapper/xml/CrossStudyQueryMapper.xml" />
+		<mapper resource="org/strasa/middleware/mapper/xml/StudyRawDataBatch.xml" />
+		<!-- Adding by QIN MAO, For browse Introgression Line info -->
+		<!-- <mapper resource="org/strasa/middleware/mapper/xml/BrowseIntrogressionLineMapper.xml" 
+			/> -->
+		<mapper resource="org/strasa/middleware/mapper/xml/BrowseSegmentMapper.xml" 
+			/>
+	</mappers>
+
+
+
+</configuration>

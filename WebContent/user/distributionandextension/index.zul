@@ -1,0 +1,21 @@
+<zk>
+	<style src="../css/main.css" />
+
+	<!-- 	<div style="padding:10px 0px 15px 20px" align="left">
+		<label class="header-menu">Extension Data</label>
+		</div> -->
+	<div sclass="page-header">
+		<label value="Extension and Distribution" />
+		<!-- <a label="overview &amp; stats" iconSclass="z-icon-angle-double-right" sclass="subtitle"/> -->
+	</div>
+	<div id="extensionDataBrowseWindow"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.distributionandextension.view.model.Index')"
+		height="100%" width="98%">
+		<separator height="5px"></separator>
+		<tabbox id="tabBox" sclass="page-content">
+			<tabs id="tabs" />
+			<tabpanels id="tabPanels" />
+		</tabbox>
+	</div>
+</zk>

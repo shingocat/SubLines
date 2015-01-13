@@ -1,0 +1,149 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style src="../css/main.css" />
+	<div id="pyramidedLineSpecificationsWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.pyramidedline.view.model.Specifications')"
+		align="center" height="98%">
+		<vlayout>
+			<div style="overflow:auto" height="10%">
+				<grid zclass="none">
+					<columns>
+						<column label="" width="120px" />
+						<column label="" width="500px" />
+					</columns>
+					<rows>
+						<row>
+							<label value="Select Data" />
+							<hlayout spacing="50px">
+								<vlayout width="100%">
+									<radiogroup>
+										<vlayout width="100%" spacing="10px">
+											<div align="left">
+												<hlayout>
+													<combobox id="studiesCombobox" visible="false"
+														model="@load(vm.lstStudy)" readonly="true"
+														selectedItem="@bind(vm.selectedStudy)" onChange="@command('updateDataSetList')">
+														<template name="model">
+															<comboitem value="@load(each)" label="@load(each.name)" />
+														</template>
+													</combobox>
+													<combobox id="dataSetCombobox" visible="false"
+														model="@load(vm.lstStudyDataSet)" readonly="true"
+														selectedItem="@bind(vm.selectedStudyDataSet)" onChange="@command('displaySelectedDataSet')">
+														<template name="model">
+															<comboitem value="@load(each)" label="@load(each.title)" />
+														</template>
+													</combobox>
+													<label id="lblMsgUpload" visible="@load(vm.fromExternalFile)"
+														value="@load(vm.dataFileName)" sclass="label-search" />
+													<button sclass="btn-danger" id="selectDataBtn"
+														label="From a Study" image="/images/find.png"
+														onClick="@command('selectFromDatabase')" />
+													<button sclass="btn-danger" id="uploadCSVBtn"
+														upload="true, maxsize=-1" label="From External File(.csv)"
+														image="/images/find.png" onUpload="@command('uploadCSV')" />
+													<button id="resetBtn" label="Reset"
+														onClick="@global-command('launchPyramidedLine')" visible="false"
+														sclass="btn-danger" />
+												</hlayout>
+											</div>
+										</vlayout>
+									</radiogroup>
+								</vlayout>
+							</hlayout>
+						</row>
+					</rows>
+				</grid>
+			</div>
+			<div style="overflow:auto" height="30%">
+				<groupbox id="grpVariableData" mold="3d" width="100%"
+					hflex="1">
+					<caption label="Data Preview" />
+					<hlayout spacing="50px">
+						<vlayout>
+							<div id="dataGridDiv"></div>
+						</vlayout>
+					</hlayout>
+				</groupbox>
+			</div>
+			<div style="overflow:auto" height="50%">
+				<tabbox id="tabBox" mold="default">
+					<tabs id="tabs">
+						<tab id="modelSpecificationsTab" label="Model Specifications" />
+						<tab id="otherOptionsTab" label="Other Options" />
+						<tab id="graphOptionsTab" label="Graph Options" />
+					</tabs>
+					<tabpanels id="tabpanels">
+						<tabpanel vflex="1" id="modelSpecificationsTP">
+							<vbox vflex="1" style="overflow:auto;">
+								<groupbox closable="false" open="true" height="80px">
+									<caption label="Design Factors" />
+									<hbox spacing="10px">
+										<separator width="10px" />
+										<label value="Number of Genes: " />
+										<separator width="5px" />
+										<combobox readonly="true" id="lstNumberOfGenesCBB"
+											constraint="no empty"
+											onChange="@command('updateNumberOfGenesOpt',selectedValue=self.value)">
+											<attribute name="onCreate">
+												self.setSelectedIndex(0);
+											</attribute>
+											<comboitem value="2" label="Bi-Genes" />
+											<comboitem value="3" label="Tri-Genes" />
+											<comboitem value="4" label="Quadra-Genes" />
+										</combobox>
+										<separator width="20px" />
+										<label value="Analysis Type: " />
+										<separator width="5px" />
+										<combobox model="@load(vm.lstAnalysisType)" readonly="true"
+											id="lstAnalysisTypeCBB" selectedItem="@bind(vm.analysisType)"
+											onChange="@command('updateAnalysisTypeOptions',selectedIndex = self.selectedIndex)">
+											<template name="model">
+												<comboitem value="@load(each)" label="@load(each)" />
+											</template>
+										</combobox>
+										<separator width="20px" />
+										<label value="Type of design: " />
+										<separator width="5px" />
+										<combobox model="@load(vm.lstTypeOfDesign)" readonly="true"
+											id="lstTypeOfDesignCBB" selectedItem="@bind(vm.typeOfDesign)"
+											onChange="@command('updateVariableList', selectedIndex=self.selectedIndex)">
+											<template name="model">
+												<comboitem value="@load(each)" label="@load(each)" />
+											</template>
+										</combobox>
+									</hbox>
+								</groupbox>
+								<groupbox closable="false" open="true">
+									<caption label="Variable Factors" />
+									<div style="overflow=auto">
+										<include id="includeVariableLst"
+											src="/user/analysis/pyramidedline/variablelistboxes.zul" />
+									</div>
+								</groupbox>
+							</vbox>
+						</tabpanel>
+						<tabpanel id="otherOptionsTP" vflex="1" hflex="1">
+							<vbox vflex="1" hflex="1" style="overflow:auto">
+								<include id="includeOtherOptions"
+									src="/user/analysis/pyramidedline/otheroptions.zul" />
+							</vbox>
+						</tabpanel>
+						<tabpanel id="graphOptionsTP">
+							<include id="includeGraphOptions"
+								src="/user/analysis/pyramidedline/graphoptions.zul"></include>
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+			</div>
+			<div height="10%">
+				<button id="runBtn" label="Run"
+					onClick="@command('validatePyramidedLineAnalysisInputs')" sclass="btn-danger" />
+
+				<label value="@bind(vm.resultRServe)" multiline="true" />
+			</div>
+			<space height="20px"></space>
+
+		</vlayout>
+	</div>
+</zk>

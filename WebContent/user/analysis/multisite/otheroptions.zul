@@ -1,0 +1,72 @@
+<div align="left" apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('org.strasa.web.analysis.singlesite.view.model.OtherOptions')">
+
+	<vlayout>
+		<radiogroup id="performPairwiseGroup" />
+		<groupbox hflex="1">
+			<caption>Options for genotype as fixed</caption>
+			<vbox>
+				<checkbox id="cb" checked="true"
+					label="Perform pairwise mean comparisons" />
+					
+				<radio id="compareWithControlsBtn" label="Compare with control(s)"
+					radiogroup="performPairwiseGroup" />
+					
+				<radio id="performAllPairwiseBtn" label="Perform all comparisons"
+					radiogroup="performPairwiseGroup" />
+
+				<hbox>Level of significance: <doublebox id="pairwiseAlphaTextBox"/></hbox>
+			</vbox>
+		</groupbox>
+
+		<separator />
+
+		<groupbox hflex="1">
+			<caption>Options for genotype as random</caption>
+			<vbox>
+				<checkbox
+					label="Exclude controls in the estimation of genotypic variance" />
+				<checkbox
+					label="Estimate genotypic and phenotypic corelations" />
+			</vbox>
+		</groupbox>
+
+		<groupbox hflex="1">
+			<caption>Specify control(s):</caption>
+			<hbox>
+				<listbox id="genotypeLevelsLb" hflex="1" rows="4">
+					<listhead>
+						<listheader label="Levels of Genotype:" />
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell />
+						</listitem>
+					</template>
+				</listbox>
+				
+				<image style="cursor:pointer" id="addBlockButton"
+					src="/images/rightarrow_g.png" tooltip="Add control levels" align="center"/>
+				<listbox id="controlsLb" hflex="1" rows="4">
+					<listhead>
+						<listheader label="Control(s):" />
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell />
+						</listitem>
+					</template>
+				</listbox>
+			</hbox>
+		</groupbox>
+		
+		<groupbox hflex="1">
+			<caption>Display:</caption>
+			<vbox>
+				<checkbox label="Descriptive Statistics" />
+				<checkbox label="Variance Components" />
+			</vbox>
+		</groupbox>
+		
+	</vlayout>
+</div>

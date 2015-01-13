@@ -1,0 +1,263 @@
+<vbox apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('org.strasa.web.germplasmquery.view.model.BrowseGermplasm')">
+	<div align="center">
+		<div>
+			<hlayout>
+				<label value="Search By" style="font-weight: bold;" />
+				<combobox id="cmbSearchKey" autodrop="true"
+					selectedIndex="@bind(vm.searchKey)"
+					onChange="@command('SetSearchUI')">
+					<comboitem label="Name" />
+					<comboitem label="Key Characteristics" />
+					<comboitem label="Type" />
+				</combobox>
+				<textbox id='txtNameSearch' width="150px"
+					value="@bind(vm.nameSearch)" visible="true" />
+
+				<combobox id="cmbKeyChar" visible="false"
+					onChange="@command('getKeyCharacteristicOptionsList')">
+					<comboitem label="Abiotic" />
+					<comboitem label="Biotic" />
+					<comboitem label="Grain Quality" />
+					<comboitem label="Major Genes" />
+				</combobox>
+
+				<!-- 
+					<combobox id="cmbKeyCharValue" visible="false"
+					model="@load(vm.keyCharacteristicOption)"
+					selectedItem="@bind(vm.keyCharactericticValue)">
+					<template name="model">
+					<comboitem value="${each}"
+					label="${each}" />
+					</template>
+					</combobox>  
+					
+				-->
+
+				<chosenbox width="250px" id="cmbKeyCharValue"
+					visible="false" model="@load(vm.keyCharacteristicOption)" />
+				<combobox id="cmbGermplasmType" visible="false"
+					model="@load(vm.germplasmType)"
+					selectedItem="@bind(vm.selectedGermplasmType)"
+					onChange="@command('SetSearchUI')">
+					<template name="model">
+						<comboitem value="@load(each.id)"
+							label="@load(each.germplasmtype)" />
+					</template>
+				</combobox>
+
+				<vbox>
+					<tabbox height="200px"
+						id="keyCharacteristicsOptions" visible="false" width="400px">
+						<tabs>
+							<tab label="Abiotic Stress" />
+							<tab label="Biotic Stress" />
+							<tab label="Grain Quality" />
+							<tab label="Major Genes" />
+						</tabs>
+						<tabpanels>
+							<tabpanel height="300px">
+								<listbox
+									model="@load(vm.keyAbioticList)" id="listboxAbioticId"
+									width="200px" vflex="1" sizedByContent="true">
+									<listhead>
+										<listheader label="Select" />
+										<listheader
+											label="Characteristics" />
+
+									</listhead>
+									<template name="model">
+										<listitem>
+
+											<listcell>
+												<checkbox
+													checked="@bind(each.value)">
+												</checkbox>
+											</listcell>
+											<listcell
+												label="@load(each.name)" />
+										</listitem>
+
+									</template>
+								</listbox>
+							</tabpanel>
+							<tabpanel>
+								<listbox model="@load(vm.keyBioticList)"
+									vflex="1" sizedByContent="true" width="200px">
+									<listhead>
+										<listheader label="Select" />
+										<listheader
+											label="Characteristics" />
+									</listhead>
+									<template name="model">
+										<listitem>
+
+											<listcell>
+												<checkbox
+													checked="@bind(each.value)">
+												</checkbox>
+											</listcell>
+											<listcell
+												label="@load(each.name)" />
+										</listitem>
+
+									</template>
+								</listbox>
+							</tabpanel>
+							<tabpanel>
+								<listbox
+									model="@load(vm.keyGrainQualityList)" width="200px" vflex="1"
+									sizedByContent="true">
+									<listhead>
+										<listheader label="Select" />
+										<listheader
+											label="Characteristic" />
+									</listhead>
+									<template name="model">
+										<listitem>
+											<listcell>
+												<checkbox
+													checked="@bind(each.value)">
+												</checkbox>
+											</listcell>
+											<listcell
+												label="@load(each.name)" />
+										</listitem>
+
+
+									</template>
+								</listbox>
+							</tabpanel>
+							<tabpanel>
+								<listbox vflex="1"
+									model="@load(vm.keyMajorGenesList)" width="200px"
+									sizedByContent="true">
+									<listhead>
+										<listheader label="Select" />
+										<listheader
+											label="Characteristics" />
+									</listhead>
+									<template name="model">
+										<listitem>
+											<listcell>
+												<checkbox
+													checked="@bind(each.value)">
+												</checkbox>
+											</listcell>
+											<listcell
+												label="@load(each.name)" />
+										</listitem>
+
+									</template>
+								</listbox>
+							</tabpanel>
+						</tabpanels>
+					</tabbox>
+				</vbox>
+
+			</hlayout>
+		</div>
+		<separator spacing="10px" />
+		<div id="searchIntrogresionLineOption" visible="false"
+			align="left">
+			<vlayout>
+				<groupbox>
+					<caption label="Advanced Option" />
+					<hlayout>
+						<!-- <hlayout>
+							<label value="Introgression Line Name: " />
+							<textbox value="@bind(vm.ilNameSearch)" id="tbILNameSearch" onChange="@command('ilNameSearchOnChange')"/>
+						</hlayout> -->
+						<separator spacing="5px" />
+						<hlayout>
+							<label value="Segment Number: " />
+							<intbox value="@bind(vm.segmentNumber)" id="ibSegmentNumber" />
+						</hlayout>
+						<separator spacing="5px" />
+						<hlayout>
+							<label value="Recurrent Parent: " />
+							<textbox value="@bind(vm.recurrentParent)" id="tbRecurrentParent" />
+						</hlayout>
+						<hlayout>
+							<label value="Donor Parent: " />
+							<textbox value="@bind(vm.donorParent)" id="tbDonorParent"/>
+						</hlayout>
+					</hlayout>
+				</groupbox>
+			</vlayout>
+		</div>
+		<separator spacing="20px" />
+		<div>
+			<hlayout>
+				<button label="Search" sclass="btn-success"
+					image="/images/find.png" onClick="@command('SearchGermplasm')" />
+				<button label="Reset" sclass="btn-danger"
+					visible="false" id="resetKeyCharId" image="/images/reset.png"
+					onClick="@command('ResetKeyChar')" />
+			</hlayout>
+		</div>
+	</div>
+
+
+	<groupbox mold="3d">
+		<caption label="@load(vm.searchResultLabel)" />
+		<grid height="200px" model="@load(vm.germplasmList)"
+			oddRowSclass="odd" zclass="none" emptyMessage="No Record Found"
+			visible="true" id="defaultGermplasmDisplay">
+
+			<columns>
+				<column label="Germplasm Name" />
+				<column label="Other Name" />
+				<column label="Breeder" />
+				<column label="Germplasm Type" />
+
+			</columns>
+			<template name="model">
+				<row>
+					<toolbarbutton label="@load(each.germplasmname)"
+						onClick="@global-command('openGermplasmDetailInGermplasm', germplasmId=each.id,gname=each.germplasmname)"
+						sclass="grid-link" />
+					<label value="@load(each.othername)" />
+					<label value="@load(each.breeder)" />
+					<label value="@load(each.remarks)" />
+				</row>
+			</template>
+		</grid>
+		<!-- Adding by QIN MAO -->
+		<grid height="200px" model="@load(vm.lstIntrogressionLine)"
+			oddRowSclass="odd" zclass="none" emptyMessage="No Record Found"
+			visible="false" id="defaultIntrogressionLineDisplay">
+
+			<columns>
+				<column label="Introgression Line Name"
+					sort="auto(germplasmname)" />
+				<column label="Segment Number"
+					sort="auto(segmentNumber)" />
+				<column label="Recurrent Parent" />
+				<column label="Donor Parent" />
+				<column label="Germplasm Type" sort="auto(remarks)" />
+				<column label="Breeder" sort="auto(breeder)" />
+			</columns>
+			<template name="model">
+				<row>
+					<toolbarbutton label="@load(each.germplasmname)"
+						onClick="@global-command('openIntrogressionLineDetail', germplasmId=each.id,gname=each.germplasmname, introgressionLine = each)"
+						sclass="grid-link" />
+					<label value="@load(each.segmentNumber)" />
+					<label value="@load(each.recurrentParent)" />
+					<label value="@load(each.donorParent)" />
+					<label value="@load(each.remarks)" />
+					<label value="@load(each.breeder)" />
+				</row>
+			</template>
+		</grid>
+	</groupbox>
+
+	<separator />
+
+	<tabbox id="tabBox">
+		<tabs id="tabs" />
+		<tabpanels id="tabPanels" />
+	</tabbox>
+
+</vbox>

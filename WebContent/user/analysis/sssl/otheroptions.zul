@@ -1,0 +1,145 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<div align="left" hflex="1">
+		<groupbox width="100%">
+			<caption>Basic:</caption>
+			<vbox hflex="1">
+				<checkbox label="Descriptive Statistics" id="descriptiveStatCB"
+					checked="true" />
+				<checkbox label="Variance Components" id="varComponentCB"
+					checked="true" />
+				<hlayout>
+				<label>Alpha Level</label>
+				<doublebox id="alphaLevelDB" constraint="no empty,no negative, no zero" value="@bind(vm.alphalevel)" />
+				</hlayout>
+			</vbox>
+		</groupbox>
+		<groupbox width="100%">
+			<caption>Contrasts:</caption>
+			<vlayout hflex="1">
+				<div visible="true">
+					<checkbox label="Compare with Recurrent Parent" id="compareWithControlCB"
+						onCheck="@command('isCompareWithControlCBChecked')" />
+					<hlayout>
+						<space width="20px" />
+						<label value="Recurrent Parent : " />
+						<combobox id="controlCBB" width="150px" disabled="true">
+							<template name="model">
+								<comboitem label="${each}" />
+							</template>
+						</combobox>
+					</hlayout>
+				</div>
+			</vlayout>
+		</groupbox>
+		<groupbox closable="false" open="true">
+			<caption label="Specified Contrast"></caption>
+			<!-- <checkbox label="Specified Contrast" id="specifiedContrastCB" onCheck="@global-command('isSpecifiedContrastCBChecked')" 
+				/> -->
+			<vlayout style="margin: 10px 10px 10px 20px">
+				<div id="specifiedContrastOnGenotypeDiv" visible="true">
+					<groupbox>
+						<caption>On Genotype:</caption>
+						<hlayout>
+							<label id="fileNameOfContrastOnGenotypeLb" value="@load(vm.contrastFileNameOnGenotype)"
+								sclass="label-search" />
+							<separator width="10px" />
+							<button id="contrastFromFileOnGenotypeBtn" label="From File(.csv)"
+								sclass="btn-primary" upload="true, maxsize=-1" disabled="false"
+								onUpload="@command('uploadContrastFromFileOnGenotype')" />
+							<separator width="10px" />
+							<button id="contrastByManuallyOnGenotypeBtn" label="Manually Input"
+								sclass="btn-primary" disabled="false"
+								onClick="@command('manuallyInputContrastOnGenotype')" />
+							<separator width="10px" />
+							<button id="contrastResetOnGenotypeBtn" label="Reset Contrast"
+								onClick="@command('resetContrastOnGenotype')" sclass="btn-danger"
+								visible="false" />
+						</hlayout>
+						<separator height="10px" />
+						<div id="contrastByManuallyOnGenotypeDiv" visible="false">
+							<hlayout>
+								<!-- <label value="Factor Name : " /> <textbox id="contrastVariableTB" 
+									readonly="true"></textbox> <separator width="10px" /> -->
+								<label value="No. of Contrast : " />
+								<doublespinner id="numberOfContrastOnGenotypeDS"
+									step="1" value="0" constraint="no negative, min 0"
+									onChange="@command('updateContrastGridManuallyOnGenotype', inputValue=self.value)" 
+									readonly="true" instant="true">
+									</doublespinner>
+							</hlayout>
+						</div>
+						<separator height="20px" />
+						<hlayout>
+							<div id="contrastGridOnGenotypeDiv" width="98%" height="98%">
+								<!-- <include id="includeContrast" src="/user/analysis/sssl/contrast.zul" 
+									/> -->
+							</div>
+						</hlayout>
+					</groupbox>
+				</div>
+				<div id="specifiedContrastOnEnvDiv" visible="true">
+					<groupbox>
+						<caption>On Environment:</caption>
+						<hlayout>
+							<label id="fileNameOfContrastOnEnvLb" value="@load(vm.contrastFileNameOnEnv)"
+								sclass="label-search" />
+							<separator width="10px" />
+							<button id="contrastFromFileOnEnvBtn" label="From File(.csv)"
+								sclass="btn-primary" upload="true, maxsize=-1" disabled="false"
+								onUpload="@command('uploadContrastFromFileOnEnv')" />
+							<separator width="10px" />
+							<button id="contrastByManuallyOnEnvBtn" label="Manually Input"
+								sclass="btn-primary" disabled="false"
+								onClick="@command('manuallyInputContrastOnEnv')" />
+							<separator width="10px" />
+							<button id="contrastResetOnEnvBtn" label="Reset Contrast"
+								onClick="@command('resetContrastOnEnv')" sclass="btn-danger"
+								visible="false" />
+						</hlayout>
+						<separator height="10px" />
+						<div id="contrastByManuallyOnEnvDiv" visible="false">
+							<hlayout>
+								<!--<label value="Environment: " /> <textbox id="contrastVariableOnEnvTB" 
+									readonly="true"></textbox> <separator width="10px" /> -->
+								<label value="No. of Contrast : " />
+								<doublespinner id="numberOfContrastOnEnvDS" step="1"
+									value="0" constraint="no negative, min 0"
+									onChange="@command('updateContrastGridManuallyOnEnv', inputValue=self.value)"
+									readonly="true" instant="true"/>
+							</hlayout>
+						</div>
+						<separator height="20px" />
+						<hlayout>
+							<div id="contrastGridOnEnvDiv" width="98%" height="98%">
+								<!-- <include id="includeContrast" src="/user/analysis/sssl/contrast.zul" 
+									/> -->
+							</div>
+						</hlayout>
+					</groupbox>
+				</div>
+			</vlayout>
+		</groupbox>
+		<div id="genotypeByEnvDiv">
+			<groupbox>
+				<caption>Genotype by Environment Analysis</caption>
+				<vlayout style="margin: 10px 10px 10px 20px">
+					<groupbox>
+						<caption>Stability Models</caption>
+						<hlayout spacing="20px">
+							<checkbox id="finlayWilkinsonModelCB" label="Finlay-Wilkinson"></checkbox>
+							<checkbox id="shuklaModelCB" label="Shukla" />
+						</hlayout>
+					</groupbox>
+					<groupbox>
+						<caption>Multiplicative Models</caption>
+						<hlayout spacing="20px">
+							<checkbox id="ammiModelCB" label="AMMI" checked="true" onCheck="@command('updateAMMIGraphicOptions', status = self.checked)"/>
+							<checkbox id="ggeModelCB" label="GGE" checked="true"  onCheck="@command('updateGGEGraphicOptions', status = self.checked)"/>
+						</hlayout>
+					</groupbox>
+				</vlayout>
+			</groupbox>
+		</div>
+	</div>
+</zk>

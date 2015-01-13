@@ -1,0 +1,72 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<listbox id="listbox" width="100%">
+		<listhead>
+			<listheader hflex="1" />
+		</listhead>
+		<listitem>
+			<listcell>
+				<!-- <checkbox id="boxplotCB" label="Boxplot of the raw data" /> -->
+				<div id="singleEnvOnGraphDiv" visible="false">
+					<groupbox>
+						<caption>Single Environment</caption>
+						<vlayout>
+							<checkbox id="boxplotSingleEnvCB" label="Boxplot"></checkbox>
+							<checkbox id="histogramSingleEnvCB" label="Histogram"></checkbox>
+							<checkbox id="diagnosticplotSingleEnvCB" label="Diagnostic Plots"></checkbox>
+						</vlayout>
+					</groupbox>
+				</div>
+			</listcell>
+		</listitem>
+		<listitem>
+			<listcell>
+				<div id="acrossEnvOnGraphDiv">
+					<groupbox>
+						<caption>Across Environment</caption>
+						<vlayout>
+							<checkbox id="boxplotAcrossEnvCB" label="Boxplot"></checkbox>
+							<checkbox id="histogramAcrossEnvCB" label="Histogram"></checkbox>
+							<checkbox id="diagnosticplotAcrossEnvCB" label="Diagnostic Plots"></checkbox>
+						</vlayout>
+					</groupbox>
+				</div>
+			</listcell>
+		</listitem>
+		<listitem>
+			<listcell>
+				<div id="multiplicativeModelOnGraphDiv">
+					<groupbox>
+						<caption>Multiplicative Models</caption>
+						<vlayout>
+							<checkbox id="responsePlotCB" label="Response Plots"
+								visible="false" disabled="false" />
+							<div id="ammiGraphicOptionsDiv">
+								<groupbox>
+									<caption>AMMI Graphic Options</caption>
+									<hlayout spacing="20px">
+										<checkbox id="adaptationMapCB" label="Adaptation Map" />
+										<checkbox id="ammiBiplotCB" label="AMMI1 Biplot"></checkbox>
+										<checkbox id="ammiBiplotPC1VsPC2CB" label="AMMI Biplot-PC1 vs. PC2" />
+										<checkbox id="ammiBiplotPC1VsPC3CB" label="AMMI Biplot-PC1 vs. PC3" />
+										<checkbox id="ammiBiplotPC2VsPC3CB" label="AMMI Biplot-PC2 vs. PC3" />
+									</hlayout>
+								</groupbox>
+							</div>
+							<div id="ggeGraphicOptionsDiv">
+								<groupbox>
+									<caption>GGE Graphic Options</caption>
+									<hlayout spacing="20px">
+										<checkbox id="ggeBiplotSymmetricViewCB" label="GGE Biplot-Symmetric View"></checkbox>
+										<checkbox id="ggeBiplotEnvironmentViewCB" label="GGE Biplot-Environment View"></checkbox>
+										<checkbox id="ggeBiplotGenotypeViewCB" label="GGE Biplot-Genotype View"></checkbox>
+									</hlayout>
+								</groupbox>
+							</div>
+						</vlayout>
+					</groupbox>
+				</div>
+			</listcell>
+		</listitem>
+	</listbox>
+</zk>

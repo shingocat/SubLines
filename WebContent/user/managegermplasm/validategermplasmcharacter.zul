@@ -1,0 +1,155 @@
+<zk>
+	<window title="Validate Germplasm Characteristic" border="normal"
+		closable="true" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.managegermplasm.view.model.ValidateGermplasmCharacteristics')"
+		width="20%">
+		<style src="../css/main.css" />
+
+		<vlayout spacing="15px">
+
+			<listbox model="@load(vm.biotic)" sizedByContent="true"
+				hflex="1">
+				<auxhead>
+					<auxheader colspan="2"
+						label="Biotic Characteristics">
+					</auxheader>
+				</auxhead>
+				<listhead sizable="true">
+					<listheader label="Old Value" sort="auto" />
+					<listheader label="New Value" sort="auto" />
+
+				</listhead>
+
+				<template name="model">
+					<listitem>
+						<listcell label="@load(each.oldValue)">
+						</listcell>
+						<listcell>
+							<combobox model="@load(vm.lstBiotics)"
+								readonly="true" value="@bind(each.newValue)">
+								<template name="model">
+									<comboitem width="90%"
+										label="@load(each.value)" value="@load(each.value)">
+									</comboitem>
+								</template>
+
+							</combobox>
+
+						</listcell>
+					</listitem>
+
+				</template>
+			</listbox>
+			<listbox model="@load(vm.abiotic)" sizedByContent="true">
+				<auxhead>
+					<auxheader colspan="2"
+						label="Abiotic Characteristics">
+					</auxheader>
+				</auxhead>
+				<listhead sizable="true">
+					<listheader label="Old Value" sort="auto" />
+					<listheader label="New Value" sort="auto" />
+
+				</listhead>
+
+				<template name="model">
+					<listitem>
+						<listcell label="@load(each.oldValue)">
+						</listcell>
+						<listcell>
+							<combobox model="@load(vm.lstAbiotics)"
+								readonly="true" value="@bind(each.newValue)">
+								<template name="model">
+									<comboitem width="90%"
+										label="@load(each.value)" value="@load(each.value)">
+									</comboitem>
+								</template>
+
+							</combobox>
+
+						</listcell>
+					</listitem>
+
+				</template>
+			</listbox>
+
+			<listbox model="@load(vm.grainQuality)"
+				sizedByContent="true">
+				<auxhead>
+					<auxheader colspan="2" label="Grain Quality"></auxheader>
+				</auxhead>
+				<listhead sizable="true">
+					<listheader label="Old Value" sort="auto" />
+					<listheader label="New Value" sort="auto" />
+
+				</listhead>
+
+				<template name="model">
+					<listitem>
+						<listcell label="@load(each.oldValue)">
+						</listcell>
+						<listcell>
+							<combobox
+								model="@load(vm.lstGrainQualities)" readonly="true"
+								value="@bind(each.newValue)">
+								<template name="model">
+									<comboitem width="90%"
+										label="@load(each.value)" value="@load(each.value)">
+									</comboitem>
+								</template>
+
+							</combobox>
+
+						</listcell>
+					</listitem>
+
+				</template>
+			</listbox>
+
+			<listbox model="@load(vm.majorGenes)"
+				sizedByContent="true">
+				<auxhead>
+					<auxheader colspan="2" label="Major Genes"></auxheader>
+				</auxhead>
+				<listhead sizable="true">
+					<listheader label="Old Value" sort="auto" />
+					<listheader label="New Value" sort="auto" />
+
+				</listhead>
+
+				<template name="model">
+					<listitem>
+						<listcell label="@load(each.oldValue)">
+						</listcell>
+						<listcell>
+							<combobox model="@load(vm.lstAllMajorGenes)"
+								readonly="true" value="@bind(each.newValue)">
+								<template name="model">
+									<comboitem width="90%"
+										label="@load(each.value)" value="@load(each.value)">
+									</comboitem>
+								</template>
+
+							</combobox>
+
+						</listcell>
+					</listitem>
+
+				</template>
+			</listbox>
+			<div align="right">
+				<hbox>
+					<button label="Cancel" onClick="@command('submit')"
+						sclass="btn-danger" height="30px" width="100px"
+						image="/images/cancel16.png">
+					</button>
+					<button label="Save" onClick="@command('submit')"
+						sclass="btn-warning" height="30px" width="100px"
+						image="/images/save16.png">
+					</button>
+				</hbox>
+			</div>
+		</vlayout>
+
+	</window>
+</zk>

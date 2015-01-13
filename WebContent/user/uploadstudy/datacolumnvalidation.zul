@@ -1,0 +1,40 @@
+<zk>
+
+	<window title="Data Column Header Validation" border="normal"
+		closable="true" apply="org.zkoss.bind.BindComposer" 
+		viewModel="@id('vm') @init('org.strasa.web.uploadstudy.view.model.DataColumnValidation')"
+		width="360px" height="475px">
+		<style src="/css/main.css"></style>
+		<vlayout width="100%" height="90%">
+			<grid height="50%" width="99%" model="@load(vm.varData)"
+				hflex="true" vflex="1">
+				<columns>
+					<column label="Column" width="40%" />
+					<column label="Changed To" width="30%"
+					 />
+					<column label="Action" width="30%" />
+				</columns>
+				<template name="model">
+					<row visible="@load(each.headerExisting)">
+						<label value="@load(each.currentVariable)" />
+						<label value="@bind(each.newVariable)" />
+						<toolbarbutton src="/images/edit16.png" tooltiptext="Edit Variable" 
+							onClick="@command('changeVar', oldVar=each.currentVariable)" disabled="@load(!each.editable)" />
+					</row>
+				</template>
+			</grid>
+		
+				</vlayout>
+<separator spacing="5px" />
+		<hlayout style="float:right;">
+		<button label="Cancel"
+						onClick="@command('cancel')"  sclass="btn-danger" image="/images/cancel16.png" />
+					<button label="Save"
+						onClick="@command('saveHeader')" sclass="btn-success" image="/images/save16.png" />
+					
+				</hlayout>
+
+
+
+	</window>
+</zk>

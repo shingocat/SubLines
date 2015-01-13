@@ -1,0 +1,83 @@
+<zk>
+	<div>
+
+		<div id="sidebar" sclass="sidebar"
+			apply="applications2.SidebarComposer">
+			<!-- Shortcuts Button-->
+			<div class="shortcuts">
+				<!-- Display when expanded -->
+				<div class="shortcuts-expanded">
+					<button type="button" class="btn-success"
+						iconSclass="z-icon-signal" />
+					<button type="button" class="btn-info"
+						iconSclass="z-icon-pencil" />
+					<button type="button" class="btn-warning"
+						iconSclass="z-icon-group" />
+					<button type="button" class="btn-danger"
+						iconSclass="z-icon-cogs" />
+				</div>
+				<!-- Display when collapsed -->
+				<div class="shortcuts-collapsed">
+					<button type="button" class="btn-success" />
+					<button type="button" class="btn-info" />
+					<button type="button" class="btn-warning" />
+					<button type="button" class="btn-danger" />
+				</div>
+			</div>
+			<!-- Navigation List -->
+			<navbar id="navbar" sclass="nav-list" orient="vertical">
+				<nav label="Data Management"
+					iconSclass="z-icon-desktop">
+					<nav label="Upload"
+						iconSclass="z-icon-angle-double-right">
+						<navitem label="Study" iconSclass="z-icon-leaf" />
+						<navitem label="Germplasm"
+							iconSclass="z-icon-leaf" />
+						<navitem label="Extension"
+							iconSclass="z-icon-leaf" />
+						<navitem label="Release"
+							iconSclass="z-icon-leaf" />
+					</nav>
+					<nav label="Browse"
+						iconSclass="z-icon-angle-double-right">
+						<navitem label="Study" iconSclass="z-icon-leaf" />
+						<navitem label="Germplasm"
+							iconSclass="z-icon-leaf" />
+						<navitem label="Across Study" id="across"
+							iconSclass="z-icon-leaf" />
+						<navitem label="Extension"
+							iconSclass="z-icon-leaf" />
+						<navitem label="Release"
+							id="releaseinfo" iconSclass="z-icon-leaf" />
+
+
+					</nav>
+				</nav>
+
+				<nav label="Analysis" iconSclass="z-icon-edit">
+					<navitem label="Single-Site"
+						iconSclass="z-icon-angle-double-right" />
+					<navitem label="Multi-Site"
+						iconSclass="z-icon-angle-double-right" />
+					<navitem label="Linkage Mapping"
+						iconSclass="z-icon-angle-double-right" />
+				</nav>
+
+				<nav label="Decision Making" iconSclass="z-icon-edit">
+					<navitem label="Cross Predictor"
+						iconSclass="z-icon-angle-double-right" />
+					<navitem label="Cross Designer"
+						iconSclass="z-icon-angle-double-right" />
+				</nav>
+				<navitem id="calitem" label="Settings" href="page3.zul"
+					iconSclass="z-icon-picture-o" />
+
+			</navbar>
+			<!-- Toggler -->
+			<div sclass="sidebar-collapse">
+				<a id="toggler" iconSclass="z-icon-angle-double-left" />
+			</div>
+
+		</div>
+	</div>
+</zk>

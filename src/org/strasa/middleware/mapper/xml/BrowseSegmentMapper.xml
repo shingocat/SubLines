@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.strasa.middleware.mapper.BrowseSegmentMapper">
+<resultMap type="SegmentModel" id="SegmentResult">
+		<id property="segmentId" column="segment_id" />
+		<result property="chromosome" column="chromosome"/>
+		<result property="recurrentParent" column="recurrent_parent" />
+		<result property="donorParent" column="donor_parent" />
+		<result property="geneticPosition1" column="position_1" />
+		<result property="geneticPosition2" column="position_2" />
+		<result property="geneticPosition3" column="position_3" />
+		<result property="geneticPosition4" column="position_4" />
+		<result property="physicalStart" column="physical_start" />
+		<result property="physicalEnd" column="physical_End" />
+		<result property="estimatedLength" column="estimated_length" />
+		<result property="minimumLength" column="minimum_length" />
+		<result property="maximumLength" column="maximum_length" />
+		<result property="description" column="description" />
+	</resultMap>
+	<select id="findSegmentByDynamicSQL" resultMap="SegmentResult">
+		SELECT * FROM segment
+		<where>
+		<if test="chromosome != null">
+			chromosome = #{chromosome}
+		</if>
+		<if test="donorParent != null">
+			AND donor_parent like ${donorParent}
+		</if>
+		<if test="description != null">
+			And description like #{description}
+		</if>
+		<if test="geneticPosition2 != null">
+			And position_2 = #{geneticPositoin2}
+		</if>
+		</where>
+	</select>
+	<select id="findDistinctDonorParent" resultType="String">
+		SELECT DISTINCT(donor_parent) FROM segment
+	</select>
+</mapper>

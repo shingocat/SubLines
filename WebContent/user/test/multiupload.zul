@@ -1,0 +1,19 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<div id="multiuploadDiv" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.test.view.model.MultiUpload')">
+		<vlayout>
+			<button id="uploadBtn1" label="upload1" upload="true"
+				onUpload="@command('upload1')" />
+			<label id="label1" value="@load('vm.firstFileName')" />
+			<button id="uploadBtn2" label="upload2" upload="true"
+				onUpload="@command('upload2')" />
+			<label id="label2" value="@load('vm.secondFileName')" />
+			<button id="uploadBtn3" label="upload3" upload="true"
+				onUpload="" />
+				<div>
+					<include src="/user/test/upload.zul"/>
+				</div>
+		</vlayout>
+	</div>
+</zk>

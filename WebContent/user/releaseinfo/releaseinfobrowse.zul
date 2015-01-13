@@ -1,0 +1,26 @@
+<zk>
+
+	<style src="../css/main.css" />
+	<window>
+
+		<separator height="5px"></separator>
+		<vbox>
+			<include self="@define(content)"
+				src="releaseinfo/relVCgrid.zul" />
+
+		</vbox>
+		<separator height="15px"></separator>
+		<vbox>
+			<include self="@define(content)"
+				src="releaseinfo/relVYgrid.zul" />
+		</vbox>
+		<separator height="15px"></separator>
+
+		<vbox>
+			<include self="@define(content)"
+				src="releaseinfo/relVCYgrid.zul" />
+		</vbox>
+
+	</window>
+
+</zk>

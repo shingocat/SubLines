@@ -1,0 +1,134 @@
+<zk>
+	
+	<style>
+		.heavy { font-weight: bold; font-size: 11px; } .heavier {
+		font-weight: bold; font-size: 12px; } .searchLabel {font-size:
+		13px; }
+	</style>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.SiteInformation')">
+		<style src="../css/main.css" />
+		<columnlayout>
+			<columnchildren width="65%">
+				<grid model="@load(vm.sites)" sizedByContent="true"
+					emptyMessage="No study site found.">
+					<columns>
+						<column label="Site Name"  hflex="1"/>
+						<column label="Site Location" hflex="1" />
+						<column label="Ecotype" hflex="1" />
+						<column label="Soil Type" />
+						<column label="Soil PH" hflex="1" />
+					</columns>
+					<template name="model">
+						<row>
+							<toolbarbutton label="@load(each.sitename)" sclass="grid-link"
+								width="99%"
+								onClick="@command('updateDesignInfo', studysiteid=each.id)"/>
+							<label value="@bind(each.sitelocation)"
+								width="99%" />
+							<label value="@bind(each.ecotype.ecotype)"
+								width="99%" />
+							<label value="@bind(each.soiltype)"
+								width="99%" />
+							<label value="@bind(each.soilph)"
+								width="99%" />
+						</row>
+					</template>
+				</grid>
+			</columnchildren>
+			<columnchildren width="35%">
+			
+					<groupbox width="99%" mold="3d">
+						<caption label="Agronomy" />
+						<grid  sizedByContent="true" hflex="1">
+							<columns>
+								<column width="150px"/>
+								<column hflex="1"/>
+							</columns>
+							<rows>
+								<row>
+									Planting Type:
+									<label
+										value="@bind(vm.selectedSitePlantingType.planting)" width="99%" hflex="1" />
+								</row>
+								<row>
+									Transplanting/Sowing Date:
+									<label
+										value="@bind(vm.selectedAgroInfo.sowingdate)" width="99%"  hflex="1"/>
+								</row>
+								<row>
+									Harvest Date:
+									<label
+										value="@bind(vm.selectedAgroInfo.harvestdate)" width="99%" hflex="1" />
+								</row>
+								<row>
+									Fertilization:
+									<label
+										value="@bind(vm.selectedAgroInfo.fertilization)" width="99%" hflex="1"/>
+								</row>
+								<row>
+									Density:
+									<label
+										value="@bind(vm.selectedAgroInfo.density)" width="99%" hflex="1" />
+								</row>
+							</rows>
+
+						</grid>
+					</groupbox>
+					<groupbox width="99%" mold="3d">
+						<caption label="Design Information" />
+						<grid sizedByContent="true" hflex="1">
+							<columns>
+								<column width="150px"/>
+								<column hflex="1"/>
+							</columns>
+							<rows>
+								<row>
+									Treatment Structure:
+									<label
+										value="@bind(vm.selectedDesignInfo.treatmentstructure)"
+										 hflex="1"/>
+								</row>
+								<row>
+									Plot Size:
+									<label
+										value="@bind(vm.selectedDesignInfo.plotsize)" hflex="1" />
+								</row>
+								<row>
+									Design Structure:
+									<label
+										value="@bind(vm.selectedDesignInfo.designstructure)"
+										hflex="1" />
+								</row>
+								<row>
+									Design Factor 1:
+									<label
+										value="@bind(vm.selectedDesignInfo.designfactor1)"
+										hflex="1" />
+								</row>
+								<row>
+									Design Factor 2:
+									<label
+										value="@bind(vm.selectedDesignInfo.designfactor2)"
+										hflex="1" />
+								</row>
+								<row>
+									Design Factor 3:
+									<label
+										value="@bind(vm.selectedDesignInfo.designfactor3)"
+										hflex="1" />
+								</row>
+								<row>
+									Design Factor 4:
+									<label
+										value="@bind(vm.selectedDesignInfo.designfactor4)"
+										hflex="1" />
+								</row>
+							</rows>
+						</grid>
+					</groupbox>
+		
+			</columnchildren>
+		</columnlayout>
+	</window>
+</zk>

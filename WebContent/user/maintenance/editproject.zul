@@ -1,0 +1,102 @@
+<zk>
+
+	<style src="../css/main.css" />
+	<!-- 	<div style="padding:10px 0px 0px 20px" align="left">
+		<label style="font-size:20px">Project</label>
+		</div> -->
+	<window id="editProjectWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.maintenance.view.model.EditProject')">
+		<separator height="5px"></separator>
+				<hbox>
+					<grid
+						model="@load(vm.projectList)
+						@template(each.editingStatus ? 'editable' :
+						'noneditable')"
+						sizedByContent="true" zclass="none" oddRowSclass="odd"
+						emptyMessage="No study site found.">
+						<columns>
+							<column  label="Program Name"
+								 />
+							<column hflex="1" label="Project Name"
+								 />
+							<column label="Objective"  />
+							<column label="PI"  />
+							<column label="Leading Institute"
+								 />
+							<column label="Collaborator"  />
+							<column label="Funding Agency"
+								/>
+							<column label="Action" width="100px" />
+						</columns>
+						<template name="editable">
+							<row>
+								<combobox id="programComboBox"
+									model="@load(vm.programList)" readonly="true"
+									value="@load(each.prog.name)"
+									selectedItem="@load(each.prog) @save(each.prog, before='confirm')">
+									<template name="model">
+										<comboitem
+											value="@load(each.id)" label="@load(each.name)" />
+									</template>
+								</combobox>
+								<textbox
+									value="@load(each.project.name) @save(each.project.name, before='confirm')" />
+								<textbox
+									value="@load(each.project.objective) @save(each.project.objective, before='confirm')" />
+								<textbox
+									value="@load(each.project.pi) @save(each.project.pi, before='confirm')" />
+								<textbox
+									value="@load(each.project.leadinginstitute) @save(each.project.leadinginstitute, before='confirm')" />
+								<textbox
+									value="@load(each.project.collaborators) @save(each.project.collaborators, before='confirm')" />
+								<textbox
+									value="@load(each.project.fundingagency) @save(each.project.fundingagency, before='confirm')" />
+
+								<cell>
+									<button
+										image="/images/tick-small.png"
+										onClick="@command('confirm', ProjectStatus=each)"
+										tooltiptext="Save" />
+									<button
+										image="/images/cross-small.png"
+										onClick="@command('changeEditableStatus', ProjectStatus=each)"
+										tooltiptext="Cancel" />
+								</cell>
+							</row>
+						</template>
+						<template name="noneditable">
+							<row>
+								<label value="@load(each.prog.name)" />
+								<label value="@load(each.project.name)" />
+								<label
+									value="@load(each.project.objective)" />
+								<label value="@load(each.project.pi)" />
+								<label
+									value="@load(each.project.leadinginstitute)" />
+								<label
+									value="@load(each.project.collaborators)" />
+								<label
+									value="@load(each.project.fundingagency)" />
+								<cell>
+									<toolbarbutton
+										src="/images/edit16.png"
+										onClick="@command('changeEditableStatus', ProjectStatus=each)"
+										orient="vertical" tooltiptext="Edit Project" />
+									<space />
+									<toolbarbutton
+										src="/images/Delete16.png"
+										onClick="@command('deleteProject', projectId=each.project.id)"
+										tooltiptext="Delete Project" />
+								</cell>
+							</row>
+						</template>
+					</grid>
+					<div width="500px" style="padding:0px 0px 0px 50px;">
+						<include
+							src="/user/maintenance/addnewproject.zul" />
+					</div>
+
+				</hbox>
+
+	</window>
+</zk>

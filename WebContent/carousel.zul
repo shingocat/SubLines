@@ -1,0 +1,31 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+
+<style  src="/js/jquery.bxslider.css" />
+<script src="/js/jquery.bxslider.min.js" />
+
+<script type="text/javascript"><![CDATA[
+
+ zk.afterMount(function() {
+
+          $("$slider1").bxSlider({
+            slideWidth: 1500,
+            minSlides: 1,
+            maxSlides: 1,
+            slideMargin: 10
+          });
+});
+
+ ]]></script>
+
+<window title="ZK Carousel" border="normal" >
+
+<div id="slider1">
+  <div class="slide"><image src="images/foobar1.png"></image></div>
+  <div class="slide"><image src="images/foobar2.png"></image></div>
+</div>
+
+</window>
+</zk>
+

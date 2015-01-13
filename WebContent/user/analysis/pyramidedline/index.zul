@@ -1,0 +1,20 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<div id="mainPyramidedLineWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.pyramidedline.view.model.Index')">
+
+		<separator height="5px"></separator>
+
+			<tabbox id="tabBox" sclass="page-content" style="overflow:auto">
+			<tabs id="tabs">
+				<tab label="Pyramided Line Analysis"
+					image="/images/find.png" />
+			</tabs>
+			<tabpanels id="tabPanels">
+				<tabpanel id="specificationsPanel">
+					<include id="includeSpecifications" src="/user/analysis/pyramidedline/specifications.zul" />
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</div>
+</zk>

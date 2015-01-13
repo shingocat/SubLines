@@ -1,0 +1,39 @@
+<zk>
+
+	<window id="searchResultWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.SearchResult')">
+		<separator/>
+			<style src="../css/main.css" />
+		<label value="@load(vm.searchResultLabel)" />
+		<!-- <groupbox mold="3d">
+			<caption label="@load(vm.searchResultLabel)" /> -->
+			<grid model="@load(vm.searchResult)" class="no-highlight" id="gridResultID" oddRowSclass="odd" zclass="none"
+				sizedByContent="true" emptyMessage="No study site found.">
+				<columns>
+					<column label="Study Name" width="250px"/>
+					<column label="Program" width="250px" />
+					<column label="Project" width="250px"/>
+					<column label="Study Type" />
+					<column label="Country" />
+					<column label="Location" />
+					<column label="Start Year" />
+					<column label="End Year" hflex="1" />
+				</columns>
+				<template name="model">
+					<row>
+						<toolbarbutton label="@load(each.studyname)"
+							class="grid-link"
+							onClick="@global-command('openStudyDetailInStudy', studyid=each.id, studyName=each.studyname)" />
+						<label value="@load(each.programname)"/>
+						<label value="@load(each.projectname)"/>
+						<label value="@load(each.studytypename)"/>
+						<label value="@load(each.country)"  />
+						<label value="@load(each.locationname)"/>
+						<label value="@load(each.startyear)"/>
+						<label value="@load(each.endyear)"/>
+					</row>
+				</template>
+			</grid>
+	<!-- 	</groupbox> -->
+	</window>
+</zk>

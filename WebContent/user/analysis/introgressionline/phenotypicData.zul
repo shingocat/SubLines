@@ -1,0 +1,242 @@
+<?page title="PhenotypicData" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<vlayout>
+		<div align="left">
+			<groupbox>
+				<hbox>
+					<label>
+						Data Type:
+					</label>
+					<space />
+					<combobox>
+						<comboitem label="RAW" />
+						<comboitem label="MEAN" />
+					</combobox>
+				</hbox>
+				<separator />
+				<hbox>
+					<label>
+						na.code:
+					</label>
+					<space />
+					<textbox value="NA"></textbox>
+				</hbox>
+				<separator />
+				<hbox>
+					<listbox checkmark="true" multiple="true" width="300px"
+						vflex="true">
+						<listhead>
+							<listheader label="Numeric Variables"></listheader>
+						</listhead>
+						<listitem>
+							<listcell label="HD" />
+						</listitem>
+						<listitem>
+							<listcell label="PH" />
+						</listitem>
+					</listbox>
+					<space width="10px" />
+					<vlayout>
+						<separator height="100px" />
+						<image style="cursor:pointer" src="/images/rightarrow_g.png" />
+						<image style="cursor:pointer" src="/images/leftarrow_g.png" />
+					</vlayout>
+					<space width="10px" />
+					<listbox multiple="true" rows="4" checkmark="true" width="300px">
+						<listhead>
+							<listheader label="Response Variables" />
+						</listhead>
+						<listitem>
+							<listcell label="Yield"></listcell>
+						</listitem>
+					</listbox>
+				</hbox>
+				<separator />
+				<hbox>
+					<image style="cursor:pointer" src="/images/uparrow_g.png" />
+					<image style="cursor:pointer" src="/images/downarrow_g.png" />
+				</hbox>
+				<separator />
+				<hbox>
+					<div vflex="1">
+						<listbox rows="3" checkmark="true" width="300px">
+							<listhead>
+								<listheader label="Factor Variables" />
+							</listhead>
+							<listitem>
+								<listcell label="Env" />
+							</listitem>
+							<listitem>
+								<listcell label="Block" />
+							</listitem>
+						</listbox>
+					</div>
+					<space width="10px" />
+					<div>
+						<grid oddRowSclass="false" zclass="none">
+							<columns width="450px">
+								<column label="" width="150px"></column>
+								<column label="" />
+							</columns>
+							<rows>
+								<row>
+									<cell>
+										<hbox>
+											<image style="cursor:pointer;padding=10px" src="/images/rightarrow_g.png" />
+											<label value="Genotype:"></label>
+										</hbox>
+									</cell>
+									<cell>
+										<textbox value="Geno" />
+									</cell>
+								</row>
+								<row>
+									<cell>
+										<hbox>
+											<image style="cursor:pointer;padding=10px" src="/images/rightarrow_g.png" />
+											<label value="Environment:"></label>
+										</hbox>
+									</cell>
+									<cell>
+										<hbox>
+											<textbox value="" />
+											<checkbox label="Fixed" checked="true"></checkbox>
+										</hbox>
+									</cell>
+								</row>
+								<row>
+									<cell>
+										<hbox>
+											<label value="Design:"></label>
+										</hbox>
+									</cell>
+									<cell>
+										<combobox>
+											<comboitem label="RCB"></comboitem>
+											<comboitem label="Alpha" />
+										</combobox>
+									</cell>
+								</row>
+								<row>
+									<cell>
+										<hbox>
+											<image style="cursor:pointer;padding=10px" src="/images/rightarrow_g.png" />
+											<label value="Block"></label>
+										</hbox>
+									</cell>
+									<cell>
+										<textbox value="Block" />
+									</cell>
+								</row>
+							</rows>
+						</grid>
+					</div>
+				</hbox>
+				<separator height="50px" />
+			</groupbox>
+		</div>
+		<separator />
+		<div>
+			<grid>
+				<columns>
+					<column label="Geno" />
+					<column label="Block" />
+					<column label="Env" />
+					<column label="HD"></column>
+					<column label="PH"></column>
+					<column label="Yield"></column>
+				</columns>
+				<rows>
+					<row>
+						<label>Line1</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line2</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line3</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line4</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line5</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line6</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line7</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line8</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line9</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line10</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+					<row>
+						<label>Line11</label>
+						<label>B1</label>
+						<label>E1</label>
+						<label>90</label>
+						<label>10</label>
+						<label>23</label>
+					</row>
+				</rows>
+			</grid>
+		</div>
+	</vlayout>
+</zk>

@@ -1,0 +1,20 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+	<div id="genomicselectionWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.genomicselection.view.model.Index')">
+
+		<separator height="5px"></separator>
+
+		<tabbox id="tabBox" sclass="page-content">
+			<tabs id="tabs">
+				<tab label="Genomic Selection Analysis" image="/images/find.png" />
+			</tabs>
+			<tabpanels id="tabPanels">
+				<tabpanel id="specificationsPanel">
+					<include id="includeSpecifications" src="/user/analysis/genomicselection/specifications.zul" />
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</div>
+</zk>

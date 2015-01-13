@@ -1,0 +1,533 @@
+
+DATA FILE: C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/StrasaWeb/UPLOADS/1_2/1_2/study_dataset2(dataset).csv
+
+SINGLE-ENVIRONMENT ANALYSIS
+
+DESIGN: Randomized Complete Block (RCB)
+
+==============================
+GENOTYPE AS: Fixed
+==============================
+
+------------------------------
+RESPONSE VARIABLE: YLD
+------------------------------
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df  Sum Sq  Mean Sq F value Denom Pr(>F)
+GName 14 6690589 477899.2  1.2165    30 0.3143
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName   LSMean StdErrMean
+1   GEN1 2999.967   361.8666
+2  GEN10 2190.433   361.8666
+3  GEN11 2791.733   361.8666
+4  GEN12 2666.600   361.8666
+5  GEN13 2736.133   361.8666
+6  GEN14 2380.900   361.8666
+7  GEN15 1934.133   361.8666
+8   GEN2 3009.400   361.8666
+9   GEN3 2095.167   361.8666
+10  GEN4 2334.500   361.8666
+11  GEN5 1761.867   361.8666
+12  GEN6 1952.333   361.8666
+13  GEN7 2761.900   361.8666
+14  GEN8 2238.033   361.8666
+15  GEN9 2204.500   361.8666
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   511.7566
+ Average   511.7566
+ Maximum   511.7566
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df   Sum Sq Mean Sq  F value   Denom Pr(>F)
+GName 14 38956999 2782643 1237.315 29.9999 0.0000
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName    LSMean StdErrMean
+1   GEN1  994.3333   27.37965
+2  GEN10 3509.3333   27.37965
+3  GEN11 2164.0000   27.37965
+4  GEN12 3333.0000   27.37965
+5  GEN13 2924.3333   27.37965
+6  GEN14 1754.0000   27.37965
+7  GEN15 3215.6280   27.37965
+8   GEN2 2338.6667   27.37965
+9   GEN3 1169.6887   27.37965
+10  GEN4 1870.6667   27.37965
+11  GEN5  935.5476   27.37965
+12  GEN6 1023.6667   27.37965
+13  GEN7 1023.0000   27.37965
+14  GEN8 2338.6667   27.37965
+15  GEN9  754.3333   27.37965
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   38.7207 
+ Average   38.7207 
+ Maximum   38.7207 
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df   Sum Sq Mean Sq  F value Denom Pr(>F)
+GName 14 92687044 6620503 497.9841    28 0.0000
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName    LSMean StdErrMean
+1   GEN1 2073.0000   80.71295
+2  GEN10 2350.6667   80.71295
+3  GEN11 3194.6667   80.71295
+4  GEN12 3064.3333   80.71295
+5  GEN13 3587.3333   80.71295
+6  GEN14 6868.6667   80.71295
+7  GEN15 1501.6667   80.71295
+8   GEN2 1519.0000   80.71295
+9   GEN3  440.6667   80.71295
+10  GEN4 1762.3333   80.71295
+11  GEN5 2161.0000   80.71295
+12  GEN6 1654.0000   80.71295
+13  GEN7 2440.3333   80.71295
+14  GEN8 2273.3333   80.71295
+15  GEN9 1030.6667   80.71295
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   94.1439 
+ Average   94.1439 
+ Maximum   94.1439 
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df   Sum Sq Mean Sq F value Denom Pr(>F)
+GName 14 44205559 3157540 18.8349    28 0.0000
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName    LSMean StdErrMean
+1   GEN1  760.6667    243.856
+2  GEN10  854.9667    243.856
+3  GEN11  612.4667    243.856
+4  GEN12  547.8667    243.856
+5  GEN13  512.4667    243.856
+6  GEN14  474.9667    243.856
+7  GEN15  531.2000    243.856
+8   GEN2 2083.3333    243.856
+9   GEN3 2760.4000    243.856
+10  GEN4 2197.4000    243.856
+11  GEN5 1147.2667    243.856
+12  GEN6 1126.7333    243.856
+13  GEN7 2187.4667    243.856
+14  GEN8 3958.3000    243.856
+15  GEN9 1233.2667    243.856
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   334.3084
+ Average   334.3084
+ Maximum   334.3084
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df  Sum Sq  Mean Sq F value Denom Pr(>F)
+GName 14 6729756 480696.8  4.7714    28 0.0002
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName    LSMean StdErrMean
+1   GEN1 1378.5000   197.2208
+2  GEN10 2083.2667   197.2208
+3  GEN11 1008.3667   197.2208
+4  GEN12 1003.0000   197.2208
+5  GEN13 1697.6667   197.2208
+6  GEN14  797.2333   197.2208
+7  GEN15 1646.1333   197.2208
+8   GEN2 1234.4333   197.2208
+9   GEN3 1082.4667   197.2208
+10  GEN4 1877.5000   197.2208
+11  GEN5 1337.6000   197.2208
+12  GEN6 2057.7000   197.2208
+13  GEN7 1388.7333   197.2208
+14  GEN8 1378.5000   197.2208
+15  GEN9 1852.0000   197.2208
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   259.1591
+ Average   259.1591
+ Maximum   259.1591
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df  Sum Sq  Mean Sq F value Denom Pr(>F)
+GName 14 7355158 525368.4 22.9719    28 0.0000
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName LSMean StdErrMean
+1   GEN1 1282.0   122.3283
+2  GEN10 1856.0   122.3283
+3  GEN11 1330.5   122.3283
+4  GEN12 1959.0   122.3283
+5  GEN13 2157.0   122.3283
+6  GEN14 1681.5   122.3283
+7  GEN15 2100.0   122.3283
+8   GEN2 1284.5   122.3283
+9   GEN3 1606.5   122.3283
+10  GEN4 2254.0   122.3283
+11  GEN5 1478.5   122.3283
+12  GEN6 2671.5   122.3283
+13  GEN7 1950.5   122.3283
+14  GEN8 2010.0   122.3283
+15  GEN9 1285.5   122.3283
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   123.4775
+ Average   123.4775
+ Maximum   123.4775
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df   Sum Sq  Mean Sq F value Denom Pr(>F)
+GName 14 10917756 779839.7 18.0612    30 0.0000
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName    LSMean StdErrMean
+1   GEN1  332.5000    119.969
+2  GEN10 1008.8000    119.969
+3  GEN11 1123.2667    119.969
+4  GEN12  938.5667    119.969
+5  GEN13 1675.9000    119.969
+6  GEN14 1247.9333    119.969
+7  GEN15 1818.0667    119.969
+8   GEN2 1405.5333    119.969
+9   GEN3  250.9333    119.969
+10  GEN4  407.1000    119.969
+11  GEN5  482.1667    119.969
+12  GEN6  344.1667    119.969
+13  GEN7  482.1667    119.969
+14  GEN8  844.5667    119.969
+15  GEN9  537.8667    119.969
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   169.6618
+ Average   169.6618
+ Maximum   169.6618
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df   Sum Sq Mean Sq F value Denom Pr(>F)
+GName 14 58814866 4201062 17.7727    28 0.0000
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName    LSMean StdErrMean
+1   GEN1 1777.7667   297.1508
+2  GEN10 2422.1667   297.1508
+3  GEN11 4333.3000   297.1508
+4  GEN12 4033.4333   297.1508
+5  GEN13 3166.6333   297.1508
+6  GEN14 2999.9667   297.1508
+7  GEN15 4166.6333   297.1508
+8   GEN2 4000.0000   297.1508
+9   GEN3 2333.3000   297.1508
+10  GEN4  388.8667   297.1508
+11  GEN5 1388.8667   297.1508
+12  GEN6 1722.2000   297.1508
+13  GEN7 1444.4000   297.1508
+14  GEN8 2333.3000   297.1508
+15  GEN9 3211.0667   297.1508
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   396.9694
+ Average   396.9694
+ Maximum   396.9694
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df  Sum Sq  Mean Sq F value Denom Pr(>F)
+GName 14 8076072 576862.3 71.0598    30 0.0000
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName    LSMean StdErrMean
+1   GEN1  499.5333   52.01916
+2  GEN10 1530.2667   52.01916
+3  GEN11  373.2333   52.01916
+4  GEN12  566.1667   52.01916
+5  GEN13 1013.9333   52.01916
+6  GEN14 1426.8333   52.01916
+7  GEN15  508.7667   52.01916
+8   GEN2  526.6000   52.01916
+9   GEN3 1179.8333   52.01916
+10  GEN4 1611.6333   52.01916
+11  GEN5  647.3000   52.01916
+12  GEN6 1413.6000   52.01916
+13  GEN7 1160.5667   52.01916
+14  GEN8  471.8333   52.01916
+15  GEN9 1008.0000   52.01916
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   73.5662 
+ Average   73.5662 
+ Maximum   73.5662 
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df  Sum Sq  Mean Sq F value Denom Pr(>F)
+GName 14 1545719 110408.5 29.4667    30 0.0000
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName   LSMean StdErrMean
+1   GEN1 293.6867   35.34068
+2  GEN10 716.8667   35.34068
+3  GEN11 277.2333   35.34068
+4  GEN12 330.5000   35.34068
+5  GEN13 567.3333   35.34068
+6  GEN14 675.8333   35.34068
+7  GEN15 288.1000   35.34068
+8   GEN2 293.2933   35.34068
+9   GEN3 533.9667   35.34068
+10  GEN4 708.0333   35.34068
+11  GEN5 320.1667   35.34068
+12  GEN6 731.0000   35.34068
+13  GEN7 524.5000   35.34068
+14  GEN8 217.7333   35.34068
+15  GEN9 274.0000   35.34068
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   49.9793 
+ Average   49.9793 
+ Maximum   49.9793 
+
+
+------------------------------------------------------------
+
+DATA SUMMARY:
+
+Number of observations read:  45 
+Number of observations used:  45 
+
+ Factors   Number of Levels   Levels                     
+ GName     15                 GEN1  GEN10  GEN11 ... GEN9
+ Block     3                  1  2  3                    
+
+
+TESTING FOR THE SIGNIFICANCE OF GENOTYPIC EFFECT:
+
+Analysis of Variance Table with Satterthwaite Denominator Df
+      Df   Sum Sq Mean Sq F value Denom Pr(>F)
+GName 14 47048700 3360621 86.8645    30 0.0000
+
+
+GENOTYPE LSMEANS AND STANDARD ERRORS:
+
+   GName   LSMean StdErrMean
+1   GEN1 4118.667   113.5607
+2  GEN10 1331.333   113.5607
+3  GEN11 3719.333   113.5607
+4  GEN12 3816.000   113.5607
+5  GEN13 1450.333   113.5607
+6  GEN14 3495.333   113.5607
+7  GEN15 2415.000   113.5607
+8   GEN2 2392.667   113.5607
+9   GEN3 4315.333   113.5607
+10  GEN4 1720.667   113.5607
+11  GEN5 2050.333   113.5607
+12  GEN6 2970.333   113.5607
+13  GEN7 1398.333   113.5607
+14  GEN8 2526.667   113.5607
+15  GEN9 1489.333   113.5607
+
+
+STANDARD ERROR OF THE DIFFERENCE (SED):
+
+           Estimate
+ Minimum   160.5991
+ Average   160.5991
+ Maximum   160.5991
+
+
+
+==============================

@@ -1,0 +1,63 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.updatestudy.view.DataSetTabView')">
+		<style src="../css/main.css" />
+		<vlayout>
+		<div align="left">
+			<div id = "divDataset"><hlayout  style="padding:15px">
+				<label value="Rename Dataset" sclass="label-bold"></label>
+				<textbox value="@bind(vm.uploadModel.dataset.title)"></textbox>
+				<button id="btnSaveDataset" label="Rename"
+					onClick="@command('saveDataset')" image="/images/save16.png"
+					sclass="btn-success">
+				</button>
+				<button id="btnDeleteDataset" label="Delete Dataset"
+					onClick="@command('deleteDataset')" image="/images/Delete16.png"
+					sclass="btn-danger">
+				</button>
+			
+			</hlayout>
+			</div>
+		</div>
+			<tabbox selectedIndex="@bind(vm.selectedIndex)">
+
+				<tabs>
+
+					<tab label="Data" id="tab1"
+						disabled="@load(vm.tabDisabled[self.index])"
+					 />
+
+					<tab label="Study Site" id="tab2"
+						disabled="@bind(vm.tabDisabled[self.index])"
+						onSelect="@command('showzulfile', zulFileName='/user/uploadstudy/studysiteinfo.zul', target=self.linkedPanel)" />
+
+					<tab label="Study Location" id="tab3"
+						disabled="@load(vm.tabDisabled[self.index])"
+						onSelect="@command('showzulfile', zulFileName='/user/uploadstudy/studylocationinfo.zul', target=self.linkedPanel)" />
+
+					<tab label="Germplasm Information" id="tab4"
+						disabled="@load(vm.tabDisabled[self.index])"
+						onSelect="@command('showzulfile', zulFileName='/user/uploadstudy/studygermplasminfo.zul', target=self.linkedPanel)" />
+					<tab label="Finish" id="tab5"
+						disabled="@load(vm.tabDisabled[self.index])"
+						onSelect="@command('showzulfile', zulFileName='/user/uploadstudy/studyuploadfinish.zul', target=self.linkedPanel)" />
+				</tabs>
+				<tabpanels>
+					<tabpanel id="tabpanel1">
+<include mode="defer"
+							src="/user/updatestudy/modifydata.zul" uploadModel = "@bind(vm.uploadModel)"/>
+					</tabpanel>
+					<tabpanel id="tabpanel2"></tabpanel>
+					<tabpanel id="tabpanel3"></tabpanel>
+					<tabpanel id="tabpanel4"></tabpanel>
+					<tabpanel id="tabpanel5">
+						<include mode="defer"
+							src="/user/uploadstudy/studyuploadfinish.zul" />
+					</tabpanel>
+				</tabpanels>
+			</tabbox>
+			
+		</vlayout>
+	</window>
+</zk>

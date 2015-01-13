@@ -1,0 +1,19 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.Data')">
+		<style src="../css/main.css" />
+		<div align="left">
+			<button label="Export to CSV" visible="true"
+				sclass="btn-success" image="/images/export16.png"
+				unless="${vm.rowData==null}"
+				onClick="@command('exportRowData', columns=vm.columnList, rows=vm.dataList, studyName=vm.studyName, dataType=vm.dataType)" />
+		</div>
+		<div id="datagrid">
+		
+		
+		</div>
+
+	</window>
+</zk>

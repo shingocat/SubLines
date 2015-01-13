@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.strasa.middleware.mapper.other.StudyRawDataBatch">
+<insert id="insertBatchRaw" parameterType="java.util.List">
+
+   INSERT INTO studyrawdata (id,studyid,dataset,datarow,datacolumn,datavalue,shared,userid)
+        VALUES
+        <foreach collection="list" item="item" open="(" separator="),(" close=")">
+           #{item.id},#{item.studyid},#{item.dataset},#{item.datarow},#{item.datacolumn},#{item.datavalue},#{item.shared},#{item.userid}
+        </foreach>
+</insert>
+<insert id="insertBatchDerived" parameterType="java.util.List">
+
+   INSERT INTO studyderiveddata (id,studyid,dataset,datarow,datacolumn,datavalue,shared,userid)
+        VALUES
+        <foreach collection="list" item="item" open="(" separator="),(" close=")">
+           #{item.id},#{item.studyid},#{item.dataset},#{item.datarow},#{item.datacolumn},#{item.datavalue},#{item.shared},#{item.userid}
+        </foreach>
+</insert>
+
+
+<resultMap id="countGermplasmOccurence" type="int">
+  <result property="datavalue" column="datavalue" />
+</resultMap>
+<select id="countGermplasmOccurence"  resultType="int" 
+                parameterType="map">
+SELECT COUNT(DISTINCT datavalue) datavalue FROM ${table} WHERE studyid = ${studyid} AND datacolumn = 'Gname' AND  datavalue IN 
+
+<foreach item="item" index="index" collection="list" separator="," open="(" close=")">'${item}'</foreach> 
+</select>
+</mapper>

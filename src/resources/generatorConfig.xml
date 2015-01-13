@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+
+	<context id="context1"  targetRuntime="MyBatis3">
+	<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"></plugin>
+	
+	
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/strasa" userId="root"
+			password="root" />
+		<javaModelGenerator targetPackage="org.strasa.middleware.model"
+			targetProject="StrasaIL/src/main/java" />
+
+		<javaClientGenerator targetPackage="org.strasa.middleware.mapper"
+			targetProject="StrasaIL/src/main/java" type="ANNOTATEDMAPPER" />
+
+		  
+		<table schema="MYSCHEMA" tableName="segment"
+			domainObjectName="Segment">
+			<generatedKey column="segment_id" sqlStatement="JDBC" />
+		</table>
+		
+
+		<!-- <table schema="MYSCHEMA" tableName="germplasm_segment"
+			domainObjectName="GermplasmSegment">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table> -->
+	
+		<!-- <table schema="MYSCHEMA" tableName="country" domainObjectName="Country">
+		</table>
+
+		<table schema="MYSCHEMA" tableName="ecotype" domainObjectName="Ecotype">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="georef" domainObjectName="Georef">
+		</table>
+
+		<table schema="MYSCHEMA" tableName="germplasm" domainObjectName="Germplasm">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+
+		<table schema="MYSCHEMA" tableName="germplasmcharacteristics"
+			domainObjectName="GermplasmCharacteristics">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="germplasmreleaseinfo"
+			domainObjectName="GermplasmReleaseInfo">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="germplasmtype"
+			domainObjectName="GermplasmType">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="location" domainObjectName="Location">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="plantingtype"
+			domainObjectName="PlantingType">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="program" domainObjectName="Program">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="project" domainObjectName="Project">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+
+		<table schema="MYSCHEMA" tableName="study" domainObjectName="Study">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studyagronomy"
+			domainObjectName="StudyAgronomy">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studyderiveddata"
+			domainObjectName="StudyDerivedData">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studydesign"
+			domainObjectName="StudyDesign">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studyfile" domainObjectName="StudyFile">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studylocation"
+			domainObjectName="StudyLocation">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+
+		<table schema="MYSCHEMA" tableName="studyrawdata"
+			domainObjectName="StudyRawData">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studysite" domainObjectName="StudySite">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studyrawdata"
+			domainObjectName="StudyRawDataByDataColumn">
+			<ignoreColumn column="id" />
+			<ignoreColumn column="datarow" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studyrawdata"
+			domainObjectName="StudySiteByStudy">
+			<ignoreColumn column="id" />
+			<ignoreColumn column="datarow" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studytype" domainObjectName="StudyType">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studygermplasm"
+			domainObjectName="StudyGermplasm">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+ -->
+ <!-- 
+		<table schema="MYSCHEMA" tableName="studyvariable"
+			domainObjectName="StudyVariable">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+ -->
+<!-- 
+		<table schema="MYSCHEMA" tableName="user" domainObjectName="DbUser">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="keyabiotic"
+			domainObjectName="KeyAbiotic">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="keybiotic" domainObjectName="KeyBiotic">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="keygrainquality"
+			domainObjectName="KeyGrainQuality">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="keymajorgenes"
+			domainObjectName="KeyMajorGenes">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+
+		<table schema="MYSCHEMA" tableName="studygermplasmcharacteristics"
+			domainObjectName="StudyGermplasmCharacteristics">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studydatacolumn"
+			domainObjectName="StudyDataColumn">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="studydataset"
+			domainObjectName="StudyDataSet">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+ -->
+		
+<!-- 		<table schema="MYSCHEMA" tableName="extensiondata"
+			domainObjectName="ExtensionData">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+		
+		<table schema="MYSCHEMA" tableName="designstructure"
+			domainObjectName="DesignStructure">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+		<table schema="MYSCHEMA" tableName="soiltype"
+			domainObjectName="SoilType">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table> -->
+<!-- 		<table schema="MYSCHEMA" tableName="distributionandextension"
+			domainObjectName="DistributionAndExtension">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+				<table schema="MYSCHEMA" tableName="releaseinfo"
+			domainObjectName="ReleaseInfo">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table> -->
+
+
+
+	</context>
+</generatorConfiguration>

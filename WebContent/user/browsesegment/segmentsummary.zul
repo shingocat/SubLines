@@ -1,0 +1,46 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<div apply="org.zkoss.bind.BindComposer" sclass="page-content"
+		viewModel="@id('vm') @init('org.strasa.web.segmentquery.view.model.SegmentSummary')">
+
+		<groupbox mold="3d" closable="false" open="true">
+			<caption label="Segment Number of Donor Parent over 12 Chromosomes"></caption>
+			<div hflex="1" vflex="1">
+				<flashchart id="chart" width="100%" height="100%" style="font-weight:bold"
+					type="@bind(vm.type)" 
+					model="@bind(vm.model)" 
+					chartStyle="legend-display=bottom,legend-padding=1,legend-spacing=1,legend-font-size=6"
+					/>
+<!-- 					chartStyle="legend-display=top,legend-padding=5,legend-spacing=5,legend-font-family=Arial,legend-font-size=10"/> -->
+			</div>
+
+			<!-- <grid id="NumberOfVarietybyCountryAndYearRelease" hflex="1" model="@load(vm.noVCY)" 
+				height="400px" sizedByContent="true"> <auxhead sclass="category-center"> 
+				<auxheader label="Variety by Country and Year" colspan="5" /> </auxhead> 
+				<auxhead sclass="category-center"> <auxheader colspan="1"> <image src="/images/filter.png" 
+				/> <textbox instant="true" hflex="1" value="@bind(vm.filter.programName)" 
+				onChange="@command('changeFilter')" /> </auxheader> <auxheader colspan="1"> 
+				<image src="/images/filter.png" /> <textbox instant="true" hflex="1" value="@bind(vm.filter.counrtyRelease)" 
+				onChange="@command('changeFilter')" /> </auxheader> <auxheader colspan="1"> 
+				<image src="/images/filter.png" /> <textbox instant="true" hflex="1" value="@bind(vm.filter.yearRelease)" 
+				onChange="@command('changeFilter')" /> </auxheader> <auxheader label="" colspan="2"> 
+				<button id="btnExportId" label="Export to CSV" sclass="btn-success" image="/images/export16.png" 
+				onClick="@global-command('exportGrid', gridId='NumberOfVarietybyCountryAndYearRelease', 
+				grid=NumberOfVarietybyCountryAndYearRelease)" /> </auxheader> </auxhead> 
+				<columns menupopup="auto"> <column sort="auto('programName')" label="Program 
+				Name"> </column> <column sort="auto('countryrelease')" label="Country Release"> 
+				</column> <column sort="auto('yearrelease')" label="Year Release"> </column> 
+				<column sort="auto('countVariety')" label="Total No. of Variety"> </column> 
+				<column hflex="1" label="Variety Names"> </column> </columns> <template name="model"> 
+				<row> <label value="@load(each.programName)" /> <label value="@load(each.countryrelease)" 
+				/> <label value="@load(each.yearrelease)" /> <div> <toolbarbutton label="@load(each.countVariety)" 
+				onClick="@global-command('openReleaseInfoDetail', function='varietyCountByCountryAndYear', 
+				summaryModel=each, germplasmName='')" class="grid-link" /> </div> <div children="@load(each.germplasmVarietyNames)"> 
+				<template name="children" var="item"> <toolbarbutton label="@load(item)" 
+				onClick="@global-command('openReleaseInfoDetail', function='varietyByCountryAndYear', 
+				summaryModel=each, germplasmName=item)" class="grid-link" /> </template> 
+				</div> </row> </template> <foot> <footer span="6" class="footer_right" label="@load(vm.footer)" 
+				/> </foot> </grid> -->
+		</groupbox>
+	</div>
+</zk>

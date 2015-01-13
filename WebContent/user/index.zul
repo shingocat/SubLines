@@ -1,0 +1,23 @@
+<?page title="DMAS - User"?>
+
+ <?link href="../theme/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"?> 
+<?link href="../theme/css/fonts.css" rel="stylesheet" type="text/css"?>
+ <?link href="../theme/less/index.css.dsp" rel="stylesheet" type="text/css"?> 
+<?link href="../theme/css/main.css" rel="stylesheet" type="text/css"?>
+
+
+<zk xmlns:n="native">
+
+<script src="../js/button-bs.js" />
+	<include src="navbar.zul" />
+	<hlayout id="main" spacing="0">
+		<include src="sidebar.zul" />
+		<vlayout spacing="0" hflex="1">
+		 <include src="breadcrumbs.zul" /> 
+			<div id="contentui" sclass="none">
+				<include src="page.zul" />
+			</div>
+		</vlayout>
+	</hlayout>
+
+</zk>

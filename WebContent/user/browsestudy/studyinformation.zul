@@ -1,0 +1,157 @@
+<zk>
+	<style>
+		.heavy { font-weight: bold; font-size: 12px;padding:0px 0px 0px
+		25px }
+
+		.heavier { font-weight: bold; font-size: 12px; }
+
+		.searchLabel {font-size: 13px; }
+
+		.no-highlight tr.z-row-over td.z-row-inner { background:white; }
+	</style>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.StudyInformation')">
+		<tabbox id="tb" mold="accordion">
+			<tabs>
+				<tab label="Study Detail" />
+				<tab label="Germplasm Information"
+					onSelect="@command('showzulfile', zulFileName='/user/browsestudy/germplasminfo.zul', target=self.linkedPanel)" />
+				<tab label="Derived Data"
+					onSelect="@command('showzulfile', zulFileName='/user/browsestudy/deriveddata.zul', target=self.linkedPanel)" />
+				<tab label="Raw Data"
+					onSelect="@command('showzulfile', zulFileName='/user/browsestudy/rawdata.zul', target=self.linkedPanel)" />
+				<tab label="Genotypic Data"
+					onSelect="@command('showzulfile', zulFileName='/user/browsestudy/genotypicdata.zul', target=self.linkedPanel)" />
+				<tab label="Files Data"
+					onSelect="@command('showzulfile', zulFileName='/user/browsestudy/filesdata.zul', target=self.linkedPanel)" />
+			</tabs>
+			<tabpanels width="100%">
+				<tabpanel style="overflow: auto">
+					<grid oddRowSclass="empty" class="no-highlight"
+						sizedByContent="true" emptyMessage="Search and select a study.">
+						<columns>
+							<column label="" width="150px" />
+							<column label="" />
+						</columns>
+						<rows>
+							<row>
+								<label value="Program Name"
+									sclass="heavier" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProgram.name)" />
+							</row>
+							<row>
+								<label value="Objective" sclass="heavy" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProgram.objective)" />
+							</row>
+							<row>
+								<label value="Coordinator"
+									sclass="heavy" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProgram.coordinator)" />
+							</row>
+							<row>
+								<label value="Leading Institute"
+									sclass="heavy" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProgram.leadinginstitute)" />
+							</row>
+							<row>
+								<label value="Collaborator"
+									sclass="heavy" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProgram.collaborator)" />
+							</row>
+							<row>
+								<label value="Project" sclass="heavier" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProject.name)" />
+							</row>
+							<row>
+								<label value="Objective" sclass="heavy" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProject.objective)" />
+							</row>
+							<row>
+								<label value="PI" sclass="heavy" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProject.pi)" />
+							</row>
+							<row>
+								<label value="Leading Institute"
+									sclass="heavy" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProject.leadinginstitute)" />
+							</row>
+							<row>
+								<label value="Collaborators"
+									sclass="heavy" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProject.collaborators)" />
+							</row>
+							<row>
+								<label value="Funding" sclass="heavy" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedProject.fundingagency)" />
+							</row>
+
+							<row>
+								<label value="Study Name"
+									sclass="heavier" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedStudy.name)" />
+							</row>
+							<row>
+								<label value="Description"
+									sclass="heavier" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedStudy.description)" />
+							</row>
+							<row>
+								<label value="Study Type"
+									sclass="heavier" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedStudyType.studytype)" />
+							</row>
+							<row>
+								<label value="Start Year"
+									sclass="heavier" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedStudy.startyear)" />
+							</row>
+							<row>
+								<label value="End Year"
+									sclass="heavier" />
+								<label sclass="searchLabel"
+									value="@load(vm.selectedStudy.endyear)" />
+							</row>
+						</rows>
+					</grid>
+				</tabpanel>
+
+				<tabpanel style="overflow: auto">
+					<!-- 							<include studyid="${arg.studyId}" -->
+					<!-- 								src="/user/browsestudy/deriveddata.zul" /> -->
+				</tabpanel>
+				<tabpanel style="overflow: auto">
+					<!-- 							<include studyid="${arg.studyId}" -->
+					<!-- 								src="/user/browsestudy/rawdata.zul" /> -->
+				</tabpanel>
+				<tabpanel style="overflow: auto">
+					<!-- 							<include studyid="${arg.studyId}" -->
+					<!-- 								src="/user/browsestudy/genotypicdata.zul" /> -->
+				</tabpanel>
+				<tabpanel style="overflow: auto">
+					<!-- 							<include studyid="${arg.studyId}" -->
+					<!-- 								src="/user/browsestudy/filesdata.zul" /> -->
+				</tabpanel>
+				<tabpanel style="overflow: auto">
+					<!-- 							<include studyid="${arg.studyId}" -->
+					<!-- 								src="/user/browsestudy/filesdata.zul" /> -->
+				</tabpanel>
+
+			</tabpanels>
+		</tabbox>
+	</window>
+</zk>

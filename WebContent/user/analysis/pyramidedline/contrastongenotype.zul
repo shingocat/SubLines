@@ -1,0 +1,16 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<grid model="@bind(vm.contrastDataListOnGen)" sizedByContent="ture" height="300px"
+		style="overflow:auto;" emptyMessage="No data loaded...">
+		<columns children="@load(vm.contrastColumnListOnGen)">
+			<template name="children">
+				<column label="@load(each)" />
+			</template>
+		</columns>
+		<template name="model">
+			<row>
+				<label forEach="${each}" value="${each}" />
+			</row>
+		</template>
+	</grid>
+</zk>

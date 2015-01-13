@@ -1,0 +1,28 @@
+<zk>
+	<window title="Add Major Genes" border="normal" closable="true"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.admin.view.model.AddMajorGenes')"
+		width="35%">
+
+
+		<grid vflex="1">
+			<columns>
+				<column label="Type" width="150px" />
+				<column label="Content" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Name" width="150px" />
+					<textbox value='@bind(vm.model.value)'
+						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<button label="Save" onClick="@command('add')"></button>
+					<button label="Cancel"
+						onClick="@command('cancel')">
+					</button>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

@@ -1,0 +1,21 @@
+<zk>
+
+
+	<style src="../css/main.css" />
+
+	<div apply="org.zkoss.bind.BindComposer" align="left"
+		viewModel="@id('vm') @init('org.strasa.web.uploadstudy.view.model.StudyUploadFinish')">
+		<hlayout>
+			<label value="Successfully uploaded the study..."
+				style="font-size:12pt; padding:30px" />
+			<hlayout>
+<!-- 				<button label="Upload new Study"
+					onClick="@global-command('addStudy')">
+				</button> -->
+
+				<button label="Upload New Data" sclass="btn-success"  src="/images/upload16.png"
+					onClick="@global-command('editStudy', studyID=vm.studyID)" />
+			</hlayout>
+		</hlayout>
+	</div>
+</zk>

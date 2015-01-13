@@ -1,0 +1,148 @@
+<?page title="MapData" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<vlayout>
+		<div align="left">
+			<groupbox>
+				<hbox>
+					<div>
+						<listbox rows="3" width="300px" checkmark="true">
+							<listhead>
+								<listheader label="Variables"></listheader>
+							</listhead>
+							<listitem>
+								<listcell label="Marker" />
+							</listitem>
+							<listitem>
+								<listcell label="Chromosome" />
+							</listitem>
+							<listitem>
+								<listcell label="Position" />
+							</listitem>
+						</listbox>
+					</div>
+					<space />
+					<div>
+						<grid width="350px">
+							<columns width="350px">
+								<column label="" width="150px" />
+								<column label="" />
+							</columns>
+							<rows>
+								<row>
+									<cell>
+										<hbox>
+											<image style="cursor:pointer;padding:10px" src="/images/rightarrow_g.png" />
+											<label value="Marker:" />
+										</hbox>
+									</cell>
+									<cell>
+										<textbox />
+									</cell>
+								</row>
+								<row>
+									<cell>
+										<hbox>
+											<image style="cursor:pointer;padding:10px" src="/images/rightarrow_g.png" />
+											<label value="Chromosome:" />
+										</hbox>
+									</cell>
+									<cell>
+										<textbox />
+									</cell>
+								</row>
+								<row>
+									<cell>
+										<hbox>
+											<image style="cursor:pointer;padding:10px" src="/images/rightarrow_g.png" />
+											<label value="Position:" />
+										</hbox>
+									</cell>
+									<cell>
+										<textbox />
+									</cell>
+								</row>
+							</rows>
+						</grid>
+					</div>
+				</hbox>
+				<separator />
+				<hbox>
+					<label value="Units:" />
+					<space />
+					<radiogroup>
+						<radio label="centiMorgan(cM)" checked="true" />
+						<space />
+						<radio label="base pair(bp)" />
+					</radiogroup>
+				</hbox>
+			</groupbox>
+		</div>
+		<separator />
+		<div>
+			<grid>
+				<columns>
+					<column label="Marker"/>
+					<column label="Chromosome"/>
+					<column label="Position" />
+				</columns>
+				<rows>
+					<row>
+						<label value="M1" />
+						<label value="1" />
+						<label value="1" />
+					</row>
+					<row>
+						<label value="M2" />
+						<label value="1" />
+						<label value="10" />
+					</row>
+					<row>
+						<label value="M3" />
+						<label value="1" />
+						<label value="30" />
+					</row>
+					<row>
+						<label value="M4" />
+						<label value="1" />
+						<label value="40" />
+					</row>
+					<row>
+						<label value="M5" />
+						<label value="1" />
+						<label value="50" />
+					</row>
+					<row>
+						<label value="M6" />
+						<label value="1" />
+						<label value="60" />
+					</row>
+					<row>
+						<label value="M7" />
+						<label value="1" />
+						<label value="70" />
+					</row>
+					<row>
+						<label value="M8" />
+						<label value="1" />
+						<label value="80" />
+					</row>
+					<row>
+						<label value="M9" />
+						<label value="1" />
+						<label value="90" />
+					</row>
+					<row>
+						<label value="M10" />
+						<label value="1" />
+						<label value="100" />
+					</row>
+					<row>
+						<label value="M11" />
+						<label value="1" />
+						<label value="110" />
+					</row>
+				</rows>
+			</grid>
+		</div>
+	</vlayout>
+</zk>

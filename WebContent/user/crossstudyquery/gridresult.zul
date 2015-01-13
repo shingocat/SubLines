@@ -1,0 +1,26 @@
+<zk>
+	<grid model="@load(vm.newDataRow)"  id="gridresultquery" zclass="none" mold="paging" pageSize="50"
+		rowRenderer="org.strasa.web.crossstudyquery.view.model.AcrossStudyRowRenderer"
+		sizedByContent="true" height="400px" hflex="1"
+		emptyMessage="No data loaded...">
+		<columns children="@load(vm.columnList)">
+			<template name="children">
+				<zk choose="">
+					<zk when="${each == 'Study Name'}">
+						<column id="${each}" label="@load(each)" />
+					</zk>
+					<zk when="${each == 'Germplasm'}">
+						<column id="${each}" label="@load(each)" />
+					</zk>
+					<zk>
+						<column id="${each}" label="@load(each)" hflex="1"
+							onClick="@global-command('ShowVariateDescription',variable=each)"
+							image="/images/help-icon.png" />
+					</zk>
+				</zk>
+
+			</template>
+		</columns>
+		<rows />
+	</grid>
+</zk>

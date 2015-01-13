@@ -1,0 +1,94 @@
+<zk>
+
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.releaseinfo.view.model.RelVCgrid')">
+		<groupbox mold="3d">
+			<caption label="Variety by Country"></caption>
+			<vbox>
+				<hbox>
+					<vlayout>
+						<flashchart id="chart" width="800" height="350"
+							style="font-weight:bold" type="@bind(vm.type)"
+							model="@bind(vm.model)" />
+						<!-- <hlayout
+							visible="@bind(not empty vm.message)">
+							You clicked on :
+							<label value="@bind(vm.message)" />
+						</hlayout> -->
+					</vlayout>
+
+
+					<grid id="NumberOfVarietybyCountryRelease"  hflex="1"
+						model="@load(vm.noVC)" height="400px" sizedByContent="true">
+						<!-- 			<auxhead sclass="category-center">
+							<auxheader label="Variety by Country "
+							colspan="4" />
+							</auxhead> -->
+						<auxhead sclass="category-center">
+							<auxheader colspan="1">
+								<image src="/images/filter.png" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.filter.programName)"
+									onChange="@command('changeFilter')" />
+							</auxheader>
+							<auxheader colspan="1">
+								<image src="/images/filter.png" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.filter.counrtyRelease)"
+									onChange="@command('changeFilter')" />
+							</auxheader>
+							<auxheader label="" colspan="2">
+								<button id="btnExportId"
+									label="Export to CSV" sclass="btn-success"
+									image="/images/export16.png"
+									onClick="@global-command('exportGrid', gridId='NumberOfVarietybyCountryRelease', grid=NumberOfVarietybyCountryRelease)" />
+							</auxheader>
+						</auxhead>
+						<columns menupopup="auto">
+							<column sort="auto('programName')"
+								label="Program Name">
+							</column>
+							<column sort="auto('countryrelease')"
+								label="Country Release">
+							</column>
+							<column sort="auto('countVariety')"
+								label="Total No. of Variety">
+							</column>
+							<column hflex="1" label="Variety Names">
+							</column>
+						</columns>
+						<template name="model">
+							<row>
+								<label value="@load(each.programName)" />
+								<label
+									value="@load(each.countryrelease)" />
+								<div>
+									<toolbarbutton
+										label="@load(each.countVariety)"
+										onClick="@global-command('openReleaseInfoDetail', function='varietyCountByCountry', summaryModel=each, germplasmName='')"
+										class="grid-link" />
+								</div>
+								<div
+									children="@load(each.germplasmVarietyNames)">
+									<template name="children"
+										var="item">
+										<toolbarbutton
+											label="@load(item)"
+											onClick="@global-command('openReleaseInfoDetail', function='varietyByCountry', summaryModel=each, germplasmName=item)"
+											class="grid-link" />
+									</template>
+								</div>
+							</row>
+						</template>
+						<!-- 			<foot>
+							<footer span="6" class="footer_right"
+							label="@load(vm.footer)" />
+							</foot> -->
+					</grid>
+
+				</hbox>
+			</vbox>
+		</groupbox>
+
+	</div>
+</zk>

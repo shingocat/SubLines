@@ -1,0 +1,17 @@
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.GenotypicData')">
+		<grid height="350px" model="@load(vm.genotypicFiles)" sizedByContent="true"
+			emptyMessage="No genotypic data found." oddRowSclass="empty">
+			<columns>
+				<column hflex="1"/>
+			</columns>
+			<template name="model">
+				<row>
+					<toolbarbutton label="@load(each.filename)"
+						width="99%" onClick="@global-command('downloadFile', filePath=each.filepath, dataType=vm.dataType)"/>
+				</row>
+			</template>
+		</grid>
+	</window>
+</zk>

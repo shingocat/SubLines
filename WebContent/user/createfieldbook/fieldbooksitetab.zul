@@ -1,0 +1,377 @@
+<zk>
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.createfieldbook.view.model.FieldBookSite')">
+		<style src="../css/main.css" />
+
+		<vlayout>
+			<button label="Copy this Site" class="btn btn-info"
+				onClick="@global-command('addSite', siteModel = vm.site)">
+			</button>
+			<hlayout>
+
+				<groupbox hflex="1" mold="3d" style="min-height:330px;">
+					<caption label="Site Information"></caption>
+
+					<grid>
+						<columns>
+							<column label="" width="35%"></column>
+
+							<column label="" width="55%"></column>
+
+							
+						</columns>
+						<rows>
+							<row>
+								<label value="Site Name"></label>
+								<textbox value="@bind(vm.site.sitename)"
+									onBlur="@command('updateTab')" width = "100%"> 
+								</textbox>
+							</row>
+							<row>
+								<label value="Site Location"></label>
+								<div><bandbox id="bbox_location"
+									value="@bind(vm.site.location.locationname)"
+									onChange="@command('doLocationSearch')" instant="true"
+									autodrop="true" onOpen="@command('autoFillBandbox')"
+									onClick="@command('openBandbox')" width="80%">
+									<bandpopup>
+										<vbox width="40%">
+
+											<grid
+												model="@load(vm.filteredLocations)"
+												emptyMessage="No location is available. Please add your location."
+												sizedByContent="true" hflex="true">
+												<columns>
+													<column
+														label="Location" />
+													<column
+														label="Country" />
+													<column
+														label="Province" />
+													<column
+														label="Region" />
+													<column
+														label="Altitude" />
+													<column
+														label="Latitude" />
+													<column
+														label="Weather Station" />
+												</columns>
+												<template
+													name="model">
+													<row>
+														<toolbarbutton
+															label="@load(each.locationname)" width="99%"
+															onClick="@command('setLocationRow',location = each)" />
+														<label
+															value="@bind(each.country)" />
+
+														<label
+															value="@bind(each.province)" />
+
+														<label
+															value="@bind(each.region)" />
+
+														<label
+															value="@bind(each.altitude)" />
+
+														<label
+															value="@bind(each.latitude)" />
+
+														<label
+															value="@bind(each.weatherstation)" />
+
+													</row>
+												</template>
+											</grid>
+										</vbox>
+									</bandpopup>
+								</bandbox>
+								<toolbarbutton width = "10%"
+									id="btnadd_${forEachStatus.index}" image="/images/plus.png"
+									tooltiptext="Add New Location"
+									onClick="@command('addLocation')" />
+									
+								</div>
+							</row>
+							<row>
+								<label value="Year"></label>
+								<textbox value="@bind(vm.site.year)" width = "100%"></textbox>
+							</row>
+							<row>
+								<label value="Season" ></label>
+								<textbox
+									value="@bind(vm.site.season)" width = "100%">
+								</textbox>
+							</row>
+							<row>
+								<label value="Eco System"></label>
+								<combobox model="@load(vm.ecotypes)"
+									readonly="true" width="99%"
+									selectedItem="@bind(vm.site.ecotype)">
+									<template name="model">
+										<comboitem
+											value="@load(each.id)" label="@load(each.ecotype)" />
+									</template>
+								</combobox>
+							</row>
+							<row>
+								<label value="Soil Type"></label>
+								<combobox model="@load(vm.soiltypes)"
+									width="99%" value="@bind(vm.site.soiltype)" readonly="true">
+									<template name="model">
+										<comboitem value="@load(each)"
+											label="@load(each)" />
+									</template>
+								</combobox>
+							</row>
+							<row>
+								<label value="Soil PH"></label>
+								<doublespinner
+									constraint="no empty,min 4 max 12"
+									value="@bind(vm.site.soilph)" width="99%" />
+							</row>
+						</rows>
+					</grid>
+				</groupbox>
+				<groupbox hflex="1" vflex="1" mold="3d">
+					<caption label="Agronomy"></caption>
+					<grid>
+						<columns>
+							<column width="40%" />
+							<column width="60%" />
+						</columns>
+						<rows>
+							<row>
+								<label value="Planting Type:"
+									style="color:red" />
+								<hlayout>
+									<combobox
+										model="@load(vm.plantingtypes)" readonly="true"
+										selectedItem="@bind(vm.site.plantingtype)"
+										onSelect="@command('updateLabelDate')" vflex="1"
+										value="@bind(vm.site.plantingtype.planting)">
+										<template name="model">
+											<comboitem
+												value="@load(each)" label="@load(each.planting)" />
+										</template>
+									</combobox>
+								</hlayout>
+							</row>
+							<row>
+								<label value="@load(vm.labelDate)"
+									style="color:red">
+								</label>
+								<datebox
+									value="@bind(vm.site.agronomy.sowingdate)" width="99%"
+									format="MM/dd/yyyy" />
+							</row>
+							<row>
+								<label value="Harvest Date:"
+									style="color:red" />
+								<datebox
+									value="@bind(vm.site.agronomy.harvestdate)" width="99%"
+									format="MM/dd/yyyy" />
+							</row>
+							<row>
+								Fertilization:
+								<textbox
+									value="@bind(vm.site.agronomy.fertilization)" width="99%" />
+							</row>
+							<row>
+								Density:
+								<textbox
+									value="@bind(vm.site.agronomy.density)" width="99%" />
+							</row>
+						</rows>
+
+					</grid>
+
+
+				</groupbox>
+				<groupbox hflex="1" vflex="1" mold="3d">
+					<caption label="Design Information"></caption>
+					<grid vflex="1">
+						<columns>
+							<column />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="Plot Size:"
+									style="color:red" />
+
+								<textbox
+									value="@bind(vm.site.design.plotsize)" width="99%" />
+							</row>
+							<row>
+
+								<label value="Design Structure:"
+									style="color:red" />
+								<combobox id="cmbDesignStructure"
+									value="@bind(vm.site.design.designstructure)" width="99%">
+									<attribute name="onCreate"><![CDATA[
+	List list2 = new ArrayList();
+	list2.add("CRD");
+	list2.add("RCBD");
+	list2.add("LSD");
+	ListModelList lm2 = new ListModelList(list2);
+	lm2.addSelection(lm2.get(0));
+	cmbDesignStructure.setModel(lm2);
+]]></attribute>
+
+								</combobox>
+							</row>
+							<row>
+								<label value="Treatment Structure:"
+									style="color:red" />
+
+								<combobox id="cmbTreatmentStructure"
+									value="@bind(vm.site.design.treatmentstructure)" width="99%">
+					<comboitem label="One Factor" value = "One Factor"/>
+									<comboitem label="Two Factor Factorial" value = "Two Factor Factorial"/>
+										<comboitem label="Three Factor Factorial" value = "Three Factor Factorial"/>
+
+									<attribute name = "onSelect">
+    							<![CDATA[
+	if (cmbTreatmentStructure.getSelectedIndex() == 0) {
+		txtDRow2.setValue("");
+		txtDRow3.setValue("");
+		txtDRow4.setValue("");
+
+		dRow2.setVisible(false);
+		dRow3.setVisible(false);
+		dRow4.setVisible(false);
+
+	} else if (cmbTreatmentStructure.getSelectedIndex() == 1) {
+		txtDRow3.setValue("");
+		txtDRow4.setValue("");
+		dRow2.setVisible(true);
+		dRow3.setVisible(false);
+		dRow4.setVisible(false);
+
+	} else if (cmbTreatmentStructure.getSelectedIndex() == 2) {
+		dRow2.setVisible(true);
+		dRow3.setVisible(true);
+		dRow4.setVisible(true);
+
+	}
+]]>
+    							</attribute>
+
+								</combobox>
+							</row>
+
+							<row>
+								Design Factor 1:
+								<textbox
+									value="@bind(vm.site.design.designfactor1)" width="99%" />
+							</row>
+							<row id="dRow2">
+								Design Factor 2:
+								<textbox id="txtDRow2"
+									value="@bind(vm.site.design.designfactor2)" width="99%" />
+							</row>
+							<row id="dRow3">
+								Design Factor 3:
+								<textbox id="txtDRow3"
+									value="@bind(vm.site.design.designfactor3)" width="99%" />
+							</row>
+							<row id="dRow4">
+								Design Factor 4:
+								<textbox id="txtDRow4"
+									value="@bind(vm.site.design.designfactor4)" width="99%" />
+							</row>
+
+						</rows>
+					</grid>
+
+
+				</groupbox>
+				<groupbox hflex="1" vflex="1" mold="3d">
+					<caption label="Genotype"></caption>
+
+					<vlayout>
+						<groupbox>
+							<caption label="Genotype:"></caption>
+							<vlayout>
+								<div>
+									<label
+										value="@load(vm.site.lblGenotypeFileName)">
+									</label>
+								</div>
+								<div>
+									<button label="Browse"
+										onUpload="@command('uploadGenotype')" upload="true"
+										class="btn btn-primary">
+									</button>
+									<button label="Remove"
+										onClick="@command('removeGenotype')" class="btn">
+									</button>
+								</div>
+							</vlayout>
+						</groupbox>
+						<groupbox>
+							<caption label="Layout:"></caption>
+							<vlayout>
+								<div>
+									<label
+										value="@bind(vm.site.lblLayoutFileName)">
+									</label>
+								</div>
+								<div>
+									<button label="Browse"
+										onUpload="@command('uploadLayout')" upload="true"
+										class="btn btn-primary">
+									</button>
+									<button label="Remove"
+										onClick="@command('removeLayout')" class="btn">
+									</button>
+								</div>
+							</vlayout>
+						</groupbox>
+
+					</vlayout>
+				</groupbox>
+			</hlayout>
+			<groupbox mold="3d">
+				<caption label="Variate List">
+					<button label="Add Trait"
+						class="btn btn-info pull-right" onClick="@command('addTrait')" />
+				</caption>
+
+				<listbox multiple="false" checkmark="true"
+					oddRowSclass="odd" model="@load(vm.site.lstStudyVariable)"
+					emptyMessage="No Trait code yet..." rows="10">
+					<auxhead>
+						<auxheader colspan="3" class="topic">
+						</auxheader>
+					</auxhead>
+					<listhead>
+
+						<listheader label="Trait Code" hflex="1" />
+						<listheader label="Property" hflex="1" />
+						<listheader label="Scale" hflex="1" />
+						<listheader label="Method" hflex="1" />
+						<listheader label="Trait Code" hflex="1" />
+						<listheader label="" width="30px" />
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell label="@load(each.variablecode)" />
+							<listcell label="@load(each.property)" />
+							<listcell label="@load(each.scale)" />
+							<listcell label="@load(each.method)" />
+							<listcell label="@load(each.datatype)" />
+							<listcell>
+								<button image="/images/cross.png"
+									onClick="@command('removeTrait',trait=each)">
+								</button>
+							</listcell>
+						</listitem>
+					</template>
+				</listbox>
+			</groupbox>
+		</vlayout>
+	</div>
+</zk>

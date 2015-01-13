@@ -1,0 +1,30 @@
+<zk>
+	<vlayout width="350px">
+		<label value="Variable Information"/>
+		<grid zclass="none">
+			<rows>
+				<row>
+					Description:
+					<label value="${arg.description}" />
+				</row>
+				<row>
+					Property:
+					<label value="${arg.property}" />
+				</row>
+				<row>
+					Method:
+					<label value="${arg.method}" />
+				</row>
+				<row>
+					Scale:
+					<label value="${arg.scale}" />
+				</row>
+				<row>
+					Datatype:
+					<label value="${arg.datatype}" />
+				</row>
+
+			</rows>
+		</grid>
+	</vlayout>
+</zk>

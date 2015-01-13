@@ -1,0 +1,72 @@
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.releaseinfo.view.model.AddReleaseInfo')"
+		width="35%">
+		<style src="../css/main.css" />
+		<grid sizedByContent="true">
+			<columns>
+				<column label="" width="150px" />
+				<column label="" hflex="1" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Program" />
+					<combobox id="programComboBox"
+						model="@load(vm.programList)" readonly="true"
+						onChange="@command('updateLists', program=self.selectedItem)"
+						value="@bind(vm.program.name)"  hflex="1">
+						<template name="model">
+							<comboitem value="@load(each.id)"
+								label="@load(each.name)" />
+						</template>
+					</combobox>
+				</row>
+				<row>
+					<label value="Project" width="150px" />
+					<combobox id="projectComboBox" hflex="1"
+						model="@load(vm.projectList)" value="@bind(vm.project.name)"
+						readonly="true">
+						<template name="model">
+							<comboitem value="@load(each.id)"
+								label="@load(each.name)" />
+						</template>
+					</combobox>
+				</row>
+				<row>
+					<label value="Germplasm name" />
+					<textbox value="@bind(vm.model.germplasmname)" hflex="1"/>
+				</row>
+				<row>
+					<label value="Data Source" />
+					<textbox value="@bind(vm.model.datasource)" hflex="1"/>
+				</row>
+				<row>
+					<label value="Year release" />
+					<textbox value="@bind(vm.model.yearrelease)" hflex="1"/>
+				</row>
+				<row>
+					<label value="Country release" />
+					<combobox model="@load(vm.cmbCountry)"
+						selectedItem="@bind(vm.model.countryrelease)"  hflex="1">
+						<template name="model" var="p1">
+							<comboitem value="@load(p1)"
+								label="@load(p1)" />
+						</template>
+					</combobox>
+				</row>
+				<row>
+					<label value="Seed availability" />
+					<intbox value="@bind(vm.model.seedavailability)"  hflex="1"/>
+				</row>
+				<row>
+					<label></label>
+					<hbox>
+						<button label="Save" onClick="@command('add')"
+							image="/images/save16.png" sclass="btn-warning">
+						</button>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

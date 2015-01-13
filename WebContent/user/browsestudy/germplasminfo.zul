@@ -1,0 +1,72 @@
+<zk>
+	<style>
+		.heavy { font-weight: bold; font-size: 11px; } .heavier {
+		font-weight: bold; font-size: 12px; } .searchLabel {font-size:
+		13px; }
+	</style>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.GermplasmInfo')">
+		<style src="../css/main.css" />
+<!-- 		<div align="left">
+			<label value="@load(vm.searchResultLabel)"
+				sclass="label-bold" />
+		</div> -->
+
+				<groupbox mold="3d" width="98%">
+			<caption label="@load(vm.searchResultLabel)" />
+		<grid model="@load(vm.germplasmList)" sizedByContent="true"
+			emptyMessage="No Record Found">
+			<columns>
+				<column label="GID " />
+				<column label="GName " sort="auto(germplasmname)"
+					hflex="1" />
+				<column label="OtherName " />
+				<column label="Breeder " />
+				<column label="GermplasmType " />
+				<column label="IR Number " />
+				<column label="IR Cross " />
+				<column label="Parentage " />
+				<column label="Female Parent " />
+				<column label="Male Parent " />
+				<column label="Selection History " />
+				<column label="Source " hflex="1" />
+				<!-- 				<column label="Characteristic " /> -->
+
+			</columns>
+			<template name="model">
+				<row>
+					<label value="@load(each.gid)" />
+					
+					<toolbarbutton if="${vm.parentSource=='germplasm'}"
+							label="@load(each.germplasmname)"
+							onClick="@global-command('openGermplasmDetailInGermplasm', gname=each.germplasmname, germplasmId=each.gid)"
+							class="grid-link" />
+							
+					<toolbarbutton  if="${vm.parentSource=='study'}"
+						label="@load(each.germplasmname)"
+						sclass="grid-link"
+						onClick="@global-command('openGermplasmDetailInStudy', gname=each.germplasmname)" />
+						
+					<toolbarbutton  if="${vm.parentSource=='crossstudy'}"
+						label="@load(each.germplasmname)"
+						sclass="grid-link"
+						onClick="@global-command('openGermplasmDetailInAcrossStudy', gname=each.germplasmname)" />
+						
+					<label value="@load(each.germplasmname)" if="${vm.parentSource==null}"/>
+					<label value="@load(each.othername)" />
+					<label value="@load(each.breeder)" />
+					<label value="@load(each.type.germplasmtype)" />
+					<label value="@load(each.irnumber)" />
+					<label value="@load(each.ircross)" />
+					<label value="@load(each.parentage)" />
+					<label value="@load(each.femaleparent)" />
+					<label value="@load(each.maleparent)" />
+					<label value="@load(each.selectionhistory)" />
+					<label value="@load(each.source)" />
+
+				</row>
+			</template>
+		</grid>
+			</groupbox>
+	</window>
+</zk>

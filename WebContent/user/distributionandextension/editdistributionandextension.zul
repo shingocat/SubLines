@@ -1,0 +1,148 @@
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+
+	<window id="editExtensionWindow" apply="org.zkoss.bind.BindComposer"
+		sclass="page-content" style="padding:10px"
+		viewModel="@id('vm') @init('org.strasa.web.distributionandextension.view.model.EditDistributionAndExtension')">
+
+		<style src="../css/main.css" />
+		<div sclass="page-header">
+			<label value="Update Extension Data" />
+			<!-- <a label="overview &amp; stats" iconSclass="z-icon-angle-double-right" sclass="subtitle"/> -->
+		</div>
+		<tabbox id="tb">
+			<tabs>
+				<tab label="Distribution and Extension List" />
+				<tab label="Add New Record" />
+			</tabs>
+			<tabpanels width="100%">
+				<tabpanel style="overflow: auto">
+					<grid height="600px" hflex="1" oddRowSclass="odd"
+						model="@load(vm.rowList) @template(each.editingStatus ? 'editable' : 'noneditable')"
+						sizedByContent="true" emptyMessage="No Record Found">
+						<columns>
+							<column label="Program" />
+							<column label="Project" />
+							<column label="Germplasm Name" />
+							<column label="Year Extension" />
+							<column label="Location Extension" />
+							<column label="Country Extension" />
+							<column label="Planting Area" />
+							<column label="Data Source" />
+							<column label="Seed Availability" />
+							<column label="ASD"
+								tooltiptext="Amount Seeds Distributed" />
+							<column label="ASP"
+								tooltiptext="Amount Seeds Produced" />
+							<column label="No. Farmers Adopted"
+								tooltiptext="Number Farmers Adopted" />
+							<column label="Action" hflex="1" />
+						</columns>
+						<template name="editable">
+							<row>
+								<combobox id="programComboBox"
+									model="@load(vm.programList)" readonly="true"
+									onChange="@command('updateLists', program=self.selectedItem)"
+									value="@load(each.program.name)"
+									selectedItem="@load(each.program) @save(each.program, before='confirm')">
+									<template name="model">
+										<comboitem
+											value="@load(each.id)" label="@load(each.name)" />
+									</template>
+								</combobox>
+
+								<combobox id="projectComboBox"
+									model="@load(vm.projectList)" value="@load(each.project.name)"
+									readonly="true"
+									selectedItem="@load(each.project) @save(each.project, before='confirm')">
+									<template name="model">
+										<comboitem
+											value="@load(each.id)" label="@load(each.name)" />
+									</template>
+								</combobox>
+
+								<textbox
+									value="@load(each.value.germplasmname) @save(each.value.germplasmname, before='confirm')" />
+								<textbox
+									value="@load(each.value.yearextension) @save(each.value.yearextension, before='confirm')" />
+								<textbox
+									value="@load(each.value.locationextension) @save(each.value.locationextension, before='confirm')" />
+								<combobox model="@load(vm.cmbCountry)"
+									selectedItem="@bind(each.value.countryextension)"
+									width="99%">
+									<template name="model" var="p1">
+										<comboitem value="@load(p1)"
+											label="@load(p1)" />
+									</template>
+								</combobox>
+								<decimalbox
+									value="@load(each.value.plantingarea) @save(each.value.plantingarea, before='confirm')" />
+								<textbox
+									value="@load(each.value.datasource) @save(each.value.datasource, before='confirm')" />
+								<intbox
+									value="@load(each.value.seedavailability) @save(each.value.seedavailability, before='confirm')" />
+								<intbox
+									value="@load(each.value.amountseeddistributed) @save(each.value.amountseeddistributed, before='confirm')" />
+								<intbox
+									value="@load(each.value.amountseedsproduced) @save(each.value.amountseedsproduced, before='confirm')" />
+								<doublebox
+									value="@load(each.value.numfarmersadopted) @save(each.value.numfarmersadopted, before='confirm')" />
+
+								<cell>
+									<button image="/images/save.png"
+										onClick="@command('confirm', RowStatus=each)"
+										tooltiptext="Save" />
+									<button
+										image="/images/cross-small.png"
+										onClick="@command('changeEditableStatus', RowStatus=each)"
+										tooltiptext="Cancel" />
+								</cell>
+							</row>
+						</template>
+						<template name="noneditable">
+							<row>
+								<label value="@load(each.program.name)" />
+								<label value="@load(each.project.name)" />
+								<label
+									value="@load(each.value.germplasmname)" />
+								<label
+									value="@load(each.value.yearextension)" />
+								<label
+									value="@load(each.value.locationextension)" />
+								<label
+									value="@load(each.value.countryextension)" />
+								<label
+									value="@load(each.value.plantingarea)" />
+								<label
+									value="@load(each.value.datasource)" />
+								<label
+									value="@load(each.value.seedavailability)" />
+								<label
+									value="@load(each.value.amountseeddistributed)" />
+								<label
+									value="@load(each.value.numfarmersadopted)" />
+								<label
+									value="@load(each.value.amountseedsproduced)" />
+								<cell>
+									<toolbarbutton
+										src="/images/edit16.png"
+										onClick="@command('changeEditableStatus', RowStatus=each)"
+										orient="vertical" tooltiptext="Edit Extension data" />
+									<space />
+									<toolbarbutton
+										src="/images/delete.png"
+										onClick="@command('delete', id=each.value.id)"
+										orient="vertical" tooltiptext="Delete Extension data" />
+								</cell>
+							</row>
+						</template>
+					</grid>
+				</tabpanel>
+				<tabpanel style="overflow: auto">
+					<include
+						src="/user/distributionandextension/adddistributionandextension.zul" />
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</window>
+</zk>

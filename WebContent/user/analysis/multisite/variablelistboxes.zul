@@ -1,0 +1,55 @@
+<window apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vmdlb') @init('org.strasa.web.analysis.singlesite.view.model.VariableListBoxes')">
+	<vlayout style="padding:10px">
+		<hbox>
+			<listbox id="numericLb" hflex="1" vflex="true"
+				multiple="true" rows="4">
+				<listhead>
+					<listheader label="Numeric Variables" />
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell label="${each}" />
+					</listitem>
+				</template>
+			</listbox>
+			<vbox spacing="10px" width="24px">
+				<image style="cursor:pointer" id="chooseResponseBtn"
+					src="/images/rightarrow_g.png" tooltip="Add response variable" />
+				<image style="cursor:pointer" id="removeResponseBtn"
+					src="/images/leftarrow_g.png" tooltip="Remove response variable" />
+			</vbox>
+			<listbox id="responseLb" hflex="1"
+				multiple="true" rows="4">
+				<listhead>
+					<listheader label="Response Variable" />
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell label="${each}" />
+					</listitem>
+				</template>
+			</listbox>
+		</hbox>
+		<hbox spacing="10px" width="24px">
+			<image style="cursor:pointer" id="toNumericBtn"
+				tooltip="set as Numeric" src="/images/uparrow_g.png" />
+			<image style="cursor:pointer" id="toFactorBtn"
+				src="/images/downarrow_g.png" tooltip="set as Factor" />
+		</hbox>
+		<hbox>
+		<listbox id="factorLb" hflex="1"
+			rows="4">
+			<listhead>
+				<listheader label="Factor Variables" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${each}" />
+				</listitem>
+			</template>
+		</listbox>
+		<div id="othervariables" hflex="1"></div>
+		</hbox>
+	</vlayout>
+</window>

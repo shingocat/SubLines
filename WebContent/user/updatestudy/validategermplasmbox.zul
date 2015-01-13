@@ -1,0 +1,23 @@
+<window title="Invalid data detected" border="normal" closable="true"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.updatestudy.view.DetailedMissingGermplasmList')"
+		width="15%">
+	
+	
+	<label style="font-size:14px;" value ="Warning! This data does not match the germplasm list from the previous uploaded data."></label>
+    <grid model="@load(vm.invalidGermplasmList)">
+        <columns>
+            <column label="Germplasm Name" align="center" />
+     
+        </columns>
+        <template name="model">
+            <row>
+                <label value="${each}" />
+            </row>
+        </template>
+    </grid>
+
+    <hbox width="100%" pack="center">
+        <button id="closeButton" label="Close" />
+    </hbox>
+</window>

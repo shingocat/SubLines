@@ -1,0 +1,52 @@
+<?link rel="stylesheet" type="text/css" href="css/main.css"?>
+<zk>
+	<style src="../css/main.css" />
+
+	<!-- 	<div hflex="1" vflex="1">
+		<zscript>
+	String username = org.spring.security.model.SecurityUtil.getUserName();
+</zscript>
+		<hlayout sclass="z-valign-center"
+		style="background:#628640;color:white;" height="120px">
+		<div align="right" hflex="1" style="padding:50px">
+		<hbox align="center" pack="end">
+		<label sclass="login-header">Welcome </label>
+		<image src="/images/user32.png"></image>
+		
+		<label sclass="login-header"> Logged as User</label>
+		<space width="15px"></space>
+		<button label="Logout" sclass="btn-blue"
+		unless="${empty execution.userPrincipal}"
+		href="/j_spring_security_logout" />
+		</hbox>
+		</div>
+		<space />
+		</hlayout>
+		</div> -->
+
+	<zscript>
+	String username = org.spring.security.model.SecurityUtil.getUserName();
+</zscript>
+	<!-- #F0CD45 -->
+	<div>
+<!-- 	<image src="/images/banner.jpg"></image> -->
+		<div hflex="1" vflex="1"
+			style="background:#6A94D4;color:white; vertical-align:middle;padding:25px"
+			height="30px">
+				<vbox hflex="1" vflex="1" align="right">
+					<hlayout valign="middle">
+						<label value="Logged as: "
+							sclass="logUserLabel">
+						</label>
+						<label value="${username}"
+							sclass="logUserLabel">
+						</label>
+						<toolbarbutton label="Sign Out"
+							sclass="grid-link" unless="${empty execution.userPrincipal}"
+							href="/j_spring_security_logout" />
+					</hlayout>
+
+				</vbox>
+		</div>
+	</div>
+</zk>

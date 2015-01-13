@@ -1,0 +1,65 @@
+<zk>
+	<window id="editLocationWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.admin.view.model.EditLocation')">
+		<button label="Add New" onClick="@command('add')" />
+		<grid height="300px"
+			model="@load(vm.list) @template(each.editingStatus ? 'editable' : 'noneditable')"
+			sizedByContent="true" width="95%">
+			<columns width="200px">
+				<column label="Location Name" />
+				<column label="Country" />
+				<column label="Province" />
+				<column label="Region" />
+				<column label="Altitude" />
+				<column label="Latitude" />
+				<column label="Weather Station" />
+				<column label="Action" width="100px" />
+			</columns>
+			<template name="editable">
+				<row>
+					<textbox
+						value="@load(each.location.locationname) @save(each.location.locationname, before='confirm')" />
+					<textbox
+						value="@load(each.location.country) @save(each.location.country, before='confirm')" />
+					<textbox
+						value="@load(each.location.province) @save(each.location.province, before='confirm')" />
+					<textbox
+						value="@load(each.location.region) @save(each.location.region, before='confirm')" />
+					<textbox
+						value="@load(each.location.altitude) @save(each.location.altitude, before='confirm')" />
+					<textbox
+						value="@load(each.location.latitude) @save(each.location.latitude, before='confirm')" />
+					<textbox
+						value="@load(each.location.weatherstation) @save(each.location.weatherstation, before='confirm')" />
+					<cell>
+						<button image="/images/tick-small.png"
+							onClick="@command('confirm', RowStatus=each)" tooltiptext="Save" />
+						<button image="/images/cross-small.png"
+							onClick="@command('changeEditableStatus', RowStatus=each)"
+							tooltiptext="Cancel" />
+					</cell>
+				</row>
+			</template>
+			<template name="noneditable">
+				<row>
+					<label value="@load(each.location.locationname)" />
+					<label value="@load(each.location.country)" />
+					<label value="@load(each.location.province)" />
+					<label value="@load(each.location.region)" />
+					<label value="@load(each.location.altitude)" />
+					<label value="@load(each.location.latitude)" />
+					<label value="@load(each.location.weatherstation)" />
+					<cell>
+						<toolbarbutton src="/images/edit16.png"
+							onClick="@command('changeEditableStatus', RowStatus=each)"
+							orient="vertical" tooltiptext="Edit Location" />
+						<space />
+						<toolbarbutton src="/images/Delete16.png"
+							onClick="@command('delete', id=each.location.id)"
+							orient="vertical" tooltiptext="Delete Location" />
+					</cell>
+				</row>
+			</template>
+		</grid>
+	</window>
+</zk>

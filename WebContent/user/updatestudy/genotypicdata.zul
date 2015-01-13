@@ -1,0 +1,28 @@
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.updatestudy.view.GenotypicData')">
+		<grid height="350px" model="@load(vm.genotypicFiles)" sizedByContent="true"
+			emptyMessage="No genotypic data found." oddRowSclass="empty">
+			<auxhead>
+                <auxheader colspan="4"
+                    >
+                    <hlayout>
+                      <button upload="true" label="Upload Genotype"
+													onUpload="@command('uploadGenotypeData')" />
+                    </hlayout>
+                </auxheader>
+                </auxhead>
+			<columns>
+				<column label="Filename" hflex="1"/>
+				<column hflex="1"/>
+			</columns>
+			<template name="model">
+				<row>
+					<toolbarbutton label="@load(each.filename)"
+						width="99%" onClick="@global-command('downloadFile', filePath=each.filepath, dataType=vm.dataType)"/>
+					<button label ="Delete" onClick="@command('removeGenotypeFile',model=each)" />
+				</row>
+			</template>
+		</grid>
+	</window>
+</zk>

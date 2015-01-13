@@ -1,0 +1,75 @@
+<zk>
+	<style src="../css/main.css" />
+	<!-- 	<div style="padding:10px 0px 0px 20px" align="left">
+		<label style="font-size:20px">Program</label>
+		</div>
+	-->
+	<window id="editProgramWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.maintenance.view.model.EditProgram')">
+		<hbox>
+			<grid zclass="none" oddRowSclass="odd"
+				model="@load(vm.programList) @template(each.editingStatus ? 'editable' : 'noneditable')"
+				sizedByContent="true" 
+				emptyMessage="No study site found.">
+				<columns>
+					<column label="Program Name" 
+						 />
+					<column label="Objective" />
+					<column label="Collaborator" />
+					<column label="Coordinator" />
+					<column label="Leading Institute"/>
+					<column label="Action" width="100px" />
+				</columns>
+				<template name="editable">
+					<row>
+						<textbox
+							value="@load(each.program.name) @save(each.program.name, before='confirm')" />
+						<textbox
+							value="@load(each.program.objective) @save(each.program.objective, before='confirm')" />
+						<textbox
+							value="@load(each.program.collaborator) @save(each.program.collaborator, before='confirm')" />
+						<textbox
+							value="@load(each.program.coordinator) @save(each.program.coordinator, before='confirm')" />
+						<textbox
+							value="@load(each.program.leadinginstitute) @save(each.program.leadinginstitute, before='confirm')" />
+						<cell width="100px">
+							<button image="/images/tick-small.png"
+								onClick="@command('confirm', ProgramStatus=each)"
+								tooltiptext="Save" />
+							<button image="/images/cross-small.png"
+								onClick="@command('changeEditableStatus', ProgramStatus=each)"
+								tooltiptext="Cancel" />
+						</cell>
+					</row>
+				</template>
+				<template name="noneditable">
+					<row>
+						<label value="@load(each.program.name)"
+							hflex="1" />
+						<label value="@load(each.program.objective)" />
+						<label value="@load(each.program.collaborator)" />
+						<label value="@load(each.program.coordinator)" />
+						<label
+							value="@load(each.program.leadinginstitute)" />
+						<cell width="100px">
+							<toolbarbutton src="/images/edit16.png"
+								onClick="@command('changeEditableStatus', ProgramStatus=each)"
+								orient="vertical" tooltiptext="Edit Program" />
+							<space />
+							<toolbarbutton src="/images/Delete16.png"
+								onClick="@command('deleteProgram', programId=each.program.id)"
+								orient="vertical" tooltiptext="Delete Program" />
+						</cell>
+					</row>
+				</template>
+			</grid>
+			
+
+			<div width="500px"  style="padding:0px 0px 0px 50px;">
+				<include src="/user/maintenance/addnewprogram.zul" />
+			</div>
+
+		</hbox>
+
+	</window>
+</zk>

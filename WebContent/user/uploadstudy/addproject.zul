@@ -1,0 +1,66 @@
+<zk>
+	<window title="Add Project" border="normal" closable="true"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.uploadstudy.view.model.AddProject')"
+		width="35%">
+		<style src="../css/main.css" />
+
+		<grid vflex="1">
+			<columns>
+				<column label="" width="150px" />
+				<column label="" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Name" />
+					<textbox value='@bind(vm.projectModel.name)'
+						constraint="no empty" hflex="1" />
+				</row>
+				<row>
+					<label value="Objective" width="150px" />
+					<textbox value='@bind(vm.projectModel.objective)'
+						constraint="no empty" hflex="1" />
+				</row>
+				<row>
+					<label value="Funding Agency" width="150px" />
+					<textbox
+						value='@bind(vm.projectModel.fundingagency)' constraint="no empty"
+						hflex="1" />
+				</row>
+				<row>
+					<label value="PI" width="150px" />
+					<textbox value='@bind(vm.projectModel.pi)'
+						constraint="no empty" hflex="1" />
+				</row>
+				<row>
+					<label value="Leading Institute" width="150px" />
+					<textbox
+						value='@bind(vm.projectModel.leadinginstitute)'
+						constraint="no empty" hflex="1" />
+				</row>
+				<row>
+					<label value="Collaborators" />
+					<textbox
+						value='@bind(vm.projectModel.collaborators)' constraint="no empty"
+						hflex="1" />
+				</row>
+
+
+				<row>
+					<label></label>
+					<hlayout>
+						<button label="Cancel" sclass="btn-danger" image="/images/cancel16.png"
+							onClick="@command('cancel')">
+						</button>
+						<button label="Save" sclass="btn-warning" image="/images/save16.png"
+							onClick="@command('add')">
+						</button>
+
+					</hlayout>
+				</row>
+			</rows>
+		</grid>
+
+
+	</window>
+</zk>

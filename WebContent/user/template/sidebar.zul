@@ -1,0 +1,91 @@
+<zk>
+	<!-- 	<style>
+		.mygrid .z-row-hover .z-row-inner{
+		background:#AFBFB7; }
+		
+		.myaccordion . z-tab-hover .z-tab-inner{ background:#AFBFB7; }
+		
+		.z-tab-accordion-header { cursor: default; zoom: 1; }
+		</style>
+		
+		<script>
+		jq("tr.z-row","@grid") .live("mouseover",function(){
+		jq(this).addClass("z-row-hover");}) .live("mouseout",function(){
+		jq(this).removeClass("z-row-hover");});;
+		</script>
+	-->
+	<tabbox id="tb" width="100%" mold="accordion" class="myaccordion"
+		apply="org.strasa.web.page.navigation.user.SidebarAjaxbasedController"
+		style="padding:5px 0px 0px 0px">
+		<tabs>
+			<tab id="uploadId" label="Upload"
+				image="/images/upload16.png" />
+			<tab id="browseId" label="Browse"
+				image="/images/Search16.png" />
+			<tab id="analysisId" label="Analysis" image="/images/Analysis16.png" /> 
+			<tab id="decisionId" label="Decision Making" image="/images/Analysis16.png" /> 
+			<tab id="settingsId" label="Settings"
+				image="/images/Settings16.png" />
+		</tabs>
+		<tabpanels>
+			<tabpanel id="tabPanelUploadId" style="padding:0px">
+				<grid sclass="sidebar" oddRowSclass="empty"
+					id="fnListUpload" class="mygrid">
+					<columns>
+						<column width="36px" />
+						<column />
+					</columns>
+					<rows />
+				</grid>
+
+			</tabpanel>
+			<tabpanel id="tabPanelBrowseId" style="padding:0px">
+				<grid sclass="sidebar" oddRowSclass="empty"
+					id="fnListBrowse" class="mygrid">
+					<columns>
+						<column width="36px" />
+						<column />
+					</columns>
+					<rows />
+				</grid>
+
+			</tabpanel>
+			<tabpanel style="padding:0px">
+				<grid sclass="sidebar" oddRowSclass="empty"
+					id="fnAnalysis" class="mygrid">
+					<columns>
+						<column width="36px" />
+						<column />
+					</columns>
+					<rows />
+				</grid>
+			</tabpanel>
+			<tabpanel style="padding:0px">
+				<grid sclass="sidebar" oddRowSclass="empty"
+					id="fnDecisionMaking" class="mygrid">
+					<columns>
+						<column width="36px" />
+						<column />
+					</columns>
+					<rows />
+				</grid>
+			</tabpanel>
+			<tabpanel id="tabPanelSettingId"  style="padding:0px">
+				<grid sclass="sidebar" oddRowSclass="empty"
+					id="fnMaintenance" class="mygrid">
+					<columns>
+						<column width="36px" />
+						<column />
+					</columns>
+					<rows />
+				</grid>
+
+			</tabpanel>
+			<tabpanel>
+
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+
+
+</zk>

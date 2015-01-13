@@ -1,0 +1,115 @@
+<zk>
+	<div id="sidebar" sclass="sidebar"
+		apply="org.strasa.web.page.navigation.user.SidebarComposer">
+		<!-- Shortcuts Button -->
+		<div class="shortcuts">
+			<!-- Display when expanded -->
+			<div class="shortcuts-expanded">
+				<button type="button" class="btn-success" iconSclass="z-icon-signal" />
+				<button type="button" class="btn-info" iconSclass="z-icon-pencil" />
+				<button type="button" class="btn-warning" iconSclass="z-icon-group" />
+				<button type="button" class="btn-danger" iconSclass="z-icon-cogs" />
+			</div>
+			<!-- Display when collapsed -->
+			<div class="shortcuts-collapsed">
+				<button type="button" class="btn-success" />
+				<button type="button" class="btn-info" />
+				<button type="button" class="btn-warning" />
+				<button type="button" class="btn-danger" />
+			</div>
+		</div>
+		<!-- Navigation List -->
+		<navbar id="navbar" sclass="nav-list" orient="vertical">
+			<nav label="Upload/Modify" iconSclass="z-icon-inbox">
+				<navitem label="Study" id="uploadstudy" iconSclass="z-icon-angle-double-right" />
+				<navitem label="Germplasm" id="uploadgermplasm" iconSclass="z-icon-angle-double-right" />
+				<navitem label="Segment" id="uploadsubstitutionline" iconSclass="z-icon-angle-double-right" />
+				<nav label="Upload/Modify" iconSclass="z-icon-angle-double-right" visible="false">
+					<!-- 
+					<navitem label="Study" iconSclass="z-icon-leaf" id="uploadstudy" />
+					<navitem label="Germplasm" id="uploadgermplasm" iconSclass="z-icon-leaf" />
+					 -->
+					<!-- Modify by QIN MAO for adding two children under Germplasm -->
+					<!--  
+					<nav label="Germplasm" iconSclass="z-icon-angle-double-right">
+						<navitem label="Non ILs" id="uploadgermplasm" iconSclass="z-icon-leaf" />
+						<navitem label="ILs" id="uploadintrogressionline"
+							iconSclass="z-icon-leaf" />
+					</nav>
+					-->
+					<!-- End -->
+					<navitem label="Extension" id="uploadextension" iconSclass="z-icon-leaf" visible="false"/>
+					<navitem label="Release" id="uploadrelease" iconSclass="z-icon-leaf" visible="false"/>
+				</nav>
+				<nav label="Browse" iconSclass="z-icon-angle-double-right" visible="false">
+					<!-- 
+					<navitem label="Study" iconSclass="z-icon-leaf" id="browsestudy" />
+					<navitem label="Germplasm" id="browsegermplasm" iconSclass="z-icon-leaf" />
+					adding by QIN MAO, is used to search introgression line by segment 
+						info
+					<navitem label="Segment" id="browsesegment" iconSclass="z-icon-leaf" />
+					<navitem label="Across Study" id="across" iconSclass="z-icon-leaf" />
+					-->
+					<navitem label="Extension" id="extension" iconSclass="z-icon-leaf" visible="false"/>
+					<navitem label="Release" id="releaseinfo" iconSclass="z-icon-leaf" visible="false"/>
+				</nav>
+				<navitem id="createfieldbook" label="Create Study Template"
+					iconSclass="z-icon-picture-o" visible="false"/>
+			</nav>
+				<nav label="Browse" iconSclass="z-icon-search">
+				<navitem label="Study" id="browsestudy" iconSclass="z-icon-angle-double-right"  />
+				<navitem label="Across Study" id="across" iconSclass="z-icon-angle-double-right" />
+				<navitem label="Germplasm" id="browsegermplasm" iconSclass="z-icon-angle-double-right" />
+				<navitem label="Segment" id="browsesegment" iconSclass="z-icon-angle-double-right" />
+				<navitem label="Result" id="browseanalysisresult" iconSclass="z-icon-angle-double-right"  visible="false"/>
+			</nav>
+
+			<nav label="Analysis" iconSclass="z-icon-pencil">
+			<!--  
+				<navitem label="Browse Result" id="browseanalysisresult"
+					iconSclass="z-icon-angle-double-right" />
+					-->
+				<nav label="Breeding Trial" iconSclass="z-icon-edit" visible="false">
+					<navitem label="Single-Site" id="singlesite" iconSclass="z-icon-angle-double-right" />
+					<navitem label="Multi-Site" iconSclass="z-icon-angle-double-right" />
+				</nav>
+				<nav label="SSSL" iconSclass="z-icon-angle-double-right" visible="true">
+					<navitem label="New" id="ssslAnalysis" iconSclass="z-icon-plus"></navitem>
+					<navitem label="Previous" id="ssslAnalysisOutcome" iconSclass="z-icon-file-text-o"></navitem>
+				</nav>
+				<nav label="Pyramided Line" iconSclass="z-icon-angle-double-right" visible="true">
+					<navitem label="New" id="pyramidedLineAnalysis" iconSclass="z-icon-plus" />
+					<navitem label="Previous" id="pyramidedLineAnalysisOutcome" iconSclass="z-icon-file-text-o" />
+				</nav>
+				<nav label="Introgression Line" iconSclass="z-icon-angle-double-right" visible="true">
+					<navitem label="New" id="introgressionLineAnalysis" iconSclass="z-icon-plus" />
+					<navitem label="Previous" id="introgressionLineAnalysisOutcome" iconSclass="z-icon-file-text-o" />
+				</nav>
+				<!--  
+				<nav label="Substitution Lines" iconSclass="z-icon-edit">
+					<navitem label="SSSL" id="ssslAnalysis" iconSclass="z-icon-angle-double-right"></navitem>
+					<navitem label="Pyramided Line" id="pyramidedLineAnalysis" iconSclass="z-icon-angle-double-right"></navitem>
+					<navitem label="Introgression Line" id="introgressionLineAnalysis" iconSclass="z-icon-angle-double-right" />
+				</nav>
+				-->
+				<navitem label="Linkage Mapping" id="linkagemapping"
+					iconSclass="z-icon-angle-double-right" visible="false"/>
+				<navitem label="Genomic Selection" id="genomicselection"
+					iconSclass="z-icon-angle-double-right" visible="false"/>
+			</nav>
+
+			<nav label="Decision Making" iconSclass="z-icon-edit" visible="false">
+				<navitem label="Cross Predictor" iconSclass="z-icon-angle-double-right" />
+				<navitem label="Cross Designer" iconSclass="z-icon-angle-double-right" />
+			</nav>
+			<navitem id="settings" label="Settings" iconSclass="z-icon-gear" />
+
+		</navbar>
+		<!-- Toggler but now unvisible it -->
+		<div sclass="sidebar-collapse" visible="false">
+			<a id="toggler2" iconSclass="z-icon-angle-double-left" />
+		</div>
+
+	</div>
+
+</zk>

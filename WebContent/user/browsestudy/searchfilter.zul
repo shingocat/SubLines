@@ -1,0 +1,111 @@
+<zk>
+	
+		<div apply="org.zkoss.bind.BindComposer"
+			viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.SearchFilter')"
+			width="400px" hflex="1">
+			<grid sizedByContent="true" class="no-highlight">
+				<columns>
+					<column label="" width="100px" />
+					<column label="" hflex="1" />
+				</columns>
+				<rows>
+					<row>
+						Data
+
+						<radiogroup onCreate="self.setSelectedIndex(2)" 
+							selectedItem="@bind(vm.searchFilter.shared)">
+							<radio label="My Data" value="private" style="padding:10px" /> 
+							<radio label="Shared Data" value="public"  style="padding:10px" />
+							<radio label="Both" value="both" />
+						</radiogroup>
+
+
+					</row>
+					<row>
+						Study Name
+						<textbox hflex="1"
+							value="@bind(vm.searchFilter.studyname)" />
+					</row>
+					<row>
+						Program
+						<combobox model="@load(vm.programList)"
+							hflex="1" readonly="true"
+							onChange="@command('updateLists', programName=self.value)">
+							<template name="model">
+								<comboitem value="@load(each.id)"
+									label="@load(each.name)" />
+							</template>
+						</combobox>
+					</row>
+					<row>
+						Project
+						<combobox id="projectComboBox"
+							model="@load(vm.projectList)" hflex="1" readonly="true"
+							onChange="@command('updateProjectId', projectName=self.value)">
+							<template name="model">
+								<comboitem value="@load(each.id)"
+									label="@load(each.name)" />
+							</template>
+						</combobox>
+					</row>
+					<row>
+						StudyType
+						<combobox model="@load(vm.studyTypeList)"
+							hflex="1" readonly="true"
+							selectedIndex="@bind(vm.searchFilter.studytypeid)">
+							<template name="model">
+								<comboitem value="@load(each.id)"
+									label="@load(each.studytype)" />
+							</template>
+						</combobox>
+					</row>
+					<row>
+						Start Year
+						<intbox
+							value="@bind(vm.searchFilter.startyear)" />
+					</row>
+					<row>
+						End Year
+						<intbox value="@bind(vm.searchFilter.endyear)" />
+					</row>
+					<row>
+						Country
+						<combobox model="@load(vm.countryList)"
+							hflex="1" autodrop="true"
+							value="@bind(vm.searchFilter.country)"
+							onChange="@command('updateLocationList', countryName=self.value)">
+							<template name="model">
+								<comboitem value="@load(each.isoabbr)"
+									label="@load(each.isoabbr)" />
+							</template>
+						</combobox>
+					</row>
+					<row>
+						Location
+						<combobox id="locationCombobox" model="@load(vm.locationList)"
+							hflex="1" readonly="true"
+							onChange="@command('updateLocationId', locationName=self.value)">
+							<template name="model">
+								<comboitem value="@load(each.id)"
+									label="@load(each.locationname)" />
+							</template>
+						</combobox>
+					</row>
+				</rows>
+			</grid>
+
+			<div align="right">
+				<hlayout>
+					<button label="Reset" image="/images/Reset16.png"
+						sclass="btn-danger" onClick=" @command('reset')" />
+
+					<button label="Search" image="/images/Search16.png"
+						sclass="btn-info"
+						onClick="@global-command('updateSearchFilterResult', searchFilter=vm.searchFilter)" />
+				</hlayout>
+			</div>
+
+
+		</div>
+
+</zk>

@@ -1,0 +1,50 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window border="none"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.uploadstudy.view.model.Index')">
+
+		<tabbox id="mainTab" selectedIndex="@bind(vm.selectedIndex)">
+			<tabs>
+
+			
+				<tab label="Study Information" id="tab6" selected="true" vflex="1" hflex="1">
+				
+				</tab>
+				
+
+				<tab label="Study Site" id="tab2"
+					disabled="@bind(vm.tabDisabled[self.index])"
+					onSelect="@command('showzulfile', zulFileName='/user/uploadstudy/studysiteinfo.zul', target=self.linkedPanel)" />
+
+				<tab label="Study Location" id="tab3"
+					disabled="@load(vm.tabDisabled[self.index])"
+					onSelect="@command('showzulfile', zulFileName='/user/uploadstudy/studylocationinfo.zul', target=self.linkedPanel)" />
+
+				<tab label="Germplasm Information" id="tab4"
+					disabled="@load(vm.tabDisabled[self.index])"
+					onSelect="@command('showzulfile', zulFileName='/user/uploadstudy/studygermplasminfo.zul', target=self.linkedPanel)" />
+				<tab label="Finish" id="tab5"
+					disabled="@load(vm.tabDisabled[self.index])"
+					onSelect="@command('showzulfile', zulFileName='/user/uploadstudy/studyuploadfinish.zul', target=self.linkedPanel)" />
+
+				
+			</tabs>
+			<tabpanels>
+			<tabpanel id="tabpanel6">
+					<include src="/user/uploadstudy/uploaddata.zul"></include>
+				</tabpanel>
+		
+				<tabpanel id="tabpanel2"></tabpanel>
+				<tabpanel id="tabpanel3"></tabpanel>
+				<tabpanel id="tabpanel4"></tabpanel>
+				<tabpanel id="tabpanel5">
+					<include mode="defer"
+						src="/user/uploadstudy/studyuploadfinish.zul" />
+				</tabpanel>
+				
+			</tabpanels>
+		</tabbox>
+
+	</window>
+</zk>

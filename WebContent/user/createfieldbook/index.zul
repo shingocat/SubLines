@@ -1,0 +1,189 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+
+
+<zk>
+	<style>
+		.z-menupopup .z-menuitem-icon { left: 10px; !important }
+	
+	</style>
+	
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.createfieldbook.view.model.Index')"
+		height="100%" width="99%">
+		<groupbox mold="3d">
+			<caption label="Study Information">
+
+				<div class="btn-group dropdown pull-right">
+					<popup id="puGenerateFieldbook">
+						<groupbox width="150px">
+							<listbox oddRowSclass="odd"
+								model="@load(vm.lstSiteInfo)" emptyMessage="No Site yet..."
+								rows="4" selectedItems="@bind(vm.lstSelectedSites)"
+								multiple="true" checkmark="true">
+								<listhead>
+									<listheader label="Site Name" />
+								</listhead>
+
+								<template name="model">
+									<listitem>
+
+										<listcell
+											label="@load(each.sitename)" />
+
+									</listitem>
+								</template>
+							</listbox>
+						</groupbox>
+					</popup>
+					<button class="btn-success btn-lg "
+						onClick="@command('generateFieldbook')">
+						Generate Fieldbook
+					</button>
+					<button class="btn-success btn-lg dropdown-toggle"
+						iconSclass="caret"
+						onClick='puGenerateFieldbook.open(self.previousSibling, "after_end")'>
+					</button>
+				</div>
+			</caption>
+			<grid zclass="none">
+				<columns>
+					<column label="" width="120px" />
+					<column label="" width="350px" />
+					<column label="" width="100px" />
+				</columns>
+				<rows>
+					<row>
+						<label class="name" value="Program:" />
+						<bandbox id="bdProgram" mold="rounded"
+							autodrop="true" value="@bind(vm.txtProgram.name)" readonly="true"
+							width="330px">
+							<bandpopup>
+								<listbox height="250px" width="650px"
+									mold="paging" autopaging="true" model="@load(vm.programList)"
+									selectedItem="@bind(vm.txtProgram)"
+									onSelect="bdProgram.value=self.selectedItem.label;bdProgram.close();">
+									<listhead>
+										<listheader
+											label="Select Program" />
+									</listhead>
+									<template name="model" var="item"
+										status="s">
+										<listitem>
+
+											<listcell
+												label="@bind(item.name)" />
+										</listitem>
+									</template>
+
+								</listbox>
+							</bandpopup>
+						</bandbox>
+						<button label="Add" image="/images/New16.png"
+							sclass="btn-success" onClick="@command('addProgram')" />
+					</row>
+					<row>
+						<label class="name" value="Project:" />
+						<bandbox id="bdProject" mold="rounded"
+							width="330px" autodrop="true" value="@bind(vm.txtProject.name)"
+							readonly="true">
+							<bandpopup>
+								<listbox height="250px" width="450px"
+									mold="paging" autopaging="true" model="@load(vm.projectList)"
+									selectedItem="@bind(vm.txtProject)"
+									onSelect="bdProject.value=self.selectedItem.label;bdProject.close();">
+									<listhead>
+										<listheader
+											label="Select Project" />
+									</listhead>
+									<template name="model" var="item"
+										status="s">
+										<listitem>
+
+											<listcell
+												label="@bind(item.name)" />
+										</listitem>
+									</template>
+								</listbox>
+							</bandpopup>
+						</bandbox>
+						<button label="Add" image="/images/New16.png"
+							sclass="btn-success" onClick="@command('addProject')" />
+					</row>
+					<row>
+						<label class="name" value="Study Name:" />
+						<combobox model="@load(vm.lstStudies)" value = "@bind(vm.txtStudyName)" width = "173px"
+							
+							selectedItem="@bind(vm.study)">
+							<template name="model">
+								<comboitem
+									label="@bind(each.name)"
+									value="@bind(each)" />
+							</template>
+						</combobox>
+					</row>
+			   <row>
+								<label class="name" value="Study Description:" />
+								<textbox width='173px'
+									value="@bind(vm.studyDescription)" />
+							</row>
+					<row>
+						<label class="name" value="Study Type:" />
+						<bandbox id="bdStudyType" mold="rounded"
+							autodrop="true" value="@load(vm.txtStudyType)" readonly="true">
+							<bandpopup>
+								<listbox height="250px" width="450px"
+									mold="paging" autopaging="true" model="@load(vm.studyTypeList)"
+									selectedItem="@bind(vm.txtStudyType)"
+									onSelect="bdStudyType.value=self.selectedItem.label;bdStudyType.close();">
+									<listhead>
+										<listheader
+											label="Select Study types" />
+									</listhead>
+									<listitem label="${each}"
+										forEach="${languages}" />
+								</listbox>
+							</bandpopup>
+						</bandbox>
+					</row>
+
+					<row>
+						<label class="name" value="Start Year:" />
+						<spinner width='190px'
+							value="@bind(vm.startYear)" />
+					</row>
+					<row>
+						<label class="name" value="End Year:" />
+						<spinner width='190px'
+							value="@bind(vm.endYear)" />
+					</row>
+					<row>
+						<!-- 											<button label="Save"
+							image="im" onClick="@command('saveStudyInformation')">
+							</button> -->
+
+					</row>
+				</rows>
+			</grid>
+
+		</groupbox>
+
+		<separator></separator>
+		<groupbox mold="3d" vflex="true" id="gbSiteInfo">
+			<caption label="Site Information" height="">
+				<button label="Add Site" class="btn btn-info pull-right"
+					onClick="@command('addSite', siteModel = null)">
+				</button>
+			</caption>
+
+			<tabbox id="tabboxSites">
+				<tabs></tabs>
+				<tabpanels></tabpanels>
+			</tabbox>
+		</groupbox>
+
+
+
+
+
+	</div>
+</zk>

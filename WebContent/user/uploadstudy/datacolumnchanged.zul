@@ -1,0 +1,27 @@
+<zk>
+  <window title="Variable List" border="normal" closable="true"  apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('org.strasa.web.uploadstudy.view.model.DataColumnChanged')" width = "50%" height = "45%" position="center,top">
+           <listbox  multiple="@load(vm.multiselect)" checkmark="true" oddRowSclass="odd"
+            model="@load(vm.varList)" selectedItems="@bind(vm.selectedVar)" vflex="1" sizedByContent="true">
+         <auxhead>
+                <auxheader colspan="3" class="topic">Filter: <textbox value="@bind(vm.filter)" onChange="@command('updatefilter',filterValue=event.value)" onChanging="@command('updatefilter', filterValue=event.value)" instant="true" onOK="@command('updatefilter')"></textbox></auxheader>
+            </auxhead>
+            <listhead>
+                <listheader label="Variable"  />
+                <listheader label="Property" />
+                <listheader label="Scale"  />
+                <listheader label="Method" hflex="1" />
+            </listhead>
+            <template name="model" >
+                <listitem>
+                    <listcell label="@load(each.variablecode)" />
+                    <listcell label="@load(each.property)" />
+                    <listcell label="@load(each.scale)" />
+                       <listcell label="@load(each.method)" />
+                </listitem>
+            </template>
+        </listbox>
+        
+        <button label = "Add Selected Traits" visible="@load(vm.multiselect)" onClick="@command('submitVariables')" class="btn" />
+    </window>
+</zk>

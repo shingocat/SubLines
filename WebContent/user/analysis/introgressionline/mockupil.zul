@@ -1,0 +1,96 @@
+<?page title="mockup-demo" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<vlayout>
+		<!-- Loading data -->
+		<groupbox>
+			<vbox>
+				<hbox>
+					<label>
+						Genotypic Data:
+					</label>
+					<label></label>
+					<button label="Form file" upload="true" />
+				</hbox>
+				<hbox>
+					<label>
+						Phenotypic Data:
+					</label>
+					<label></label>
+					<button label="Form file" upload="true" />
+				</hbox>
+				<hbox>
+					<label>
+						Map data:
+					</label>
+					<label></label>
+					<button label="Form file" upload="true" />
+				</hbox>
+			</vbox>
+		</groupbox>
+		<!-- viewing data -->
+		<groupbox>
+		<vbox>
+			<tabbox>
+				<tabs>
+					<tab label="Genotypic Data" />
+					<tab label="Phenotypic Data" />
+					<tab label="Map Data" />
+				</tabs>
+				<tabpanels>
+					<tabpanel>This is Genotypic Data.
+						<grid>
+							<columns>
+								<column>GENO</column>
+								<column label="${each}" forEach="M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M15, M16"></column>
+							</columns>
+							<rows>
+								<row>
+									<label value="G1"></label>
+									<label value="0"></label>
+									<label value="2"></label>
+									<label value="0"></label>
+									<label value="1"></label>
+									<label value="0"></label>
+									<label value="0"></label>
+									<label value="0"></label>
+									<label value="2"></label>
+									<label value="2"></label>
+									<label value="2"></label>
+									<label value="2"></label>
+									<label value="1"></label>
+									<label value="1"></label>
+									<label value="0"></label>
+									<label value="0"></label>
+									<label value="0"></label>
+									<label value="0"></label>
+									<label value="0"></label>
+								</row>
+							</rows>
+						</grid>
+					</tabpanel>
+					<tabpanel>This is Phenotypic Data.</tabpanel>
+					<tabpanel>This is Map Data.</tabpanel>
+				</tabpanels>
+			</tabbox>
+		</vbox>
+		</groupbox>
+		<!-- setting parameters -->
+		<groupbox>
+		<vbox>
+			<hbox>
+				<combobox>
+					<comboitem label="Chisq Test" />
+					<comboitem label="Single Marker Analysis" />
+					<comboitem label="Multi-Marker Regression" />
+				</combobox>
+			</hbox>
+		</vbox>
+		</groupbox>
+		<!-- running button -->
+		<groupbox>
+		<vbox>
+			<button label="Run"></button>
+		</vbox>
+		</groupbox>
+	</vlayout>
+</zk>

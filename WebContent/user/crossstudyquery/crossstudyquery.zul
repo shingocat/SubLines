@@ -1,0 +1,223 @@
+<zk>
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.crossstudyquery.view.model.CrossStudyQuery')"
+		align="left">
+
+		<!--  Search -->
+		<div align="center">
+			<hbox align="center" spacing="10px">
+				<label value="Select" sclass="label-search" />
+				<radiogroup id="dataCategoryId"
+					 vflex="1" 
+					selectedItem="@bind(vm.dataCategory)">
+					<radio label="Raw Data" value="rd"  style="padding:15px" />
+					<radio label="Derived Data" value="dd"  checked="true" selected="true"/>
+				</radiogroup>
+				<space width="10px" />
+				<label value="Variable" sclass="label-search" />
+				<bandbox id="studyVariable" instant="true"
+					autodrop="true" width="200px" vflex="1"
+					onChange="@command('changeFilter')">
+					<bandpopup width="700px" height="330px">
+						<vbox>
+							<listbox id="variableListItem"
+								sizedByContent="true" rows="10" width="700px" height="330px"
+								vflex="1"
+								onSelect="studyVariable.value=self.selectedItem.label;studyVariable.close();"
+								model="@load(vm.variablelist)">
+								<listhead sizable="true">
+									<listheader label="Variable"
+										width="100px" sort="auto" />
+									<listheader label="Description"
+										width="200px" />
+									<listheader label="Property" />
+									<listheader label="Scale" />
+									<listheader label="Method" />
+								</listhead>
+								<template name="model">
+									<listitem>
+
+										<listcell
+											label="${each.variablecode}" />
+										<listcell
+											label="${each.description}" />
+										<listcell
+											label="${each.property}" />
+										<listcell label="${each.scale}" />
+										<listcell
+											label="${each.method}" />
+
+									</listitem>
+								</template>
+
+							</listbox>
+						</vbox>
+					</bandpopup>
+				</bandbox>
+
+				<label value="Operator" sclass="label-search" />
+
+				<combobox id="cmbOperator" visible="true"
+					value="@bind(vm.operator)" model="@load(vm.operators)"
+					onOpen="@command('setOperator')"
+					onSelect="@command('setVariableValueInput',operatorSelected=self.value)">
+					<template name="model">
+						<comboitem value="@load(each)"
+							label="@load(each)" />
+					</template>
+				</combobox>
+
+				<label value="Value" sclass="label-search" />
+				<textbox id='txtVaribleValue' width="150px"
+					value="@bind(vm.variableValue)" visible="true" />
+				<textbox id='txtVaribleValue2' width="100px"
+					value="@bind(vm.variableValue2)" visible="false" />
+
+				<button label="Add Criteria" image="/images/add2.png"
+					sclass="btn-success" onClick="@command('AddCriteria')" />
+
+			</hbox>
+
+		</div>
+
+		<separator />
+		<!--  End Search -->
+		<!-- Criteria -->
+
+		<groupbox mold="3d" width="98%" sclass="groupbox-label">
+			<caption label="Criteria" />
+			<hbox>
+				<grid vflex="1" height="185px"
+					model="@load(vm.crossStudyFilterModelList)"
+					emptyMessage="No criteria specified">
+
+					<columns>
+						<column label="Variable" width="150px" />
+						<column label="Operator" />
+						<column label="Value" />
+						<column label="Action" />
+
+					</columns>
+					<template name="model" status="s">
+						<row>
+							<label value="@load(each.variable)" />
+							<label value="@load(each.operator)" />
+							<label value="@load(each.valueString)" />
+
+							<toolbarbutton src="/images/Delete16.png"
+								orient="vertical" tooltiptext="Delete Criteria"
+								onClick="@command('DeleteCriteria',rowIndex=s.index)" />
+						</row>
+					</template>
+				</grid>
+				<space></space>
+
+				<groupbox mold="3d" vflex="1" height="200px">
+					<caption label="Other Variable" />
+					<hbox>
+						<label value="Select" sclass="label-search" />
+						<bandbox id="studyVariable2" instant="true"
+							autodrop="true" width="200px"
+							onChange="@command('changeFilter2')">
+							<bandpopup width="700px" height="330px">
+								<vbox>
+
+									<listbox vflex="1"
+										id="variableListItem2" sizedByContent="true" rows="10"
+										width="700px"
+										onSelect="studyVariable2.value=self.selectedItem.label;studyVariable2.close();"
+										model="@load(vm.variablelist)">
+										<listhead sizable="true">
+											<listheader label="Variable"
+												width="100px" sort="auto" />
+											<listheader
+												label="Description" width="200px" />
+											<listheader
+												label="Property" />
+											<listheader label="Scale" />
+											<listheader label="Method" />
+										</listhead>
+										<template name="model">
+											<listitem>
+
+												<listcell
+													label="${each.variablecode}" />
+												<listcell
+													label="${each.description}" />
+												<listcell
+													label="${each.property}" />
+												<listcell
+													label="${each.scale}" />
+												<listcell
+													label="${each.method}" />
+
+											</listitem>
+										</template>
+
+									</listbox>
+								</vbox>
+							</bandpopup>
+						</bandbox>
+						<button label="Add" image="/images/add2.png"
+							sclass="btn-success" onClick="@command('AddColumn')" />
+					</hbox>
+
+					<grid model="@load(vm.additionalColumns)" vflex="1" zclass="none"
+						emptyMessage="No added variable" sizedByContent="false">
+
+						<columns>
+							<column hflex="1" label="Variable" />
+							<column hflex="1" label="Description" />
+							<column label="Action" width="70px" />
+
+						</columns>
+						<template name="model" status="s">
+							<row>
+								<label value="@load(each.variablecode)" />
+								<label value="@load(each.description)" />
+								<toolbarbutton src="/images/delete.png"
+									orient="vertical" tooltiptext="Delete Variable"
+									onClick="@command('DeleteAdditionalColumn',rowIndex=s.index)" />
+							</row>
+						</template>
+					</grid>
+				</groupbox>
+			</hbox>
+			<div align="left" vflex="1">
+				<hbox align="start">
+					<button label="Reset" onClick="@command('reset')"
+						sclass="btn-danger" image="/images/reset.png" />
+					<button label="Query" image="/images/query.png"
+						sclass="btn-success" onClick="@command('RunQuery')" />
+
+				</hbox>
+			</div>
+		</groupbox>
+
+		<separator />
+
+		<groupbox id="crossResultId" mold="3d" width="98%"
+			visible="false">
+			<caption label="@load(vm.searchResultLabel)" />
+			<div align="left">
+				<button id="btnExportId" label="Export to CSV"
+					sclass="btn-success" image="/images/export16.png" visible="false"
+					onClick="@command('exportToCSV', columns=vm.columnList, rows=vm.dataList)" />
+			</div> 
+
+	
+			<div id="resultQuery">
+			<label value="No record found"></label>
+			
+			</div>
+				<paging pageSize="@load(vm.pageSize)"
+					totalSize="@load(vm.totalSize)" activePage="@bind(vm.activePage)"
+					unless="${vm.rawData==null}" />
+
+<!-- 				<button label="Export to CSV"
+					unless="${vm.rawData==null}" sclass="btn-success"
+					onClick="@command('exportRawData', columns=vm.columnList, rows=vm.dataList, studyName=vm.studyName, dataType=vm.dataType)" /> -->
+	
+		</groupbox>
+	</div>
+</zk>

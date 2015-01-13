@@ -1,0 +1,5 @@
+<?init class="org.csi.view.model.AuthenticateInit"?>
+
+<div apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('org.spring.security.model.AuthenticateInit')">
+</div>

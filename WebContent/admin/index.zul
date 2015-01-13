@@ -1,0 +1,11 @@
+<?page title="Strasa Administrator Page" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+	<window border="none" >
+		<include id="mainHeader" self="@define(content)"
+			src="/admin/header.zul" />
+		<separator></separator>
+		<include id="mainFooter" self="@define(content)"
+			src="/admin/footer.zul" />
+	</window>
+</zk>

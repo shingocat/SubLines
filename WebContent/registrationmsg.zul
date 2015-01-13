@@ -1,0 +1,13 @@
+<?page title="Registation Message" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window border="none" position="center,top">
+		<separator height="300px"></separator>
+
+		<div align="center">
+			<label style="font-size:20px;"
+				value="Form successfully submitted! The administrator will informed you that your account has been validated and activated" />
+			<space width="50px"></space>
+			<button label="Back" href="index.zul" />
+		</div>
+	</window>
+</zk>

@@ -1,0 +1,110 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style>
+		.relative2{ position: absolute; top: 10px; right:0px;
+		float:right; background-color: none; width:
+		150px;text-align:right }
+
+		.labelHeader .relative2{font-family: 'Open Sans', arial; color:
+		rgb(85, 85, 85); font-size: 15px; font-weight: normal; padding:
+		5px; }
+
+		.grid-link-new .z-toolbarbutton-cnt { color: white;
+		text-decoration: underline; font-size: 15px; align: center;
+		background-image: none }
+
+		.mybtn{ color:maroon; font-weight:bold; height:35px; }
+
+	</style>
+	<zscript>
+	String username = org.spring.security.model.SecurityUtil.getUserName();
+</zscript>
+	<!-- <hlayout sclass="z-valign-center"
+		style="background:#438eb9;color:white;" height="50px">
+		<div style="padding:10px;float:left;">
+		<label value="Data Management and Analysis System(DMAS)" sclass="login-header"></label>
+		</div>
+		<div style="padding:0px 50px 0px 0px;float:right">
+		<hbox>
+		<label sclass="login-header">Welcome</label>
+		<image src="/images/user32.png"></image>
+		<label sclass="login-header">${username}</label>
+		<label sclass="login-header"> Logged as User</label>
+		<space width="15px"></space>
+		<button label="Logout" sclass="btn-blue"
+		unless="${empty execution.userPrincipal}"
+		href="/j_spring_security_logout" />
+		</hbox>
+		</div>
+		<space />
+		</hlayout>
+		<hlayout sclass="z-valign-center"
+		style="background:#336633;color:white;" height="30px">
+		<div align="left" hflex="1" >
+		<image src="/images/strasa.jpg" height="50px" width="50px"></image>
+		<span><label>Strasa Web</label></span>
+		</div>
+		
+		<div align="right" hflex="1">
+		<hbox align="center" pack="end">
+		<label>Welcome:</label>
+		<label>${username}</label>
+		<label>| Role : Admin</label>
+		<button label="Logout"
+		unless="${empty execution.userPrincipal}"
+		href="/j_spring_security_logout" />
+		</hbox>
+		</div>
+		<space />
+		</hlayout> -->
+
+
+	<div sclass="z-valign-center"
+		style="background:#438eb9;color:white;" height="50px">
+		<hbox width="500px">
+			<div style="float:left; position: relative">
+				<vbox>
+					<label style="margin-left:20px;font-weight:bold;font-size:18px"
+						value="Data Management and Analysis System(DMAS)" />
+					<label style="margin-left:20px;font-weight:bold;font-size:17px" value="MAINENANCE" />
+				</vbox>
+			</div>
+			<div width="200px"
+				style="position: absolute; top: 10px; right:0px;
+		float:right; background-color: none; width:
+		150px;text-align:right">
+
+				<hbox>
+					<label>Welcome</label>
+					<!-- 	<label value="Logged as: " style="text-align:right"></label> -->
+					<label value="${username}"
+						style="color:white;font-size:15px">
+					</label>
+
+					<button label="Logged Out"
+						unless="${empty execution.userPrincipal}"
+						href="/j_spring_security_logout" />
+				</hbox>
+			</div>
+
+		</hbox>
+
+	</div>
+
+	<hlayout sclass="z-valign-center"
+		style="background:#E5E5E5;color:white;" height="70px">
+
+		<hbox pack="center">
+			<space />
+			<toolbarbutton label="Account" src="/images/account48.png" height="70px"
+				tooltiptext="User Account" orient="vertical"
+				href="http://localhost:8080/StrasaWeb/admin/usermanagement.zul" />
+			<space />
+			<toolbarbutton label="Settings" src="/images/settings48.png" height="70px"
+				orient="vertical"
+				href="http://localhost:8080/StrasaWeb/admin/adminsettings.zul" />
+			<space />
+		</hbox>
+	</hlayout>
+
+</zk>

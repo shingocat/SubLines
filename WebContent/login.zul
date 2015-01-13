@@ -1,0 +1,50 @@
+<?page id="login" title="STRASA"?>
+<zk>
+<style src="/css/style.css"></style>
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.spring.security.model.AuthenticateInit')">
+
+<!-- 		<window id="loginwin" title="Strasa Web User Login" 
+			border="normal" width="500px" mode="overlapped" position="center" class="mymodal"> -->
+
+			<!-- this form-login-page form is also used as the
+				form-error-page to ask for a login again. 
+				If authentication fails, Spring Security will put AuthenticationException 
+				into the HttpSession with the attribute key: "SPRING_SECURITY_LAST_EXCEPTION".
+			-->
+
+			<html style="color:red"
+				if="${not empty param.login_error}">
+				<![CDATA[ Your login attempt was not successful, try
+				again.<br/><br/> Reason:
+				${SPRING_SECURITY_LAST_EXCEPTION.message} ]]>
+    		</html>
+
+
+			<html:form action="j_spring_security_check" method="POST"
+				xmlns:html="native">
+				<grid width="200px">
+					<rows>
+						<row>
+							User:
+							<textbox id="u" name="j_username" />
+						</row>
+						<row>
+							Password:
+							<textbox id="p" type="password"
+								name="j_password" />
+						</row>
+						<row spans="2">
+							<hbox>
+								<button type="reset" label="Reset" />
+								<button type="submit" label="Login" />
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+			</html:form>
+
+
+<!-- 		</window> -->
+	</div>
+</zk>

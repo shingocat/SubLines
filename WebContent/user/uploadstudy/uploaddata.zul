@@ -1,0 +1,336 @@
+<zk xmlns:n="native">
+
+	<style src="/css/main.css"></style>
+
+	<div width="100%" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.uploadstudy.view.model.UploadData')">
+
+
+		<vlayout spacing="15px">
+			<!-- <groupbox mold="3d" width="100%">
+				<caption label="Study Information" /> -->
+				<vlayout spacing="7px">
+					<grid zclass="none">
+						<columns>
+							<column label="" width="120px" />
+							<column label="" width="350px" />
+							<column label="" width="100px" />
+						</columns>
+						<rows>
+							<row>
+								<label class="name" value="Program:" />
+								<bandbox id="bdProgram" mold="rounded"
+									autodrop="true" value="@bind(vm.txtProgram.name)"
+									readonly="true" width="330px">
+									<bandpopup>
+										<listbox height="250px"
+											width="650px" mold="paging" autopaging="true"
+											model="@load(vm.programList)"
+											selectedItem="@bind(vm.txtProgram)"
+											onSelect="bdProgram.value=self.selectedItem.label;bdProgram.close();">
+											<listhead>
+												<listheader
+													label="Select Program" />
+											</listhead>
+											<template name="model"
+												var="item" status="s">
+												<listitem>
+
+													<listcell
+														label="@bind(item.name)" />
+												</listitem>
+											</template>
+
+										</listbox>
+									</bandpopup>
+								</bandbox>
+								<button label="Add" sclass="btn-success"
+									image="/images/add2.png" onClick="@command('addProgram')" />
+							</row>
+							<row>
+								<label class="name" value="Project:" />
+								<bandbox id="bdProject" mold="rounded"
+									width="330px" autodrop="true" value="@bind(vm.txtProject.name)"
+									readonly="true">
+									<bandpopup>
+										<listbox height="250px"
+											width="450px" mold="paging" autopaging="true"
+											model="@load(vm.projectList)"
+											selectedItem="@bind(vm.txtProject)"
+											onSelect="bdProject.value=self.selectedItem.label;bdProject.close();">
+											<listhead>
+												<listheader
+													label="Select Project" />
+											</listhead>
+											<template name="model"
+												var="item" status="s">
+												<listitem>
+
+													<listcell
+														label="@bind(item.name)" />
+												</listitem>
+											</template>
+										</listbox>
+									</bandpopup>
+								</bandbox>
+								<button label="Add" sclass="btn-success"
+									image="/images/add2.png" onClick="@command('addProject')" />
+							</row>
+							<row>
+								<label class="name" value="Study Name:" />
+								<textbox width='173px'
+									value="@bind(vm.txtStudyName)" />
+							</row>
+                            <row>
+								<label class="name" value="Study Description:" />
+								<textbox width='173px'
+									value="@bind(vm.studyDescription)" />
+							</row>
+							<row>
+								<label class="name" value="Study Type:" />
+								<bandbox id="bdStudyType" mold="rounded"
+									autodrop="true" value="@load(vm.txtStudyType)"
+									readonly="true">
+									<bandpopup>
+										<listbox height="250px"
+											width="450px" mold="paging" autopaging="true"
+											model="@load(vm.studyTypeList)"
+											selectedItem="@bind(vm.txtStudyType)"
+											onSelect="bdStudyType.value=self.selectedItem.label;bdStudyType.close();">
+											<listhead>
+												<listheader
+													label="Select Study types" />
+											</listhead>
+											<listitem label="${each}"
+												forEach="${languages}" />
+										</listbox>
+									</bandpopup>
+								</bandbox>
+							</row>
+
+							<row>
+								<label class="name" value="Start Year:" />
+								<spinner width='190px'
+									value="@bind(vm.startYear)" />
+							</row>
+							<row>
+								<label class="name" value="End Year:" />
+								<spinner width='190px'
+									value="@bind(vm.endYear)" />
+							</row>
+						</rows>
+					</grid>
+
+				</vlayout>
+	<!-- 		</groupbox> -->
+			<groupbox id="gbData" mold="3d" width="100%"
+				visible="@bind(vm.updateMode)">
+				<caption label="Uploaded Data" />
+				<panel width="100%" height="100%">
+					<panelchildren style="overflow: auto">
+						<tabbox id="tb" mold="accordion"
+							height="100%">
+							<tabs>
+								<tab label="Derived Data"
+									onSelect="@command('showzulfile', zulFileName='/user/browsestudy/deriveddata.zul', target=self.linkedPanel)" />
+								<tab label="Raw Data"
+									onSelect="@command('showzulfile', zulFileName='/user/browsestudy/rawdata.zul', target=self.linkedPanel)" />
+							</tabs>
+							<tabpanels width="100%">
+
+								<tabpanel style="overflow: auto"
+									height="300px">
+								</tabpanel>
+								<tabpanel style="overflow: auto"
+									height="300px">
+								</tabpanel>
+							</tabpanels>
+						</tabbox>
+					</panelchildren>
+				</panel>
+			</groupbox>
+			<div id="gbUploadData" width="100%">
+				  
+				<hlayout spacing="30px" height="" width="" vflex="true"
+					hflex="true">
+
+					<vlayout width="100%" hflex="true" vflex="true">
+						<!-- 						<groupbox width="99%">
+							<caption label="Type of Data" />
+							<radiogroup
+							selectedItem="@bind(vm.studyType)">
+							<hlayout width="100%">
+							<radio label="Raw Data"
+							value="rawdata" selected="true"
+							disabled="@load(vm.dataUploaded)" />
+							<radio label="Derived Data"
+							value="derived" disabled="@load(vm.dataUploaded)" />
+							</hlayout>
+							</radiogroup>
+							</groupbox> -->
+						<!-- 						<groupbox width="99%"
+							visible="@load(!vm.updateMode)">
+							<caption label="Upload to" />
+							
+							<radiogroup
+							selectedItem="@bind(vm.uploadTo)">
+							<hlayout width="100%">
+							<radio label="Database"
+							value="database" selected="true"
+							disabled="@load(vm.dataUploaded)" />
+							<radio label="Folder" value="folder"
+							disabled="@load(vm.dataUploaded)" />
+							</hlayout>
+							</radiogroup>
+							</groupbox> -->
+
+						<groupbox id="grpUpload" mold="3d"
+							width="100%">
+							<caption label="Select Data" />
+							<label value=""></label>
+
+
+
+							<grid>
+								<columns>
+									<column label="" width="120px" />
+									<column label="" width="500px" />
+								</columns>
+								<rows>
+									<row>
+										<label value="Type of Data">
+										</label>
+										<radiogroup
+											selectedItem="@bind(vm.studyType)">
+											<hlayout width="100%">
+												<radio label="Raw Data"
+													value="rawdata" selected="true"
+													disabled="@load(vm.dataUploaded)" />
+												<radio label="Derived"
+													value="derived" disabled="@load(vm.dataUploaded)" />
+											</hlayout>
+										</radiogroup>
+									</row>
+									<row>
+										<label value="Upload to" />
+										<radiogroup
+											selectedItem="@bind(vm.uploadTo)">
+											<hlayout width="100%">
+												<radio label="Database"
+													value="database" selected="true"
+													disabled="@load(vm.dataUploaded)" />
+												<radio label="Folder"
+													value="folder" disabled="@load(vm.dataUploaded)" />
+											</hlayout>
+										</radiogroup>
+									</row>
+									<row>
+										<label value="Select Data File" />
+										<hlayout spacing="50px">
+											<vlayout width="100%">
+												<radiogroup>
+													<vlayout
+														width="100%" spacing="10px">
+														<div
+															align="left">
+															<hlayout>
+																<label
+																	id="lblMsgUpload"
+																	visible="@load(vm.variableDataVisible)"
+																	value="@load(vm.dataFileName)" sclass="label-search" />
+													
+																<button
+																	id="uploadCSV" upload="true" label="Browse" sclass="btn-success"
+																	image="/images/find.png"
+																	onUpload="@command('uploadCSV')" /> 
+
+																
+																<button
+																	label="Remove" onClick="@command('removeUpload') "
+																	image="/images/remove.png"
+																	visible="@load(vm.variableDataVisible)"
+																	sclass="btn-danger" />
+																<button
+																	label="Modify Header" image="/images/modify.png"
+																	onClick="@command('modifyDataHeader')"
+																	visible="@load(vm.variableDataVisible)"
+																	sclass="btn-info" />
+															</hlayout>
+														</div>
+													</vlayout>
+												</radiogroup>
+											</vlayout>
+
+										</hlayout>
+									</row>
+								</rows>
+
+
+							</grid>
+
+						</groupbox>
+						<groupbox id="grpVariableData" mold="3d"
+							width="100%" hflex="1" >
+							<caption label="Data Preview" />
+							<hlayout spacing="50px">
+								<vlayout>
+								<div id="datagrid">
+									</div>
+								</vlayout>
+							</hlayout>
+						</groupbox>
+
+
+						<groupbox id="grpUploadGenotypeData"
+							width="100%" mold="3d">
+							<caption label="Select Genotype Data" />
+							<label value=""></label>
+							<!-- 		<hlayout spacing="30px"> -->
+							<!-- <vlayout width="240px"> -->
+							<grid sizedByContent="true" vflex="1"
+								height="100px" model="@bind(vm.genotypeFileList)"
+								emptyMessage="No genotype file uploaded...">
+								<columns>
+									<column label="" width="200px"></column>
+									<column label=""></column>
+								</columns>
+
+								<template name="model" var="item">
+									<row>
+										<label value="@bind(item.name)" />
+										<hbox>
+											<toolbarbutton
+												src="/images/Delete16.png" orient="vertical"
+												tooltiptext="Delete File"
+												onClick="@command('removeGenotypeFile', index=itemStatus.index)" />
+										</hbox>
+									</row>
+								</template>
+							</grid>
+							<div align="left">
+								<button id="uploadGenotype"  sclass="btn-success"
+									upload="true,native" label="Attach Genotype file..."
+									onUpload="@command('uploadGenotypeData')" />
+							</div>
+	
+						</groupbox>
+
+					</vlayout>
+
+				</hlayout>
+
+			</div>
+
+
+		</vlayout>
+		<separator spacing="20px" />
+		
+<div align="center">
+			<button label="Save" image="/images/save16.png"
+				onClick="@global-command('nextTab',model=vm)" sclass="btn-warning" height="40px" width="150px">
+			</button>
+		</div>
+
+	</div>
+
+</zk>

@@ -1,0 +1,39 @@
+<zk>
+	<style>
+		.heavy { font-weight: bold; font-size: 12px;padding:0px 0px 0px
+		25px }
+
+		.heavier { font-weight: bold; font-size: 12px; }
+
+		.searchLabel {font-size: 13px; }
+
+		.no-highlight tr.z-row-over td.z-row-inner { background:white; }
+	</style>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.maintenance.view.model.Index')">
+
+
+		<div sclass="page-header">
+			<label value="Settings" />
+			<!-- <a label="overview &amp; stats" iconSclass="z-icon-angle-double-right" sclass="subtitle"/> -->
+		</div>
+		<tabbox id="tb">
+			<tabs>
+				<tab label="Program" />
+				<tab label="Project" />
+				<tab label="User Profile" />
+			</tabs>
+			<tabpanels width="100%">
+				<tabpanel style="overflow: auto">
+					<include src="/user/maintenance/editprogram.zul" />
+				</tabpanel>
+				<tabpanel style="overflow: auto">
+					<include src="/user/maintenance/editproject.zul" />
+				</tabpanel>
+				<tabpanel style="overflow: auto">
+					<include src="/user/maintenance/edituser.zul" />
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</window>
+</zk>

@@ -1,0 +1,20 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<div id="mainSSSLWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.sssl.view.model.Index')">
+
+		<separator height="5px"></separator>
+
+			<tabbox id="tabBox" sclass="page-content"  style="overflow:auto">
+			<tabs id="tabs">
+				<tab label="SSSL Analysis"
+					image="/images/find.png" />
+			</tabs>
+			<tabpanels id="tabPanels">
+				<tabpanel id="specificationsPanel">
+					<include id="includeSpecifications" src="/user/analysis/sssl/specifications.zul" />
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</div>
+</zk>

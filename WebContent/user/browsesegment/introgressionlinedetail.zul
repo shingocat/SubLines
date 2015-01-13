@@ -1,0 +1,226 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<div apply="org.zkoss.bind.BindComposer" hflex="1" vflex="1"
+		viewModel="@id('vm') @init('org.strasa.web.segmentquery.view.model.IntrogressionLineDetail')">
+		<vbox width="99%">
+			<div style="overflow:auto;">
+				<groupbox mold="3d">
+					<caption label="Segment(s) Information" />
+					<listbox oddRowSclass="odd" sclass="gridMaxBodyHeight550" rows="3"
+						hflex="1" multiple="false" id="tblSegmentInfo" sizedByContent="true"
+						model="@load(vm.introgressionLine.segments)">
+						<!-- selectedItem="@bind(vm.selectedSegment)"> -->
+
+						<listhead>
+							<listheader label="Chr." sort="auto(chromosome)"
+								style="color:red" />
+							<listheader label="Recurrent" style="color:red" />
+							<listheader label="Donor" style="color:red" />
+							<!-- <listheader label="Genetic Position 1" style="color:none" width="150px" 
+								/> -->
+							<listheader label="GeneticStart" style="color:none" />
+							<listheader label="GeneticEnd" style="color:none" />
+							<!-- <listheader label="Genetic Position 4" style="color:none" width="150px" 
+								/> -->
+							<listheader label="PhysicalStart" style="color:none" />
+							<listheader label="PhysicalEnd" style="color:none" />
+							<listheader label="Length(cM)" style="color:red" />
+							<!-- <listheader label="Genetic Minimum Length" style="color:none" 
+								width="150px" /> <listheader label="Genetic Maximum Length" style="color:none" 
+								width="150px" /> -->
+							<listheader label="Description" style="color:none" />
+							<listheader label="Homogeous" style="color:none" />
+						</listhead>
+						<template name="model">
+							<listitem>
+								<!-- onClick="@command('selectSegment', segment = each)"> -->
+								<listcell>
+									<label
+										value="@bind(each.chromosome eq null ? 'NULL' : each.chromosome)" />
+								</listcell>
+								<listcell>
+									<label
+										value="@bind(each.recurrentParent eq null ? 'NULL' : each.recurrentParent)" />
+								</listcell>
+								<listcell>
+									<label
+										value="@bind(each.donorParent eq null ? 'NULL' : each.donorParent)" />
+								</listcell>
+								<!-- <listcell> <label value="@bind(each.position1)" /> </listcell> -->
+								<listcell>
+									<label
+										value="@bind(each.position2 eq null ? 'NULL' : each.position2)" />
+								</listcell>
+								<listcell>
+									<label
+										value="@bind(each.position3 eq null ? 'NULL' : each.position3)" />
+								</listcell>
+								<!-- <listcell> <label value="@bind(each.position4)" /> </listcell> -->
+								<listcell>
+									<label
+										value="@bind(each.physicalStart eq null ? 'NULL' : each.physicalStart)" />
+								</listcell>
+								<listcell>
+									<label
+										value="@bind(each.physicalEnd eq null ? 'NULL' : each.physicalEnd)" />
+								</listcell>
+								<listcell>
+									<label
+										value="@bind(each.estimatedLength eq null ? 'NULL' : each.estimatedLength)" />
+								</listcell>
+								<!-- <listcell> <label value="@bind(each.minimumLength)" /> </listcell> 
+									<listcell> <label value="@bind(each.maximumLength))" /> </listcell> -->
+								<listcell>
+									<div style="overflow:auto;">
+										<label
+											value="@bind(each.description eq null ? 'NULL' : each.description)" />
+									</div>
+								</listcell>
+								<listcell>
+									<label
+										value="@bind(each.isHomogenous eq null ? 'NULL' : each.isHomogenous)" />
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</groupbox>
+			</div>
+			<div hflex="1">
+				<groupbox id="IntrogressionLineDetailId" mold="3d">
+					<caption label="Baisc Information" />
+					<vlayout>
+						<grid oddRowSclass="empty">
+							<columns width="200px">
+								<column label="" width="200px" />
+								<column label="" />
+							</columns>
+							<rows>
+								<row>
+									<label value="GID:" sclass="heavy" />
+									<label class="searchLabel" value="@load(vm.introgressionLine.gid)" />
+								</row>
+								<row>
+									<label value="Germplasm Name:" sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.introgressionLine.germplasmname)" />
+								</row>
+								<row>
+									<label value="Other Name:" sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.introgressionLine.othername)" />
+								</row>
+								<row>
+									<label value="Breeder:" sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.introgressionLine.breeder)" />
+								</row>
+								<row>
+									<label value="Germplasm Type" sclass="heavy" />
+									<label sclass="searchLabel"
+										value="@load(vm.introgressionLine.germplasmtypeid)" />
+								</row>
+								<row>
+									<label value="IR Number" sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.introgressionLine.irnumber)" />
+								</row>
+								<row>
+									<label value="IR Cross" sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.introgressionLine.ircross)" />
+								</row>
+								<row>
+									<label value="Parentage" sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.introgressionLine.parentage)" />
+								</row>
+								<row>
+									<label value="Male Parent" sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.introgressionLine.maleparent)" />
+								</row>
+								<row>
+									<label value="Female Parent" sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.introgressionLine.femaleparent)" />
+								</row>
+								<row>
+									<label value="Selection History" sclass="heavy" />
+									<label sclass="searchLabel"
+										value="@load(vm.introgressionLine.selectionhistory)" />
+								</row>
+								<row>
+									<label value="Source" sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.introgressionLine.source)" />
+								</row>
+								<row spans="">
+									<label value="Key Characteristics" sclass="heavy" />
+									<label value="" />
+								</row>
+								<row>
+									<label value="Abiotic" style="padding:0px 0px 0px 50px"
+										sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.abioticCharacteristics)" />
+								</row>
+								<row>
+									<label value="Biotic" style="padding:0px 0px 0px 50px"
+										sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.bioticCharacteristics)" />
+								</row>
+								<row>
+									<label value="Grain Quality" style="padding:0px 0px 0px 50px"
+										sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.grainQualityCharacteristics)" />
+								</row>
+								<row>
+									<label value="Major Genes" style="padding:0px 0px 0px 50px"
+										sclass="heavy" />
+									<label sclass="searchLabel" value="@load(vm.majorGenesCharacteristics)" />
+								</row>
+							</rows>
+						</grid>
+					</vlayout>
+				</groupbox>
+			</div>
+
+			<div hflex="1">
+				<groupbox id="StudyTestedId" mold="3d">
+					<caption label="Studies where this introgressionLine is tested" />
+					<grid height="200px" model="@load(vm.studyTested)"
+						oddRowSclass="odd" emptyMessage="No Record Found" sizedByContent="true"
+						zclass="none">
+
+						<columns sizable="true">
+							<column label="Study Name" width="200px" />
+							<column label="Program" />
+							<column label="Project" />
+							<column label="Study Type" />
+							<column label="Start Year" />
+							<column label="End Year" />
+							<column label="Location" />
+							<column label="Country" />
+
+						</columns>
+						<template name="model">
+							<row>
+								<toolbarbutton if="${vm.parentSource=='study'}"
+									label="@load(each.studyname)"
+									onClick="@global-command('openStudyDetailInStudy', studyid=each.id,studyName=each.studyname)"
+									class="grid-link" />
+
+								<toolbarbutton if="${vm.parentSource=='germplasm'}"
+									label="@load(each.studyname)"
+									onClick="@global-command('openStudyDetailInGermplasm', studyid=each.id,studyName=each.studyname)"
+									class="grid-link" />
+
+								<toolbarbutton if="${vm.parentSource=='crossstudy'}"
+									label="@load(each.studyname)"
+									onClick="@global-command('openStudyDetailInAcrossStudy', studyid=each.id,studyName=each.studyname)"
+									class="grid-link" />
+								<label value="@load(each.programname)" />
+								<label value="@load(each.projectname)" />
+								<label value="@load(each.studytypename)" />
+								<label value="@load(each.startyear)" />
+								<label value="@load(each.endyear)" />
+								<label value="@load(each.locationname)" />
+								<label value="@load(each.country)" />
+							</row>
+						</template>
+					</grid>
+				</groupbox>
+			</div>
+		</vbox>
+	</div>
+</zk>

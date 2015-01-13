@@ -1,0 +1,403 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style src="../css/main.css" />
+	<style>
+		.gridMaxBodyHeight550 div.z-listbox-body { max-height: 90%;
+		height: 90%; overflow: auto; } tr.z-listitem-seld {
+		background-image:none; background-color:#BEC7F7;}
+	</style>
+	<script src="http://stanlemon.net/javascript/jquery.jgrowl.js" />
+	<style src="http://stanlemon.net/stylesheet/jquery.jgrowl.css" />
+
+	<div sclass="page-header">
+		<label value="Upload/Modify Introgression Line" />
+	</div>
+
+	<!-- <div id="mainDiv" width="100%" 
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.managegermplasm.view.model.introgressionline.Index')"
+		sclass="page-content"> -->
+	<div id="mainDiv" width="100%" sclass="page-content">
+
+		<div align="left">
+			<hlayout>
+				<button id="uploadGenotypeData" upload="true"
+					label="Import Introgression Line List"
+					onUpload="@command('uploadIntrogressionLine')"
+					sclass="btn-success" />
+				<div id="divUploadOption">
+					<label value="" id="lblFileName"
+						style="font-size:16px;" />
+					<button label="Remove"
+						onClick="@command('resetUnknownIntrogressionLine')"
+						sclass="btn-danger" />
+				</div>
+			</hlayout>
+		</div>
+		<separator height="15px" />
+		<columnlayout id="colLayout1" vflex="1">
+			<columnchildren width="70%" height="1000px">
+				<vlayout id="tableLayout" height="1000px">
+					<groupbox mold="3d" id="gbUnknownIntrogressionLine"
+						hflex="1" height="100%">
+						<caption
+							label="List of Introgression Lines to Import" />
+						<vlayout vflex="1">
+							<listbox zclass="none" oddRowSclass="odd"
+								checkmark="true" multiple="false"
+								id="tblStudyIntrogressionLine" sizedByContent="true" hflex="1"
+								model="@load(vm.lstStudyIntrogressionLine) @template(each.templateMode)"
+								rows="10" selectedItem="@bind(vm.selectedIntrogressionLine)">
+								<auxhead sclass="category-center">
+									<auxheader colspan="1">
+										<image src="/images/filter.png" />
+										<textbox instant="true"
+											onChange="@command('changeFilterStudy')"
+											value="@bind(vm.studyIntrogressionLineFilter.gname)"
+											width="100px" />
+									</auxheader>
+									<auxheader colspan="1">
+										<image src="/images/filter.png" />
+										<intbox instant="true"
+											onChange="@command('changeFilterStudy')"
+											value="@bind(vm.studyIntrogressionLineFilter.segmentNumber)"
+											width="100px" />
+									</auxheader>
+									<auxheader colspan="1">
+										<image src="/images/filter.png" />
+										<textbox instant="true"
+											onChange="@command('changeFilterStudy')"
+											value="@bind(vm.studyIntrogressionLineFilter.breeder)"
+											width="100px" />
+									</auxheader>
+									<auxheader colspan="1">
+										<image src="/images/filter.png" />
+										<textbox instant="true"
+											onChange="@command('changedFilterStudy')"
+											value="@bind(vm.studyIntrogressionLineFilter.femaleParent)"
+											width="100px" />
+									</auxheader>
+									<auxheader colspan="1">
+										<image src="/images/filter.png" />
+										<textbox instant="true"
+											onChange="@command('changedFilterStudy')"
+											value="@bind(vm.studyIntrogressionLineFilter.maleParent)"
+											width="100px" />
+									</auxheader>
+								</auxhead>
+								<listhead menupopup="auto"
+									columnsgroup="false">
+									<listheader label="IL Name"
+										sort="auto(germplasmname)" style="color:red" hflex="1"
+										width="19%" />
+									<listheader label="Segment Number"
+										sort="auto(segmentNumber)" style="color:red" hflex="1"
+										width="19%" />
+									<listheader label="Breeder"
+										style="color:red" hflex="1" width="19%" />
+									<listheader label="Female Parent"
+										style="color:red" hflex="1" width="19%" />
+									<listheader label="Male Parent"
+										style="color:red" hflex="1" width="16%" />
+								</listhead>
+								<template name="display">
+									<listitem
+										onClick="@command('selectIntrogresionLine', introgressionLine = each)">
+										<listcell>
+											<label
+												value="@bind(each.germplasmname)" />
+										</listcell>
+										<listcell>
+											<label
+												value="@bind(each.segmentNumber)" />
+										</listcell>
+										<listcell>
+											<label
+												value="@bind(each.breeder)" />
+										</listcell>
+										<listcell>
+											<label
+												value="@bind(each.femaleParent)" />
+										</listcell>
+										<listcell>
+											<label
+												value="@bind(each.maleParent)" />
+										</listcell>
+										<listcell>
+											<button
+												image="/images/pencil.png"
+												onClick="@command('modifyIntrogressionLine', introgressionLine=each)" />
+											<button
+												image="/images/delete.png"
+												onClick="@command('removeIntrogressionLine', introgressionLine=each)" />
+										</listcell>
+									</listitem>
+								</template>
+								<template name="editable">
+									<listitem vflex="1" hflex="1"
+										onClick="command('selectIntrogressionLine', introgressionLine=each)">
+										<listcell>
+											<label
+												value="@bind(each.germplasmname)" />
+										</listcell>
+										<listcell>
+											<intbox
+												value="@bind(each.segmentNumber)" width="15%"
+												onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+											<intbox
+												value="@bind(each.newSegmentNumber)" width="15%"
+												onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+										</listcell>
+										<listcell>
+											<textbox
+												value="@bind(each.breeder)" width="15%"
+												onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+											<textbox
+												value="@bind(each.newBreeder)" width="15%"
+												onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+										</listcell>
+										<listcell>
+											<textbox
+												value="@bind(each.femaleParent)" width="99%"
+												onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+										</listcell>
+										<listcell>
+											<textbox
+												value="@bind(each.maleParent)" width="99%"
+												onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+										</listcell>
+										<listcell>
+											<div>
+												<toolbarbutton
+													image="/images/disk.png"
+													onClick="@command('saveIntrogression', introgressionLine=each, listitem=self.parent)" />
+												<toolbarbutton
+													image="/images/cross.png"
+													onClick="@command('cancelEdit', introgressionLine=each)" />
+											</div>
+										</listcell>
+									</listitem>
+								</template>
+								<template name="newEntry">
+									<listitem vflex="1" hflex="1"
+										onClick="@command('selectIntrogressionLine' introgressionLine=each)">
+										<listcell>
+											<textbox
+												value="@bind(each.germplasmname)" />
+										</listcell>
+										<listcell>
+											<intbox
+												value="@bind(each.segmentNumber)" />
+										</listcell>
+										<listcell>
+											<textbox
+												value="@bind(each.breeder)" width="100%"
+												onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+										</listcell>
+										<listcell>
+											<textbox
+												value="@bind(each.femaleParent)" width="99%"
+												onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+										</listcell>
+										<listcell>
+											<textbox
+												value="@binad(each.maleParent)" width="99%"
+												onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+										</listcell>
+									</listitem>
+								</template>
+								<listfoot>
+									<listfooter>
+										<label
+											value="@bind(vm.totalUnknownIntrogressionLine)"
+											style="font-weight:bold" />
+									</listfooter>
+								</listfoot>
+							</listbox>
+						</vlayout>
+						<separator height="10px" />
+						<div align="center">
+							<button label="Save"
+								image="/images/save16.png" onClick="@command('saveData')"
+								sclass="btn-warning" height="40px" width="150px">
+							</button>
+						</div>
+					</groupbox>
+					<groupbox id="gdKnownIntrogressionLine">
+						<listbox id="tblKnownIntrogressionLine"
+							oddRowSclass="odd" sizedByContent="true" hflex="1"
+							sclass="gridMaxBodyHeight550" rows="10"
+							model="@load(vm.lstKnownIntrogressionLine) @template((each.known)?'display' : 'editable')"
+							selectedItem="@bind(vm.selectedIntrogressionLine)">
+							<auxhead sclass="category-center">
+								<auxheader colspan="1">
+									<image src="/images/filter.png" />
+									<textbox instant="true"
+										onChange="@command('changeFilterKnown')"
+										value="@bind(vm.knownIntrogressionLine.gname)" width="100px" />
+								</auxheader>
+								<auxheader colspan="1">
+									<image src="/images/filter.png" />
+									<intbox instant="true"
+										onChange="@command('changeFilterKnown')"
+										value="@bind(vm.knownIntrogressionLine.segmentNumber)"
+										width="100px" />
+								</auxheader>
+								<auxheader colspan="1">
+									<image src="/images/filter.png" />
+									<textbox instant="true"
+										onChange="@command('changeFilterKnown')"
+										value="@bind(vm.knownIntorgressionLine.breeder)" width="100px" />
+								</auxheader>
+								<auxheader colspan="1">
+									<image src="/images/filter.png" />
+									<textbox instant="true"
+										onChange="@command('changeFilterKnown')"
+										value="@bind(vm.knownIntrogressionLine.femaleParent)"
+										width="100px" />
+								</auxheader>
+								<auxheader colspan="1">
+									<image src="/images/filter.png" />
+									<textbox instant="true"
+										onChange="@command('changeFilterKnown')"
+										value="@bind(vm.knownIntrogressionLine.maleParent)"
+										width="100px" />
+								</auxheader>
+							</auxhead>
+							<listhead menupopup="auto"
+								columnsgroup="false">
+								<listheader label="IL Name"
+									sort="auto(germplasmname)" style="color:red" hflex="1"
+									width="19%" />
+								<listheader label="Segment Number"
+									sort="auto(segmentNumber)" style="color:red" hflex="1"
+									width="19%" />
+								<listheader label="Breeder" hflex="1"
+									style="color:red" width="19%" />
+								<listheader label="Female Parent" hflex="1"
+									style="color:red" width="19%" />
+								<listheader label="Male Parent" hflex="1"
+									style="color:red" width="16%" />
+								<listheader label="Actions" hflex="1"
+									width="8%" />
+							</listhead>
+							<template name="display">
+								<listitem
+									onClick="@command('selectIntrogreesionLine', introgressionLine=each)">
+									<listcell>
+										<label
+											value="@bind(each.germplasmname)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.segmentNumber)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.breeder)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.femaleParent)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.maleParent)" />
+									</listcell>
+									<listcell>
+										<toolbarbutton
+											image="/images/edit16.png"
+											tooltiptext="Edit Introgression Line"
+											onClick="@command('modifyIntrogressionLine', introgressionLine = each)" />
+										<toolbarbutton
+											image="/images/delete.png"
+											tooltiptext="Delete Introgression Line"
+											onClick="@command('removeIntrogressionLine', introgressionLine = each)" />
+									</listcell>
+								</listitem>
+							</template>
+							<template name="editable">
+								<listitem vflex="1" hflex="1"
+									onClick="@command('selectIntrogressionLine', introgressionLine=each)">
+									<listcell>
+										<label
+											value="@bind(each.germplasmname)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.segmentNumber)" width="85%" />
+										<intbox
+											value="@bind(each.newSegmentNumber)" width="15%"
+											onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.breeder)" width="85%" />
+										<textbox
+											value="@bind(each.newBreeder)" width="15%"
+											onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+									</listcell>
+									<listcell>
+										<textbox
+											value="@bind(each.femaleParent)" width="99%"
+											onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+									</listcell>
+									<listcell>
+										<textbox
+											value="@bind(each.maleParent)" width="99%"
+											onClick="@command('selectIntrogressionLine', introgressionLine=each)" />
+									</listcell>
+									<listcell>
+										<div>
+											<toolbarbutton
+												image="/images/disk.png"
+												onClick="@command('saveIntrogressionLine', introgressionLine=each, listitem=forEachStatus.index)" />
+											<toolbarbutton
+												image="/images/cross.png"
+												onClick="@command('cancelEdit', introgressionLine=each)" />
+										</div>
+									</listcell>
+								</listitem>
+							</template>
+							<listfoot>
+								<listfooter>
+									<label
+										value="@bind(vm.totalKnownIntrogressionLine)"
+										style="font-weight:bold" />
+								</listfooter>
+							</listfoot>
+						</listbox>
+					</groupbox>
+					<separator spacing="20px" />
+				</vlayout>
+			</columnchildren>
+			<columnchildren width="30%">
+				<vlayout vflex="1">
+					<groupbox width="100%" mold="3d">
+						<caption label="Segment(s) Information" />
+						<grid id="segmentInfoGrid" vflex="1"
+							oddRowSclass="odd"
+							model="@bind(vm.selectedIntrogressionLine.segments)">
+							<columns>
+								<column label="Attribute" width="50%" />
+								<column label="Value" width="50%" />
+							</columns>
+							<!-- Template for group -->
+							<template name="model:group">
+								<group label="@load(each)" />
+							</template>
+							<!-- Template for each element in model -->
+							<template name="model">
+								<label value="@load(each.name)" />
+								<textbox value="@bind(each.value)" width="99%" disabled="@load(vm.selectionIntrogressionLine.editMode)" inplace="@load(vm.selectionIntrogressionLine.editMode)" 
+									style="color:#000000 !important;"/>
+							</template>
+						</grid>
+					</groupbox>
+				</vlayout>
+			</columnchildren>
+		</columnlayout>
+		<separator />
+		<hlayout width="" />
+	</div>
+</zk>

@@ -1,0 +1,95 @@
+<zk>
+	<style src="../css/main.css" />
+	<div id="singleSiteSpecificationsWindow"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.singlesite.view.model.Specifications')"
+		align="center" height="98%">
+
+		<vlayout>
+			<groupbox id="grpUpload" mold="3d" width="100%">
+				<caption label="Select Data" />
+				<label value=""></label>
+				<grid zclass="none">
+					<columns>
+						<column label="" width="120px" />
+						<column label="" width="500px" />
+					</columns>
+					<rows>
+						<row>
+							<label value="Select Data File" />
+							<hlayout spacing="50px">
+								<vlayout width="100%">
+									<radiogroup>
+										<vlayout width="100%"
+											spacing="10px">
+											<div align="left">
+												<hlayout>
+													<label
+														id="lblMsgUpload" visible="@load(vm.variableDataVisible)"
+														value="@load(vm.dataFileName)" sclass="label-search" />
+
+													<button
+														id="uploadCSV" upload="true" label="Browse"
+														image="/images/find.png" onUpload="@command('uploadCSV')" />
+
+
+													<button
+														label="Remove" onClick="@command('removeUpload') "
+														image="/images/remove.png"
+														visible="@load(vm.variableDataVisible)" sclass="btn-blue" />
+													<button
+														label="Modify Header" image="/images/modify.png"
+														onClick="@command('modifyDataHeader')"
+														visible="@load(vm.variableDataVisible)" sclass="btn-blue" />
+												</hlayout>
+											</div>
+										</vlayout>
+									</radiogroup>
+								</vlayout>
+
+							</hlayout>
+						</row>
+					</rows>
+				</grid>
+			</groupbox>
+			<tabbox id="tabBox" height="700px" mold="accordion">
+				<tabs id="tabs">
+					<tab label="Model specifications" />
+					<tab label="Other options" />
+					<tab label="Graph options" />
+				</tabs>
+				<tabpanels id="tabPanels">
+					<tabpanel>
+						<vbox>
+							<hbox>
+								<label value="Type of design" />
+								<combobox
+									model="@load(vm.typeOfDesignList)" readonly="true">
+									<template name="model">
+										<comboitem value="@load(each)"
+											label="@load(each)" />
+									</template>
+								</combobox>
+							</hbox>
+							<include
+								src="/user/analysis/singlesite/variablelistboxes.zul" />
+						</vbox>
+					</tabpanel>
+					<tabpanel>
+						<include
+							src="/user/analysis/multisite/otheroptions.zul" />
+					</tabpanel>
+					<tabpanel>
+						<include
+							src="/user/analysis/multisite/graphoptions.zul" />
+					</tabpanel>
+				</tabpanels>
+			</tabbox>
+			<button label="Test"
+				onClick="@global-command('displayTextFileContent')"
+				class="grid-link" />
+
+			<label value="@bind(vm.resultRServe)" multiline="true" />
+		</vlayout>
+	</div>
+</zk>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+As this code proofs, 
+a list made available through binding, is not yet filled while constructing the grid columns,
+but it is filled while constructing the row template
+How can i have the list available at start ?
+(In the end I want to construct a dynamic set of columns, based on my data; 
+this is just an over simplified example, to show the problem I'm running into) 
+-->
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+	<window title="Dynamic Columns" border="normal" width="1024px" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.strasa.web.view.model.DynamicColumnModel')">
+		<label value="Data Length (outside grid): ${c:length(vm.dataList)}"></label>
+		<label value="Column Length (outside grid): ${c:length(vm.columnList)}"></label>
+                <grid model="@load(vm.dataList)" sizedByContent="true">
+			<columns>
+				<column label="Fixed 1"></column>
+	                        <column label="Fixed 2"></column>
+				<column forEach="${vm.columnList}" label="${each}"></column>
+			</columns>
+			<template name="model" var="r">
+				<row>
+					<label value="F1: ${r}"></label>
+                                  	<cell>
+						<label value="F2 : ${r}"></label>
+                                        	<label value="Data Length (inside grid): ${c:length(vm.dataList)}"></label>
+						<label value="Column Length (inside grid): ${c:length(vm.columnList)}"></label>
+                                  	</cell>
+					<label forEach="${vm.columnList}" value="D: ${r}"></label>
+				</row>
+			</template>
+          </grid>
+	</window>
+</zk>

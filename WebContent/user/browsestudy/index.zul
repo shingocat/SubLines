@@ -1,0 +1,71 @@
+<zk>
+	<zscript><![CDATA[
+	String selectedPosition = "after_end";
+]]></zscript>
+
+	<div id="mainBrowseWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.Index')"
+		height="98%" width="98%">
+
+		<div sclass="page-header">
+			<label value="Browse Study" />
+			<!-- <a label="overview &amp; stats" iconSclass="z-icon-angle-double-right" sclass="subtitle"/> -->
+		</div>
+
+		<tabbox id="tabBox" sclass="page-content">
+			<tabs id="tabs">
+				<tab label="Search" image="/images/find.png" />
+			</tabs>
+			<tabpanels id="tabPanels">
+				<tabpanel>
+					<vbox>
+						<div align="center" style="20px 0px 0px 20px">
+							<hlayout spacing="5px">
+								<label value="Study Name"
+									sclass="label-search" />
+								<textbox id="studyNameBox"
+									placeholder="Search..." sclass="input-prepend" />
+								<button label="Search"
+									sclass="btn-success" image="/images/find.png"
+									onClick="@global-command('searchByStudyName', studyName=studyNameBox.value)" />
+								<button label="Advanced Search"
+									sclass="btn-primary" image="/images/find2.png"
+									onClick='advancedSearch.open(self,selectedPosition)' />
+
+								<!--  tooltip="advancedSearch" -->
+
+							</hlayout>
+						</div>
+						<separator spacing="10px"></separator>
+
+
+						<tabbox style="overflow: Auto"
+							id="resultTabBox">
+							<tabs id="resultTabs">
+								<tab label="Summary" />
+							</tabs>
+							<tabpanels id="resultPanels">
+								<tabpanel>
+									<separator></separator>
+									<include
+										src="/user/browsestudy/summary.zul" progressing="true" />
+								</tabpanel>
+							</tabpanels>
+						</tabbox>
+						<popup id="advancedSearch" width="400px"
+							sclass="page-content">
+							<groupbox sclass="z-demo-config"
+								closable="false">
+								<include
+									src="/user/browsestudy/searchfilter.zul" />
+							</groupbox>
+						</popup>
+
+					</vbox>
+
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+
+	</div>
+</zk>

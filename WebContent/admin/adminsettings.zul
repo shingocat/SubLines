@@ -1,0 +1,92 @@
+<?page title="Admin Settings" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style src="/css/grid.css" />
+	<include id="mainHeader" self="@define(content)"
+		src="/admin/header.zul" />
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.admin.view.model.AdminSettings')"
+		align="center" style="padding:10px" id="adminSettingsWindow">
+		<tabbox id="tb" hflex="1" vflex="1" height="400px">
+			<tabs width="100px">
+				<tab label="Location" /> 
+				<tab label="Study Type" />
+				<tab label="Ecotype"
+					onSelect="@command('showzulfile', zulFileName='/admin/settings/editecotype.zul', target=self.linkedPanel)" />
+				<tab label="Study Variable" 
+					onSelect="@command('showzulfile', zulFileName='/admin/settings/editstudyvariable.zul', target=self.linkedPanel)" />
+				<tab label="Planting Type" 
+					onSelect="@command('showzulfile', zulFileName='/admin/settings/editplantingtype.zul', target=self.linkedPanel)" />
+				<tab label="Biotic" 
+					onSelect="@command('showzulfile', zulFileName='/admin/settings/editbiotickey.zul', target=self.linkedPanel)" />
+				<tab label="Abiotic" 
+					onSelect="@command('showzulfile', zulFileName='/admin/settings/editabiotickey.zul', target=self.linkedPanel)" />
+				<tab label="Grain Quality" 
+					onSelect="@command('showzulfile', zulFileName='/admin/settings/editgrainquality.zul', target=self.linkedPanel)" />
+				<tab label="Major Genes" 
+					onSelect="@command('showzulfile', zulFileName='/admin/settings/editmajorgenes.zul', target=self.linkedPanel)" />
+			</tabs>
+			<tabpanels width="100%">
+
+				<tabpanel>
+					<include src="/admin/settings/editlocation.zul"/>
+				</tabpanel>
+				<tabpanel style="overflow: auto">
+					<button label="Add New" onClick="@command('add')" />
+					<grid
+						model="@load(vm.rowList) @template(each.editingStatus ? 'editable' : 'noneditable')"
+						sizedByContent="true" width="95%">
+						<columns width="200px">
+							<column label="StudyType Name" />
+							<column label="Action" width="100px" />
+						</columns>
+						<template name="editable">
+							<row>
+								<textbox
+									value="@load(each.value.studytype) @save(each.value.studytype, before='confirm')" />
+								<cell>
+									<button
+										image="/images/tick-small.png"
+										onClick="@command('confirm', RowStatus=each)"
+										tooltiptext="Save" />
+									<button
+										image="/images/cross-small.png"
+										onClick="@command('changeEditableStatus', RowStatus=each)"
+										tooltiptext="Cancel" />
+								</cell>
+							</row>
+						</template>
+						<template name="noneditable">
+							<row>
+								<label
+									value="@load(each.value.studytype)" />
+								<cell>
+									<toolbarbutton
+										src="/images/edit16.png"
+										onClick="@command('changeEditableStatus', RowStatus=each)"
+										orient="vertical" tooltiptext="Edit Study type" />
+									<space />
+									<toolbarbutton
+										src="/images/Delete16.png"
+										onClick="@command('delete', id=each.value.id)"
+										orient="vertical" tooltiptext="Delete Study type" />
+								</cell>
+							</row>
+						</template>
+					</grid>
+				</tabpanel>
+				<tabpanel style="overflow: auto" />
+				<tabpanel style="overflow: auto" />
+				<tabpanel style="overflow: auto" />
+				<tabpanel style="overflow: auto" />
+				<tabpanel style="overflow: auto" />
+				<tabpanel style="overflow: auto" />
+				<tabpanel style="overflow: auto" />
+				<tabpanel style="overflow: auto" />
+			</tabpanels>
+		</tabbox>
+	</div>
+
+	<include id="mainFooter" self="@define(content)"
+		src="/admin/footer.zul" />
+
+</zk>

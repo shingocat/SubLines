@@ -1,0 +1,318 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style src="../css/main.css" />
+	<div id="introgressionLineSpecificationsWindow" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.introgressionline.view.model.Specifications')"
+		align="center" height="98%">
+		<vlayout>
+			<div align="left">
+				<groupbox closable="false">
+					<separator></separator>
+					<div>
+						<hbox>
+							<hbox>
+								<label>
+									Genotypic Data:
+								</label>
+								<label id="genotypicFileLb" value="genotypicFileName"
+									visible="false" />
+								<button sclass="btn-danger" id="selectGenotypicDataFromDBBtn"
+									label="From Database"></button>
+								<button sclass="btn-danger" id="selectGenotypicDataBtn"
+									label="From External" upload="true" />
+								<button sclass="btn-danger" id="resetGenotypicDataBtn"
+									label="Reset" visible="false" />
+							</hbox>
+							<space bar="true" spacing="40px" />
+							<hbox>
+								<label>
+									Phenotypic Data:
+								</label>
+								<label id="phenotypicFileLb" value="phenotypicFileName"
+									visible="false" />
+								<button sclass="btn-danger" id="selectPhenotypicDataFromDBBtn"
+									label="From Database" />
+								<button sclass="btn-danger" id="selectPhenotypicDataBtn"
+									label="From External" upload="true" />
+								<button sclass="btn-danger" id="resetPhenotypicDataBtn"
+									label="Reset" visible="false" />
+							</hbox>
+							<space bar="true" spacing="40px" />
+							<hbox>
+								<label>
+									Map Data:
+								</label>
+								<label id="mapFileLb" value="mapFileName" visible="false" />
+								<button sclass="btn-danger" id="selectMapDataBtn" label="Select"
+									upload="true" />
+								<button sclass="btn-danger" id="resetMapDataBtn" label="Reset"
+									visible="false" />
+							</hbox>
+						</hbox>
+					</div>
+				</groupbox>
+				<separator />
+				<groupbox>
+					<hbox>
+						<label>
+							Analysis Methods:
+						</label>
+						<combobox id="analysisMethodCBB" model="@load(vm.lstAnalysisMethod)"
+							selectedItem="@bind(vm.analysisMethod)" readonly="true"
+							onChange="@command('updateAnalysisMethodDiv', selectedItem=self.value)">
+							<template name="model">
+								<comboitem label="@load(each)" />
+							</template>
+						</combobox>
+					</hbox>
+					<separator />
+					<div id="analysisMethodDiv">
+						<div id="analysisMethodMMADiv">
+							<hbox spacing="5">
+								<label>
+									Regression Method:
+								</label>
+								<radiogroup id="regMethodRG">
+									<radio id="lassRadio" label="LASSO" />
+									<space />
+									<radio id="ridgeRadio" label="RIDGE REGRESSION" />
+									<space />
+									<radio id="elesticRadio" label="ELESTIC NET" />
+								</radiogroup>
+							</hbox>
+							<separator />
+							<hbox spacing="5">
+								<label>
+									P-Value method:
+								</label>
+								<separator />
+								<radiogroup id="pvalueRG">
+									<radio id="medianRadio" label="MEDIAN" />
+									<space></space>
+									<radio id="fdrRadio" label="FDR" />
+									<space />
+									<radio id="holmRadio" label="HOLM" />
+									<space />
+									<radio id="QARadio" label="QA" />
+								</radiogroup>
+							</hbox>
+							<separator />
+							<hbox spacing="5">
+								<label>
+									SigLevel:
+								</label>
+								<decimalbox format="#.###" value="0.05" />
+								<space />
+								<label>
+									Boostrap:
+								</label>
+								<intbox value="10"></intbox>
+								<space />
+								<label>
+									nfolds:
+								</label>
+								<intbox value="3"></intbox>
+							</hbox>
+							<separator />
+							<hbox spacing="5">
+								<label>
+									include.ht:
+								</label>
+								<checkbox label="TRUE"></checkbox>
+								<space />
+								<label>
+									step:
+								</label>
+								<decimalbox format="#.###" value="0.01" />
+								<space />
+								<label>
+									max.try:
+								</label>
+								<intbox value="10"></intbox>
+							</hbox>
+						</div>
+						<div id="analysisMethodSMADiv" visible="false">
+							<hbox spacing="5">
+								<label>
+									include.ht:
+								</label>
+								<checkbox label="TRUE" />
+								<space />
+							</hbox>
+							<separator />
+							<hbox>
+								<label>
+									digits:
+								</label>
+								<intbox value="4"></intbox>
+							</hbox>
+							<separator></separator>
+							<hbox spacing="5">
+								<label value="Test:" />
+								<radiogroup>
+									<radio label="F Test"></radio>
+									<radio label="Chisq Test" />
+								</radiogroup>
+							</hbox>
+						</div>
+						<div id="analysisMethodChisqDiv" visible="false">
+							<hbox spacing="5">
+								<label>
+									include.ht:
+								</label>
+								<checkbox label="TRUE"></checkbox>
+							</hbox>
+							<separator />
+							<hbox spacing="5">
+								<label value="Simulate P Value" />
+								<checkbox label="TRUE"></checkbox>
+								<space />
+								<label value="B"></label>
+								<intbox value="1000"></intbox>
+							</hbox>
+							<separator />
+							<hbox spacing="5">
+								<label>
+									Reference matrix:
+								</label>
+								<!-- <checkbox label="TRUE"></checkbox> -->
+								<button label="select" />
+							</hbox>
+						</div>
+					</div>
+				</groupbox>
+				<grid zclass="none" visible="false">
+					<columns>
+						<column label="" width="120px" />
+						<column label="" width="500px" />
+					</columns>
+					<rows>
+						<row>
+							<label value="Select Data" />
+							<hlayout spacing="50px">
+								<vlayout width="100%">
+									<radiogroup>
+										<vlayout width="100%" spacing="10px">
+											<div align="left">
+												<hlayout>
+													<combobox id="studiesCombobox" visible="false"
+														model="@load(vm.lstStudy)" readonly="true"
+														selectedItem="@bind(vm.selectedStudy)" onChange="@command('updateDataSetList')">
+														<template name="model">
+															<comboitem value="@load(each)" label="@load(each.name)" />
+														</template>
+													</combobox>
+													<combobox id="dataSetCombobox" visible="false"
+														model="@load(vm.lstStudyDataSet)" readonly="true"
+														selectedItem="@bind(vm.selectedStudyDataSet)" onChange="@command('displaySelectedDataSet')">
+														<template name="model">
+															<comboitem value="@load(each)" label="@load(each.title)" />
+														</template>
+													</combobox>
+													<label id="lblMsgUpload" visible="@load(vm.fromExternalFile)"
+														value="@load(vm.dataFileName)" sclass="label-search" />
+													<button sclass="btn-danger" id="selectDataBtn"
+														label="From a Study" image="/images/find.png"
+														onClick="@command('selectFromDatabase')" />
+													<button sclass="btn-danger" id="uploadCSVBtn"
+														upload="true, maxsize=-1" label="From External File(.csv)"
+														image="/images/find.png" onUpload="@command('uploadCSV')" />
+													<button id="resetBtn" label="Reset"
+														onClick="@global-command('launchIntrogressionLine')"
+														visible="false" sclass="btn-danger" />
+												</hlayout>
+											</div>
+										</vlayout>
+									</radiogroup>
+								</vlayout>
+							</hlayout>
+						</row>
+					</rows>
+				</grid>
+			</div>
+			<div>
+				<tabbox id="dataTB" mold="default">
+					<tabs id="dataTabs">
+						<tab id="genotypicDataTab" label="Genotypic Data" />
+						<tab id="PhenotypicDataTab" label="Phenotypic Data" />
+						<tab id="mapDataTab" label="Map Data" />
+					</tabs>
+					<tabpanels id="dataTabpanels">
+						<tabpanel vflex="1" id="genotypicDataTabPanels">
+							<div>
+								<include src="/user/analysis/introgressionline/genotypicData.zul" />
+							</div>
+						</tabpanel>
+						<tabpanel vflex="1" id="phenotypicDataTabPanels">
+							<div>
+								<include src="/user/analysis/introgressionline/phenotypicData.zul"></include>
+							</div>
+						</tabpanel>
+						<tabpanel vflex="1" id="mapDataTabPanels">
+							<div>
+								<include src="/user/analysis/introgressionline/mapData.zul" />
+							</div>
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+			</div>
+			<div visible="false">
+				<groupbox id="grpVariableData" mold="3d" width="100%"
+					hflex="1">
+					<caption label="Data Preview" />
+					<hlayout spacing="50px">
+						<vlayout>
+							<div id="dataGridDiv">
+							</div>
+						</vlayout>
+					</hlayout>
+				</groupbox>
+			</div>
+			<div visible="false">
+				<tabbox id="tabBox" height="700px" mold="default">
+					<tabs id="tabs">
+						<tab id="modelSpecificationsTab" label="Model Specifications" />
+						<tab id="otherOptionsTab" label="Other Options" />
+						<tab id="graphOptionsTab" label="Graph Options" />
+					</tabs>
+					<tabpanels id="tabpanels">
+						<tabpanel vflex="1" id="modelSpecificationsTP">
+							<vbox vflex="1" style="overflow:auto;">
+								<hbox>
+									<label value="Type of design" />
+									<combobox model="@load(vm.lstTypeOfDesign)" readonly="true"
+										id="lstTypeOfDesignCBB" selectedIndex="@bind(vm.introgressionLineAnalysisModel.design)"
+										onChange="@command('updateVariableList', selectedIndex=self.selectedIndex)">
+										<template name="model">
+											<comboitem value="@load(each)" label="@load(each)" />
+										</template>
+									</combobox>
+								</hbox>
+								<div style="overflow=auto">
+									<include id="includeVariableLst"
+										src="/user/analysis/introgressionline/variablelistboxes.zul" />
+								</div>
+								<space height="50px"></space>
+							</vbox>
+						</tabpanel>
+						<tabpanel id="otherOptionsTP" vflex="1" hflex="1">
+							<vbox vflex="1" hflex="1" style="overflow:auto">
+								<include id="includeOtherOptions"
+									src="/user/analysis/introgressionline/otheroptions.zul" />
+							</vbox>
+						</tabpanel>
+						<tabpanel id="graphOptionsTP">
+							<include id="includeGraphOptions"
+								src="/user/analysis/introgressionline/graphoptions.zul"></include>
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+			</div>
+			<button id="runBtn" label="Run"
+				onClick="@command('validateIntrogressionLineAnalysisInputs')"
+				sclass="btn-danger" />
+
+			<label value="@bind(vm.resultRServe)" multiline="true" />
+		</vlayout>
+	</div>
+</zk>

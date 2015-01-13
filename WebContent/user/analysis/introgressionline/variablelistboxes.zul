@@ -1,0 +1,181 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<vlayout style="padding:10px" height="1000px">
+		<hbox>
+			<listbox id="numericLB" hflex="1" vflex="true" width="300px"
+				checkmark="true" multiple="true">
+				<listhead>
+					<listheader label="Numeric Variables" />
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell label="${each}" />
+					</listitem>
+				</template>
+			</listbox>
+			<space width="10px"></space>
+			<vlayout spacing="10px" width="24px" height="300px">
+				<separator height="100px"></separator>
+				<image style="cursor:pointer" id="chooseResponseBtn" src="/images/rightarrow_g.png"
+					tooltip="Add response variable" onClick="@command('addResponse')" />
+				<image style="cursor:pointer" id="removeResponseBtn" src="/images/leftarrow_g.png"
+					tooltip="Remove response variable" onClick="@command('removeResponse')" />
+			</vlayout>
+			<space width="10px"></space>
+			<listbox id="responseLB" hflex="1" multiple="true" rows="4"
+				checkmark="true" width="300px">
+				<listhead>
+					<listheader label="Response Variable" />
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell label="${each}" />
+					</listitem>
+				</template>
+			</listbox>
+		</hbox>
+		<hbox spacing="10px" width="24px">
+			<image style="cursor:pointer" id="toNumericBtn" tooltip="set as Numeric"
+				src="/images/uparrow_g.png" onClick="@command('toNumeric')" />
+			<image style="cursor:pointer" id="toFactorBtn" src="/images/downarrow_g.png"
+				tooltip="set as Factor" onClick="@command('toFactor')" />
+		</hbox>
+		<hbox height="800px">
+			<div vflex="1">
+				<listbox id="factorLB" hflex="1" rows="4" checkmark="true"
+					width="300px">
+					<listhead>
+						<listheader label="Factor Variables" />
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell label="${each}" />
+						</listitem>
+					</template>
+				</listbox>
+				<!-- </groupbox> -->
+			</div>
+			<div style="overflow=auto">
+				<grid oddRowSclass="false" zclass="none">
+					<columns width="450px">
+						<column label="" width="150px" />
+						<column label="" />
+					</columns>
+					<rows>
+						<!-- This is for selected genotype variable -->
+						<row id="genotypeRow">
+							<cell>
+								<hlayout valign="middle">
+									<image style="cursor:pointer;padding:10px" id="addGenotypeBtn"
+										src="/images/rightarrow_g.png" tooltip="Add Genotype variable"
+										onClick="@command('chooseVariable', varTextBox=genotypeTB, imgButton=self)" />
+									<label value="Genotype:" />
+								</hlayout>
+							</cell>
+							<cell>
+								<hlayout>
+									<textbox id="genotypeTB" width="150px" readonly="true"
+										tabindex="7" />
+								</hlayout>
+							</cell>
+						</row>
+						<!-- This is for selected enviroment variable -->
+						<row id="envRow">
+							<cell>
+								<hlayout valign="middle">
+									<image style="cursor:pointer;padding:10px" id="addEnvBtn"
+										src="/images/rightarrow_g.png" tooltip="Add Environment variable"
+										onClick="@command('chooseVariable', varTextBox=envTB, imgButton=self)" />
+									<label value="Environment:" />
+								</hlayout>
+							</cell>
+							<cell width="400px">
+								<hlayout>
+									<textbox id="envTB" width="150px" readonly="true"
+										tabindex="7" />
+									<space spacing="20px" />
+									<checkbox id="envFixedCB" label="Fixed"
+										onClick="@command('updateEnvOptions', selected=self.checked, label=self.label)"
+										checked="true" />
+									<space spacing="20px" />
+									<checkbox id="envRandomCB" label="Random"
+										onClick="@command('updateEnvOptions', selected=self.checked, label=self.label)" />
+								</hlayout>
+							</cell>
+						</row>
+						<row>
+							<label />
+							<label />
+							<label />
+						</row>
+						<row id="blockRow">
+							<cell>
+								<hlayout valign="middle">
+									<image style="cursor:pointer;padding:10px" id="addBlockBtn"
+										src="/images/rightarrow_g.png" tooltip="Add Block variable"
+										onClick="@command('chooseVariable', varTextBox=blockTB, imgButton=self)" />
+									<label value="Block:" />
+								</hlayout>
+							</cell>
+							<cell>
+								<hlayout>
+									<textbox id="blockTB" width="150px" readonly="true"
+										tabindex="7" />
+								</hlayout>
+							</cell>
+						</row>
+						<row id="replicateRow" visible="false">
+							<cell>
+								<hlayout valign="middle">
+									<image style="cursor:pointer;padding:10px" id="addReplicateBtn"
+										src="/images/rightarrow_g.png" tooltip="Add Replicate variable"
+										onClick="@command('chooseVariable', varTextBox=replicateTB, imgButton=self)" />
+									<label value="Replicate:" />
+								</hlayout>
+							</cell>
+							<cell>
+								<hlayout>
+									<textbox id="replicateTB" width="150px" readonly="true"
+										tabindex="7" />
+								</hlayout>
+							</cell>
+						</row>
+						<row id="rowRow" visible="false">
+							<cell>
+								<hlayout valign="middle">
+									<image style="cursor:pointer;padding:10px" id="addRowBtn"
+										src="/images/rightarrow_g.png" tooltip="Add Row variable"
+										onClick="@command('chooseVariable', varTextBox=rowTB, imgButton=self)" />
+									<label value="Row:" />
+								</hlayout>
+							</cell>
+							<cell>
+								<hlayout>
+									<textbox id="rowTB" width="150px" readonly="true"
+										tabindex="7" />
+								</hlayout>
+							</cell>
+						</row>
+						<row id="columnRow" visible="false">
+							<cell>
+								<hlayout valign="middle">
+									<image style="cursor:pointer;padding:10px" id="addColumnBtn"
+										src="/images/rightarrow_g.png" tooltip="Add Column variable"
+										onClick="@command('chooseVariable', varTextBox=columnTB, imgButton=self)" />
+									<label value="Column:" />
+								</hlayout>
+							</cell>
+							<cell>
+								<hlayout>
+									<textbox id="columnTB" width="150px" readonly="true"
+										tabindex="7" />
+								</hlayout>
+							</cell>
+						</row>
+					</rows>
+				</grid>
+			</div>
+			<separator spacing="200px"></separator>
+		</hbox>
+	</vlayout>
+</zk>

@@ -1,0 +1,54 @@
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.maintenance.view.model.AddNewProgram')"
+		width="98%">
+
+
+		<grid vflex="1" hflex="1">
+			<auxhead>
+				<auxheader label="Add New Program" colspan="2"></auxheader>
+			</auxhead>
+			<columns>
+				<column label="Field" />
+				<column label="Value" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Name" width="150px" />
+					<textbox value='@bind(vm.programModel.name)'
+						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<label value="Objective" width="150px" />
+					<textbox value='@bind(vm.programModel.objective)'
+						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<label value="Coordinator" width="150px" />
+					<textbox value='@bind(vm.programModel.coordinator)'
+						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<label value="Leading Institute" width="150px" />
+					<textbox
+						value='@bind(vm.programModel.leadinginstitute)'
+						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<label value="Collaborator" width="150px" />
+					<textbox value='@bind(vm.programModel.collaborator)'
+						constraint="no empty" width="150px" />
+				</row>
+
+				<row>
+					<label></label>
+					<button label="Save" onClick="@command('add')"
+						image="/images/save16.png" sclass="btn-warning">
+					</button>
+				</row>
+			</rows>
+		</grid>
+
+
+	</window>
+</zk>

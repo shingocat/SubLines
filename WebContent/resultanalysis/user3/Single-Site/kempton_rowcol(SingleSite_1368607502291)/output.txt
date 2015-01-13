@@ -1,0 +1,179 @@
+
+DATA FILE: E:/Program Files/PBTools1.2.1/Projects/Demo/Data/Lecture/kempton_rowcol.csv
+
+SINGLE-ENVIRONMENT ANALYSIS
+
+DESIGN: Row-Column
+
+==============================
+GENOTYPE AS: Fixed
+==============================
+
+------------------------------
+RESPONSE VARIABLE: yield
+------------------------------
+
+Data Summary:
+
+Number of observations read:  68 
+Number of observations used:  68 
+
+ Factors   Number of Levels   Levels               
+ gen       35                 G01  G02  G03 ... G35
+ rep       2                  R1  R2               
+ row       5                  1  2  3  4  5        
+ col       7                  1  2  3 ... 7        
+
+Variance Components Table:
+
+    Groups   Variance  Std.Dev.
+1  rep:col 0.19265047 0.4389197
+2  rep:row 0.06387484 0.2527347
+3      rep 0.70355512 0.8387819
+4 Residual 0.09017210 0.3002867
+
+Testing for the Significance of Genotypic Effect:
+
+Models:
+model2: yield ~ 1 + (1|rep) + (1|rep:row) + (1|rep:col)
+model1: yield ~ 1 + gen + (1|rep) + (1|rep:row) + (1|rep:col)
+
+       Df    AIC    BIC  logLik  Chisq Chi Df Pr(>Chisq)
+model2  5 160.78 171.87 -75.387                         
+model1 39 100.31 186.87 -11.152 128.47     34  6.736e-13
+
+    Df   Sum Sq   Mean Sq  F value p-value
+gen 34 15.01589 0.4416437 4.897787  0.0000
+
+Genotype LSMeans and Standard Errors:
+
+   gen   LSMean StdErrMean
+1  G01 4.814286  0.6624977
+2  G02 3.915454  0.6640548
+3  G03 5.097609  0.6649235
+4  G04 3.520665  0.6629401
+5  G05 4.395182  0.6643011
+6  G06 5.409298  0.6652967
+7  G07 5.085020  0.6629389
+8  G08 4.602778  0.6654063
+9  G09 4.350865  0.6634186
+10 G10 4.328084  0.6643718
+11 G11 4.930897  0.6637697
+12 G12 4.945756  0.6676225
+13 G13 4.682487  0.6653057
+14 G14 4.764440  0.6630500
+15 G15 3.212107  0.7269908
+16 G16 3.958010  0.7253778
+17 G17 4.154380  0.6654669
+18 G18 4.564520  0.6645979
+19 G19 5.668895  0.6650438
+20 G20 4.319503  0.6622545
+21 G21 4.592916  0.6627076
+22 G22 4.011359  0.6646568
+23 G23 3.423320  0.6628343
+24 G24 3.888375  0.6622523
+25 G25 4.640420  0.6647438
+26 G26 3.759033  0.6665810
+27 G27 4.699095  0.6651475
+28 G28 4.294628  0.6646119
+29 G29 3.793255  0.6637854
+30 G30 3.952967  0.6629951
+31 G31 3.858940  0.6643158
+32 G32 4.264210  0.6638298
+33 G33 4.914263  0.6652862
+34 G34 4.298454  0.6622566
+35 G35 3.601799  0.6644256
+
+
+Significant Pairwise Comparisons (if any): 
+Compared with control(s)
+
+  Trmt[i] Trmt[j]  Estimate       lwr         upr
+1     G04     G01 -1.293621 -2.440260 -0.14698056
+2     G15     G01 -1.602179 -3.085700 -0.11865749
+3     G23     G01 -1.390965 -2.468516 -0.31341448
+4     G35     G01 -1.212487 -2.347186 -0.07778707
+
+
+==============================
+GENOTYPE AS: Random
+==============================
+
+------------------------------
+RESPONSE VARIABLE: yield
+------------------------------
+
+Data Summary:
+
+Number of observations read:  68 
+Number of observations used:  68 
+
+ Factors   Number of Levels   Levels               
+ gen       35                 G01  G02  G03 ... G35
+ rep       2                  R1  R2               
+ row       5                  1  2  3  4  5        
+ col       7                  1  2  3 ... 7        
+
+Variance Components Table:
+
+    Groups   Variance  Std.Dev.
+1      gen 0.24896221 0.4989611
+2  rep:col 0.21717154 0.4660167
+3  rep:row 0.08712423 0.2951681
+4      rep 0.69580775 0.8341509
+5 Residual 0.07607709 0.2758207
+
+Predicted means:
+
+   gen    Means
+1  G01 4.780304
+2  G02 3.945253
+3  G03 4.928840
+4  G04 3.646338
+5  G05 4.316858
+6  G06 5.240432
+7  G07 4.917665
+8  G08 4.541377
+9  G09 4.255530
+10 G10 4.335391
+11 G11 4.895003
+12 G12 4.951481
+13 G13 4.648602
+14 G14 4.740613
+15 G15 3.649814
+16 G16 4.180243
+17 G17 4.221433
+18 G18 4.519953
+19 G19 5.372193
+20 G20 4.338163
+21 G21 4.505068
+22 G22 4.176689
+23 G23 3.673926
+24 G24 3.973549
+25 G25 4.588357
+26 G26 3.955071
+27 G27 4.651671
+28 G28 4.342418
+29 G29 3.970706
+30 G30 4.017010
+31 G31 3.842282
+32 G32 4.298530
+33 G33 4.715955
+34 G34 4.290029
+35 G35 3.766806
+
+Heritability:
+     
+0.86 
+
+Testing for the Significance of Genotypic Variance:
+Models:
+model2: yield ~ 1 + (1|rep) + (1|rep:row) + (1|rep:col)
+model1: yield ~ 1 + (1|rep) + (1|rep:row) + (1|rep:col) + (1|gen)
+
+       Df    AIC    BIC  logLik  Chisq Chi Df Pr(>Chisq)
+model2  5 160.78 171.87 -75.387                         
+model1  6 146.56 159.88 -67.280 16.216      1  5.652e-05
+
+
+==============================

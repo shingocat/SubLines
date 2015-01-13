@@ -1,0 +1,11 @@
+
+<vlayout apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('org.strasa.extensiondata.chart.LineChartVM')">
+    <chart id="chart" title="Half-Year Report" width="520" height="350" paneColor="#FFFFFF"
+        type="line" yAxis="Amount"
+        model="@bind(vm.model)" engine="@bind(vm.engine)" threeD="@bind(vm.threeD)"
+        onClick="@command('showMessage',msg=event.areaComponent.tooltiptext)"/>
+    <hlayout visible="@bind(not empty vm.message)">
+        You clicked on :<label value="@bind(vm.message)"/>
+    </hlayout>
+</vlayout>

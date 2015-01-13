@@ -1,0 +1,86 @@
+<zk xmlns:n="native">
+
+
+
+	<div width="100%" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.updatestudy.view.RawDataView')">
+
+			<groupbox id="gbUploadRawData" width="100%">
+				<!-- <caption label="" /> -->
+				<hlayout spacing="30px" height="" width="" vflex="true" hflex="true">
+
+					<vlayout width="100%" hflex="true" vflex="true">
+
+						<groupbox id="grpUpload" mold="3d"
+							width="100%" visible="@bind(vm.dataReUploaded)">
+							<caption label="Select Data" />
+							<label value=""></label>
+							<hlayout spacing="50px">
+								<vlayout width="100%">
+									<radiogroup>
+
+										<vlayout width="100%"
+											spacing="10px">
+											<hlayout>
+												<button id="uploadCSV" sclass="btn-success"
+													upload="true" label="Browse" image="/images/add.png"
+													onUpload="@command('uploadCSV')" />
+												<label id="lblMsgUpload"
+													visible="@load(vm.variableDataVisible)"
+													value="@load(vm.dataFileName)" style="font-size:14pt;" />
+												<button label="Remove" sclass="btn-danger" image="/images/remove.png"
+													onClick="@command('removeUpload') "
+													visible="@load(vm.variableDataVisible)" />
+												<button
+													label="Modify Header" sclass="btn-info" image="/images/modify.png"
+													onClick="@command('modifyDataHeader')"
+													visible="@load(vm.variableDataVisible)" />
+											</hlayout>
+										</vlayout>
+									</radiogroup>
+
+								</vlayout>
+
+							</hlayout>
+						</groupbox>
+						<groupbox id="grpVariableData" mold="3d"
+							width="100%" height="450px"
+							visible="@bind(vm.dataReUploaded)"  zclass="none">
+						<!-- 	<caption label="CSV Data Preview"  zclass="none"/> -->
+							<hlayout spacing="50px">
+								<vlayout  zclass="none">
+									<div id="datagrid">
+									</div>
+								
+
+								</vlayout>
+							</hlayout>
+						</groupbox>
+						<groupbox id="gbUploadData" hflex="true"
+							vflex="true" visible="@bind(!vm.dataReUploaded)">
+							<vlayout>
+<!-- 									<button label="Remove"
+													onClick="@command('removeRawData') " /> -->
+													
+									<button label="Modify Column Header" sclass="btn-blue"
+													onClick="@command('updateColumnHeader') "
+													/>	
+								<div id="divRawData" vflex="true" hflex="true"></div>
+							</vlayout>
+						</groupbox>
+					</vlayout>
+
+				</hlayout>
+			</groupbox>
+			
+		<div align="center">
+
+			<button label="Save"
+				onClick="@global-command('nextTab',model=vm)" image="/images/save16.png" sclass="btn-warning" height="40px"
+								width="150px">
+			</button>
+
+		</div>
+	</div>
+
+</zk>

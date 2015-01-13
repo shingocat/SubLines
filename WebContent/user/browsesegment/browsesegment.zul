@@ -1,0 +1,252 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<vbox apply="org.zkoss.bind.BindComposer"
+		hflex="1" vflex="1"
+		viewModel="@id('vm') @init('org.strasa.web.segmentquery.view.model.BrowseSegment')">
+		<columnlayout>
+			<columnchildren width="70%">
+				<div align="left">
+					<vlayout>
+						<separator spacing="20px" />
+						<hlayout>
+							<label value="Chromosome: " />
+							<separator spacing="10px" orient="vertical" />
+							<textbox id="tbChromosome" value="@bind(vm.chromosome)" />
+						</hlayout>
+						<hlayout>
+							<label value="Donor Parent :" />
+							<separator spacing="10px" orient="vertical" />
+							<textbox id="tbDonorParent" value="@bind(vm.donorParent)" />
+						</hlayout>
+						<hlayout>
+							<label value="Marker : " />
+							<combobox id="cmbOperationOnMarker" autodrop="true"
+								selectedItem="@bind(vm.selectedOperationOnMarker)" model="@load(vm.lstOperationMarker)"
+								width="80px">
+								<template name="model">
+									<comboitem label="@load(each)" />
+								</template>
+							</combobox>
+							<textbox value="@bind(vm.segmentMarker)" id="tbSegmentMarker" />
+						</hlayout>
+						<hlayout>
+							<label value="Estimated Length" />
+							<separator spacing="10px" orient="vertical" />
+							<combobox autodrop="true" width="50px"
+								id="cmbOperationOnEstimatedLength" selectedItem="@bind(vm.selectedOperationOnEstimatedLength)"
+								model="@load(vm.lstOperation)">
+								<template name="model">
+									<comboitem label="@load(each)" />
+								</template>
+							</combobox>
+							<doublebox value="@bind(vm.estimatedLength)" id="dbEstimatedLegnth" />
+							<label value="cM" />
+						</hlayout>
+						<hlayout>
+							<groupbox mold="3d">
+								<caption label="Genetic Position" />
+								<hlayout>
+									<vlayout>
+										<hlayout>
+											<label value="Genetical Start : " />
+											<combobox autodrop="true" id="cmbOperationOnGeneticalStart"
+												width="50px" selectedItem="@bind(vm.selectedOperationOnGeneticalStart)"
+												model="@load(vm.lstOperation)">
+												<template name="model">
+													<comboitem label="@load(each)" />
+												</template>
+											</combobox>
+											<doublebox value="@bind(vm.geneticalStart)" id="dbGeneticalStart" />
+											<label value="cM." />
+										</hlayout>
+										<hlayout>
+											<label value="Genetical End : " />
+											<combobox autodrop="true" id="cmbOperationOnGeneticalEnd"
+												width="50px" selectedItem="@bind(vm.selectedOperationOnGeneticalEnd)"
+												model="@load(vm.lstOperation)">
+												<template name="model">
+													<comboitem label="@load(each)" />
+												</template>
+											</combobox>
+											<doublebox value="@bind(vm.geneticalEnd)" id="dbGeneticalEnd" />
+											<label value="cM." />
+										</hlayout>
+									</vlayout>
+								</hlayout>
+							</groupbox>
+							<groupbox mold="3d">
+								<caption label="Physical Positon" />
+								<vlayout>
+									<hlayout>
+										<label value="Physical Start: " />
+										<combobox autodrop="true" width="50px"
+											id="cmbOperationOnPhysicalStart" selectedItem="@bind(vm.selectedOperationOnPhysicalStart)"
+											model="@load(vm.lstOperation)">
+											<template name="model">
+												<comboitem label="@load(each)" />
+											</template>
+										</combobox>
+										<intbox value="@bind(vm.physicalStart)" id="itPhysicalStart" />
+										<label value="bp." />
+									</hlayout>
+									<hlayout>
+										<label value="Physical End: " />
+										<combobox autodrop="true" id="cmbOperationOnPhysicalEnd"
+											width="50px" selectedItem="@bind(vm.selectedOperationOnPhysicalEnd)"
+											model="@load(vm.lstOperation)">
+											<template name="model">
+												<comboitem label="@load(each)" />
+											</template>
+										</combobox>
+										<intbox value="@bind(vm.physicalEnd)" id="itPhysicalEnd" />
+										<label value="bp." />
+									</hlayout>
+								</vlayout>
+							</groupbox>
+						</hlayout>
+					</vlayout>
+					<div align="center">
+						<hlayout valign="middle">
+							<button label="Search" sclass="btn-success" id="btnSearch"
+								image="/images/find.png" onClick="@command('submitSearchSegment')" />
+							<button label="Reset" sclass="btn-danger" visible="false"
+								id="btnReset" image="/images/reset.png" onClick="@command('resetSearchSegment')" />
+						</hlayout>
+					</div>
+				</div>
+			</columnchildren>
+			<columnchildren width="30%">
+				<div>
+					<groupbox mold="3d" closable="false" open="true">
+						<caption label="Basic Segments Summary" style="color:blue"
+							sclass="none" />
+						<grid height="200px" model="@load(vm.lstSegmentSummary)"
+							oddRowSclass="odd" zclass="none" visible="true">
+							<columns>
+								<column label="Chromosome" style="font-weigth:bolder;" />
+								<column label="Amounts" style="font-weigth:bolder;" />
+							</columns>
+							<template name="model">
+								<row>
+									<label value="@load(each.condition)" style="font-weight:bold; font-style:italic" />
+									<label value="@load(each.value)" />
+								</row>
+							</template>
+						</grid>
+					</groupbox>
+				</div>
+			</columnchildren>
+		</columnlayout>
+		
+				<div id="divSearchSegmentResult" style="overflow:auto;">
+					<groupbox mold="3d">
+						<caption label="@load(vm.searchSegmentResultLabel)" />
+						<listbox oddRowSclass="odd" sclass="gridMaxBodyHeight550" sizedByContent="true"
+							emptyMessage="No Record Found" multiple="false" id="tblSegmentInfo"
+							model="@load(vm.lstSegmentExt)" rows="10">
+							<listhead>
+								<listheader label="Chr." sort="auto(chromosome)"
+									style="color:red" />
+								<listheader label="Recurrent" style="color:red" />
+								<listheader label="Donor" style="color:red" />
+								<listheader label="SubstitutionLine" style="color:none" />
+								<listheader label="GeneticStart" style="color:none" />
+								<listheader label="GeneticEnd" style="color:none" />
+								<listheader label="PhysicalStart" style="color:none" />
+								<listheader label="PhysicalEnd" style="color:none" />
+								<listheader label="Length(cM)" style="color:red" />
+								<listheader label="Description" style="color:none" />
+							</listhead>
+							<template name="model">
+								<listitem>
+									<!-- onClick="@command('selectSegment', segment = each)"> -->
+									<listcell>
+										<label
+											value="@bind(each.chromosome eq null ? 'NULL' : each.chromosome)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.recurrentParent eq null ? 'NULL' : each.recurrentParent)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.donorParent eq null ? 'NULL' : each.donorParent)" />
+									</listcell>
+									<listcell>
+										<label forEach="${each.harborer}" value="${each.germplasmname};"
+											onClick="@command('openIntrogressionLineDetailInSegment', germplasmId=self.getAttribute('germplasmId'),gname=self.getAttribute('gname'),introgressionLine=self.getAttribute('introgressionLine'))"
+											sclass="grid-link">
+											<!-- onClick="@global-command('openIntrogressionLineDetail', germplasmId='self.getAttribute(germplasmId)', 
+												gname='self.getAttribute(gname)', introgressionLine='self.getAttribute(introgressionLine)')" -->
+											<!-- onClick='alert(self.getAttribute("gname"))' -->
+											<custom-attributes germplasmId="${each.id}" />
+											<custom-attributes gname="${each.germplasmname}" />
+											<custom-attributes introgressionLine="${each}" />
+										</label>
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.position2 eq null ? 'NULL' : each.position2)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.position3 eq null ? 'NULL' : each.position3)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.physicalStart eq null ? 'NULL' : each.physicalStart)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.physicalEnd eq null ? 'NULL' : each.physicalEnd)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.estimatedLength eq null ? 'NULL' : each.estimatedLength)" />
+									</listcell>
+									<listcell>
+										<label
+											value="@bind(each.description eq null ? 'NULL' : each.description)" />
+									</listcell>
+									
+								</listitem>
+							</template>
+						</listbox>
+					</groupbox>
+				</div>
+			
+		<div id="divSearchIntrogressionLineResult" visible="false">
+			<groupbox mold="3d">
+				<caption label="@load(vm.searchResultLabel)" />
+				<grid height="200px" model="@load(vm.lstIntrogressionLine)"
+					oddRowSclass="odd" zclass="none" emptyMessage="No Record Found"
+					visible="true" id="defaultIntrogressionLineDisplay">
+					<columns>
+						<column label="Introgression Line Name" sort="auto(germplasmname)" />
+						<column label="Segment Number" sort="auto(segmentNumber)" />
+						<column label="Recurrent Parent" />
+						<column label="Donor Parent" />
+						<column label="Germplasm Type" sort="auto(remarks)" />
+						<column label="Breeder" sort="auto(breeder)" />
+					</columns>
+					<template name="model">
+						<row>
+							<toolbarbutton label="@load(each.germplasmname)"
+								onClick="@global-command('openIntrogressionLineDetail', germplasmId=each.id,gname=each.germplasmname, introgressionLine = each)"
+								sclass="grid-link" />
+							<label value="@load(each.segmentNumber)" />
+							<label value="@load(each.recurrentParent)" />
+							<label value="@load(each.donorParent)" />
+							<label value="@load(each.remarks)" />
+							<label value="@load(each.breeder)" />
+						</row>
+					</template>
+				</grid>
+			</groupbox>
+		</div>
+		<tabbox id="tabBox" hflex="1">
+			<tabs id="tabs" />
+			<tabpanels id="tabPanels" />
+		</tabbox>
+	</vbox>
+</zk>

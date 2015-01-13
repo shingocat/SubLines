@@ -1,0 +1,95 @@
+<zk>
+
+	<window apply="org.zkoss.bind.BindComposer" width="95%" sclass="page-content"
+		style="padding:10px 0px 15px 20px"
+		viewModel="@id('vm') @init('org.strasa.web.distributionandextension.view.model.DistributionAndExtensionDetail')">
+		<grid id="multipleGrid" model="@load(vm.rowList)"
+			sizedByContent="true" emptyMessage="No Record Found"
+			visible="false">
+			<columns>
+				<column label="Program" />
+				<column label="Project" />
+				<column label="Germplasm Name" />
+				<column label="Year" />
+				<column label="Location" />
+				<column label="Country" />
+				<column label="Planting Area" />
+				<column label="Data Source" />
+				<column label="Seed Availability" />
+				<column label="Amount of seeds distributed" />
+				<column label="Number of farmers who adopted" />
+				<column label="Amount of seeds produced" />
+			</columns>
+			<template name="model">
+				<row>
+					<label value="@load(each.program.name)" />
+					<label value="@load(each.project.name)" />
+					<label value="@load(each.value.germplasmname)" />
+					<label value="@load(each.value.yearextension)" />
+					<label value="@load(each.value.locationextension)" />
+					<label value="@load(each.value.countryextension)" />
+					<label value="@load(each.value.plantingarea)" />
+					<label value="@load(each.value.datasource)" />
+					<label value="@load(each.value.seedavailability)" />
+					<label
+						value="@load(each.value.amountseeddistributed)" />
+					<label value="@load(each.value.numfarmersadopted)" />
+					<label
+						value="@load(each.value.amountseedsproduced)" />
+				</row>
+			</template>
+		</grid>
+		<grid id="singleGrid" vflex="1" oddRowSclass="empty"
+			sizedByContent="true">
+			<columns>
+				<column label=""  hflex="min"/>
+				<column label="" hflex="1" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Program" sclass="heavier" />
+					<label value='@load(vm.row.program.name)' />
+
+				</row>
+				<row>
+					<label value="Project" sclass="heavier" />
+					<label value='@load(vm.row.project.name)' />
+				</row>
+				<row>
+					<label value="Germplasm" sclass="heavier" />
+					<label value='@load(vm.row.value.germplasmname)' />
+				</row>
+				<row>
+					<label value="Planting Area" sclass="heavier" />
+					<label value='@load(vm.row.value.plantingarea)' />
+				</row>
+				<row>
+					<label value="Data Source" sclass="heavier" />
+					<label value='@load(vm.row.value.datasource)' />
+				</row>
+				<row>
+					<label value="Seed Availability" sclass="heavier" />
+					<label value='@load(vm.row.value.seedavailability)' />
+				</row>
+				<row>
+					<label value="Amount of seeds distributed"
+						sclass="heavier" />
+					<label
+						value='@load(vm.row.value.amountseeddistributed)' />
+				</row>
+				<row>
+					<label value="Number of farmers who adopted"
+						sclass="heavier" />
+					<label
+						value='@load(vm.row.value.numfarmersadopted)' />
+				</row>
+				<row>
+					<label value="Amount of seeds produced"
+						sclass="heavier" />
+					<label
+						value='@load(vm.row.value.amountseedsproduced)' />
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

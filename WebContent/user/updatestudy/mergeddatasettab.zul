@@ -1,0 +1,26 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.DataSet')">
+		<tabbox>
+			<tabs>
+				<tab label="Data" />
+				<tab label="Site" vflex="1"
+					onSelect="@command('showzulfile', zulFileName='/user/browsestudy/siteinfo.zul', target=self.linkedPanel)" />
+
+				<tab label="Location"
+					onSelect="@command('showzulfile', zulFileName='/user/browsestudy/locationinfo.zul', target=self.linkedPanel)" />
+					<tab label="Germplasm"
+					onSelect="@command('showzulfile', zulFileName='/user/browsestudy/germplasminfo.zul', target=self.linkedPanel)" />
+			</tabs>
+			<tabpanels>
+				<tabpanel id="tabpanel1">
+					<include studyId="${arg.studyId}" dataset="${arg.dataset}" dataType="${arg.dataType}" src="/user/browsestudy/data.zul"/>
+				</tabpanel>
+				<tabpanel id="tabpanel2" vflex="1"></tabpanel>
+				<tabpanel id="tabpanel3" vflex="1"></tabpanel>
+					<tabpanel id="tabpanel4" vflex="1"></tabpanel>
+			</tabpanels>
+		</tabbox>
+	</window>
+</zk>

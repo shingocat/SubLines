@@ -1,0 +1,155 @@
+<zk>
+
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.germplasmquery.view.model.GermplasmDetail')">
+		<groupbox id="GermplasmDetailId" mold="3d">
+			<caption label="Germplasm Information" />
+			<grid oddRowSclass="empty">
+				<columns width="200px">
+					<column label="" width="200px" />
+					<column label="" />
+				</columns>
+				<rows>
+					<row>
+						<label value="GID:" sclass="heavy" />
+						<label class="searchLabel"
+							value="@load(vm.germplasm.gid)" />
+					</row>
+					<row>
+						<label value="Germplasm Name:" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.germplasmname)" />
+					</row>
+					<row>
+						<label value="Other Name:" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.othername)" />
+					</row>
+					<row>
+						<label value="Breeder:" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.breeder)" />
+					</row>
+					<row>
+						<label value="Germplasm Type" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.germplasmtypeid)" />
+					</row>
+					<row>
+						<label value="IR Number" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.irnumber)" />
+					</row>
+					<row>
+						<label value="IR Cross" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.ircross)" />
+					</row>
+					<row>
+						<label value="Parentage" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.parentage)" />
+					</row>
+					<row>
+						<label value="Male Parent" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.maleparent)" />
+					</row>
+					<row>
+						<label value="Female Parent" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.femaleparent)" />
+					</row>
+					<row>
+						<label value="Selection History" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.selectionhistory)" />
+					</row>
+					<row>
+						<label value="Source" sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.germplasm.source)" />
+					</row>
+					<row spans="">
+						<label value="Key Characteristics"
+							sclass="heavy" />
+						<label value="" />
+					</row>
+					<row>
+						<label value="Abiotic" style="padding:0px 0px 0px 50px"
+							sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.abioticCharacteristics)" />
+					</row>
+					<row>
+						<label value="Biotic" style="padding:0px 0px 0px 50px"
+							sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.bioticCharacteristics)" />
+					</row>
+					<row>
+						<label value="Grain Quality" style="padding:0px 0px 0px 50px"
+							sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.grainQualityCharacteristics)" />
+					</row>
+					<row>
+						<label value="Major Genes" style="padding:0px 0px 0px 50px"
+							sclass="heavy" />
+						<label sclass="searchLabel"
+							value="@load(vm.majorGenesCharacteristics)" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+
+		<groupbox id="StudyTestedId" mold="3d">
+			<caption label="Studies where this germplasm is tested" />
+			<grid height="200px" model="@load(vm.studyTested)" oddRowSclass="odd"
+				emptyMessage="No Record Found" sizedByContent="true"
+				zclass="none">
+
+				<columns sizable="true">
+					<column label="Study Name" width="200px"/>
+					<column label="Program" />
+					<column label="Project" />
+					<column label="Study Type" />
+					<column label="Start Year" />
+					<column label="End Year" />
+					<column label="Location" />
+					<column label="Country" />
+
+				</columns>
+				<template name="model">
+					<row>
+						<toolbarbutton if="${vm.parentSource=='study'}"
+							label="@load(each.studyname)"
+							onClick="@global-command('openStudyDetailInStudy', studyid=each.id,studyName=each.studyname)"
+							class="grid-link" />
+
+						<toolbarbutton
+							if="${vm.parentSource=='germplasm'}"
+							label="@load(each.studyname)"
+							onClick="@global-command('openStudyDetailInGermplasm', studyid=each.id,studyName=each.studyname)"
+							class="grid-link" />
+
+						<toolbarbutton
+							if="${vm.parentSource=='crossstudy'}"
+							label="@load(each.studyname)"
+							onClick="@global-command('openStudyDetailInAcrossStudy', studyid=each.id,studyName=each.studyname)"
+							class="grid-link" />
+						<label value="@load(each.programname)" />
+						<label value="@load(each.projectname)" />
+						<label value="@load(each.studytypename)" />
+						<label value="@load(each.startyear)" />
+						<label value="@load(each.endyear)" />
+						<label value="@load(each.locationname)" />
+						<label value="@load(each.country)" />
+					</row>
+				</template>
+			</grid>
+		</groupbox>
+	</div>
+
+
+</zk>

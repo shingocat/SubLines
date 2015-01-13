@@ -1,0 +1,61 @@
+<?page title="Account Management" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style src="/css/grid.css" />
+	<include id="mainHeader" self="@define(content)"
+		src="/admin/header.zul" />
+	<div apply="org.zkoss.bind.BindComposer" 
+		viewModel="@id('vm') @init('org.strasa.web.admin.view.model.UserManagement')"
+		align="center" style="padding:10px">
+		<grid id="grid" model="@load(vm.user)" mold="paging"
+			pageSize="6" sizedByContent="true">
+			<auxhead>
+				<auxheader label="User Management" colspan="9"
+					style="background:#424040;color:white;padding:2px" />
+			</auxhead>
+			<columns>
+				<column label="id" align="left" visible="false" />
+				<column  label="Name(Lastname,Firstname)" align="left"
+					sort="auto(lastname)" />
+				<column label="Agency" align="center"
+					sort="auto(agency)" />
+				<column label="Country" align="center"
+					sort="auto(country)" />
+				<column label="Email Address" align="center" />
+				<column label="Username" align="center" />
+				<column label="Date Registered" align="center"
+					sort="auto(dateregistered)" />
+				<column label="Status" align="center" />
+				<column label="Action" align="center" width="100px"/>
+			</columns>
+			<template name="model">
+				<row>
+					<label value="@load(each.id)" visible="false" />
+					<hbox>
+						<label value="@load(each.lastname)" />
+						<label value="," />
+						<label value="@load(each.firstname)" />
+					</hbox>
+
+					<label value="@load(each.agency)" />
+					<label value="@load(each.country)" />
+					<label value="@load(each.email)" />
+					<label value="@load(each.username)" />
+					<label value="@load(each.dateregistered)" />
+					<checkbox hflex="1" width="100px"
+						label="@load(each.status ?'Active':'Inactive')"
+						checked="@bind(each.status)"
+						onCheck='@command("onChecked", user= each)' />
+					<!--  <button label="Delete" onClick="@command('deleteUser', user=each)" /> -->
+					<toolbarbutton tooltiptext="Delete User"
+						src="/images/deleteuser16.png" orient="vertical"
+						onClick="@command('deleteUser', user=each)" />
+				</row>
+			</template>
+		</grid>
+	</div>
+
+
+	<include id="mainFooter" self="@define(content)"
+		src="/admin/footer.zul" />
+
+</zk>

@@ -1,0 +1,50 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<listbox id="listbox" width="100%">
+		<listhead>
+			<listheader hflex="1" />
+		</listhead>
+		<listitem>
+			<listcell>
+				<checkbox id="boxplotCB" label="Boxplot of the raw data" />
+			</listcell>
+		</listitem>
+		<listitem>
+			<listcell>
+				<checkbox id="histogramCB" label="Histogram of the raw data" />
+			</listcell>
+		</listitem>
+		<listitem>
+			<listcell>
+				<vbox>
+					<checkbox id="heatmapCB" label="Heatmap of the residuals" />
+					<hbox>
+						<space spacing="20px" />
+						<label value="Field row variable:" />
+						<combobox id="fieldRowCBB" model="@load(vm.lstVarNames)"
+							readonly="true">
+							<template name="model">
+								<comboitem value="@load(each)" label="@load(each)" />
+							</template>
+						</combobox>
+					</hbox>
+					<hbox>
+						<space spacing="20px" />
+						<label value="Field column variable:" />
+						<combobox id="fieldColumnCBB" model="@load(vm.lstVarNames)"
+							readonly="true">
+							<template name="model">
+								<comboitem value="@load(each)" label="@load(each)" />
+							</template>
+						</combobox>
+					</hbox>
+				</vbox>
+			</listcell>
+		</listitem>
+		<listitem>
+			<listcell>
+				<checkbox id="diagnosticplotCB" label="Diagnostic plots" />
+			</listcell>
+		</listitem>
+	</listbox>
+</zk>
