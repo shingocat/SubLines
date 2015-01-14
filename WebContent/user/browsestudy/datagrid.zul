@@ -1,20 +1,23 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
 <zk>
-	<style src="/css/grid/simple/style.css" />
-	<grid model="@bind(vm.dataList)" sizedByContent="true" height="400px"
-		emptyMessage="No data loaded...">
+ <grid model="@bind(vm.dataList)" sizedByContent="true"
+ 		emptyMessage="No data loaded..." mold="paging" pageSize="10">
 		<columns children="@load(vm.columnList)">
 			<template name="children">
 				<column hflex="1" label="@load(each)" />
 			</template>
 		</columns>
-		<rows children="@bind(vm.rowData)">
-			<template name="children" var="data">
-				<row>
-					<label forEach="${data}" value="${each}"/>
-				</row>
-			</template>
-		</rows>
-	</grid>
-	<paging pageSize="@load(vm.pageSize)" totalSize="@load(vm.totalSize)"
-		activePage="@bind(vm.activePage)" unless="${vm.rowData==null}" />
+		<template name="model" var="data">
+			<row>
+				<label forEach="${data}" value="${each}" />
+			</row>
+		</template>
+<!-- 		<rows children="@bind(vm.rowData)"> -->
+<!-- 			<template name="children" var="data"> -->
+<!-- 				<row> -->
+<!-- 					<label forEach="${data}" value="${each}" /> -->
+<!-- 				</row> -->
+<!-- 			</template>		 -->
+<!-- 		</rows> 		 -->
+ 		</grid>
 </zk>

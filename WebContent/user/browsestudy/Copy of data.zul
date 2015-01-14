@@ -7,9 +7,10 @@
 		<div align="left">
 			<button label="Export to CSV" visible="true"
 				sclass="btn-success" image="/images/export16.png"
-				unless="${vm.dataListSize lt 0}"
+				unless="${vm.rowData==null}"
 				onClick="@command('exportRowData', columns=vm.columnList, rows=vm.dataList, studyName=vm.studyName, dataType=vm.dataType)" />
 		</div>
+		<label>HAHAH</label>
 		<div id="datagrid">
 		
 		
