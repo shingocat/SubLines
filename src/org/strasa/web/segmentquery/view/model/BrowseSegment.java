@@ -489,7 +489,7 @@ public class BrowseSegment
 			Include studyInformationPage = new Include();
 			studyInformationPage.setSrc("/user/browsesegment/introgressionlinedetail.zul");
 			studyInformationPage.setParent(newPanel);
-			studyInformationPage.setDynamicProperty("parentSource", "germplasm");
+			studyInformationPage.setDynamicProperty("parentSource", "study");
 			studyInformationPage.setDynamicProperty("gname", gname);
 			studyInformationPage.setDynamicProperty("introgressionLine", introgressionLine);
 

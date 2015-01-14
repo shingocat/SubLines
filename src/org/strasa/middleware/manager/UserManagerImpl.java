@@ -1,5 +1,8 @@
 package org.strasa.middleware.manager;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -15,11 +18,29 @@ public class UserManagerImpl {
 	@WireVariable
 	ConnectionFactory connectionFactory;
 	
-	public void addUser(DbUser record){
+	public boolean addUser(DbUser record){
 		 
 		SqlSession session =connectionFactory.sqlSessionFactory.openSession();
 		DbUserMapper DbUserMapper = session.getMapper(DbUserMapper.class);
 		try{
+			
+//modify by QIN MAO on JAN 14, 2015, adding md5 implement for password.
+//			String pw = record.getPassword();
+//			try {
+//				byte[] byesOfPw = pw.getBytes("UTF-8");
+//				MessageDigest md = MessageDigest.getInstance("MD5");
+//				byte[] theDigest = md.digest(byesOfPw);
+//				pw = theDigest.toString();
+//				record.setPassword(pw);
+//			} catch (UnsupportedEncodingException e) {
+//				// if it could not encode password using md5
+//				e.printStackTrace();
+//				return false;
+//			} catch (NoSuchAlgorithmException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				return false;
+//			} 
 			DbUserMapper.insert(record);
 			session.commit();
 			
@@ -27,6 +48,7 @@ public class UserManagerImpl {
 			session.close();
 		}
 		
+		return true;
 	}
 	
 	public void updateUser(DbUser record){

@@ -42,6 +42,9 @@ public class SearchResult {
 	private String searchResultLabel;
 	private Tab resultTab;
 	
+	private Integer userID = SecurityUtil.getDbUser().getId();
+
+	
 	@Init
 	public void init(@ExecutionArgParam("resultTab") Tab resultTab){
 		this.resultTab = resultTab;
@@ -57,7 +60,9 @@ public class SearchResult {
 		if(validateString(studyName)){
 			StudySearchFilterModel searchFilter = new StudySearchFilterModel();
 			searchFilter.setStudyname(studyName);
-			searchResult = browseStudyManagerImpl.getStudySearchResult(searchFilter);
+//			searchResult = browseStudyManagerImpl.getStudySearchResult(searchFilter);
+			//modify it
+			searchResult = browseStudyManagerImpl.getStudySearchResult(searchFilter, userID);
 			resultTab.setSelected(true);
 		}else{
 			
@@ -76,21 +81,23 @@ public class SearchResult {
 			
 			try{
 			if(searchFilter.shared.equals("private")){ //specific user only
-				searchFilter.setShared(null);
+				searchFilter.setShared("private");
 				searchFilter.userid = studyMan.getUserid();
 			}
 			else if(searchFilter.shared.equals("public")){
-				searchFilter.shared = "1";
+				searchFilter.shared = "public";
 				searchFilter.userid = 0;
 			}else if(searchFilter.shared.equals("both")){//both
-				searchFilter.shared = "1";//both
+				searchFilter.shared = "both";//both
 				searchFilter.userid =  studyMan.getUserid();
 			}
 			}catch(NullPointerException npe){
 				
 			}
 			
-			searchResult = browseStudyManagerImpl.getStudySearchResult(searchFilter);
+//			searchResult = browseStudyManagerImpl.getStudySearchResult(searchFilter);
+			searchResult = browseStudyManagerImpl.getStudySearchResult(searchFilter, userID);
+
 			setSearchResultLabel("Search Result:  "+ searchResult.size()+"  row(s) returned");
 			System.out.println("Size:"+searchResult.size());
 			resultTab.setSelected(true);

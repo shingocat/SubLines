@@ -6,8 +6,29 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.strasa.middleware.factory.ConnectionFactory;
 import org.strasa.middleware.mapper.GermplasmMapper;
+import org.strasa.middleware.mapper.LocationMapper;
+import org.strasa.middleware.mapper.ProgramMapper;
+import org.strasa.middleware.mapper.ProjectMapper;
+import org.strasa.middleware.mapper.StudyGermplasmMapper;
+import org.strasa.middleware.mapper.StudyLocationMapper;
+import org.strasa.middleware.mapper.StudyMapper;
+import org.strasa.middleware.mapper.StudyTypeMapper;
 import org.strasa.middleware.model.Germplasm;
 import org.strasa.middleware.model.GermplasmExample;
+import org.strasa.middleware.model.Location;
+import org.strasa.middleware.model.LocationExample;
+import org.strasa.middleware.model.Program;
+import org.strasa.middleware.model.ProgramExample;
+import org.strasa.middleware.model.Project;
+import org.strasa.middleware.model.ProjectExample;
+import org.strasa.middleware.model.Study;
+import org.strasa.middleware.model.StudyExample;
+import org.strasa.middleware.model.StudyGermplasm;
+import org.strasa.middleware.model.StudyGermplasmExample;
+import org.strasa.middleware.model.StudyLocation;
+import org.strasa.middleware.model.StudyLocationExample;
+import org.strasa.middleware.model.StudyType;
+import org.strasa.middleware.model.StudyTypeExample;
 import org.strasa.web.browsestudy.view.model.StudySearchResultModel;
 import org.strasa.web.germplasmquery.view.model.KeyCharacteristicQueryModel;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
@@ -25,7 +46,7 @@ public class BrowseGermplasmManagerImpl {
 	public List<StudySearchResultModel> getStudyWithGemrplasmTested(String gname) {
 		SqlSession session =connectionFactory.sqlSessionFactory.openSession();
 		try{
-
+			
 			List<StudySearchResultModel> toreturn= session.selectList("BrowseStudy.getStudyWithGemrplasmTested",gname);
 
 			return toreturn;
@@ -35,6 +56,117 @@ public class BrowseGermplasmManagerImpl {
 		}
 
 	}
+	
+	//Add by QIN MAO on JAN 13, implement the same function of getStudyWithGermplamTest(String gname)
+	//but adding the user id and change the logical
+	public List<StudySearchResultModel> getStudyWithGermplasmTested(String gname, Integer userId)
+	{
+		SqlSession session = connectionFactory.sqlSessionFactory.openSession();
+		List<StudySearchResultModel> toreturn = new ArrayList<StudySearchResultModel>();
+		try{
+			
+			return toreturn;
+		} finally
+		{
+			session.close();
+		}
+	}
+	//for introgressionline 
+	public List<StudySearchResultModel> getStudyWithGermplasmTested(Germplasm g, Integer userId)
+	{
+		SqlSession session = connectionFactory.sqlSessionFactory.openSession();
+		List<StudySearchResultModel> toreturn = new ArrayList<StudySearchResultModel>();
+		try{
+			// get records in studygermplasm table
+			StudyGermplasmMapper sgMapper = session.getMapper(StudyGermplasmMapper.class);
+			StudyGermplasmExample sgExample = new StudyGermplasmExample();
+			sgExample.createCriteria().andUseridEqualTo(userId).andGrefEqualTo(g.getId());
+			List<StudyGermplasm> lstStudyGermplasm = sgMapper.selectByExample(sgExample);
+			if(lstStudyGermplasm == null)
+				return null;
+			//get study information according the records above
+			StudyMapper sMapper = session.getMapper(StudyMapper.class);
+			ProjectMapper projMapper = session.getMapper(ProjectMapper.class);
+			ProgramMapper progMapper = session.getMapper(ProgramMapper.class);
+			StudyTypeMapper stMapper = session.getMapper(StudyTypeMapper.class);
+			StudyLocationMapper slMapper = session.getMapper(StudyLocationMapper.class);
+			LocationMapper lMapper = session.getMapper(LocationMapper.class);
+			
+			for(StudyGermplasm sg : lstStudyGermplasm)
+			{
+				StudyExample sExample = new StudyExample();
+				ProjectExample projExample  = new ProjectExample();
+				ProgramExample progExample = new ProgramExample();
+				StudyTypeExample stExample = new StudyTypeExample();
+				StudyLocationExample slExample = new StudyLocationExample();
+				LocationExample lExample = new LocationExample();
+				// study information
+				sExample.createCriteria().andUseridEqualTo(userId).andIdEqualTo(sg.getStudyid());
+				List<Study> lstStudy = sMapper.selectByExample(sExample);
+				if(lstStudy != null && lstStudy.size() != 0)
+				{
+					// it will be only one study return if exist
+					StudySearchResultModel ssrm = new StudySearchResultModel();
+
+					Study study = lstStudy.get(0);
+					ssrm.setId(sg.getStudyid());
+					ssrm.setStudyname(lstStudy.get(0).getName());
+					ssrm.setStartyear(lstStudy.get(0).getStartyear());
+					ssrm.setEndyear(lstStudy.get(0).getEndyear());
+					// program information
+					progExample.createCriteria().andUseridEqualTo(userId).andIdEqualTo(study.getProgramid());
+					List<Program> lstProgram = progMapper.selectByExample(progExample);
+					if(lstProgram != null && lstProgram.size() != 0)
+					{
+						ssrm.setProgramid(lstProgram.get(0).getId());
+						ssrm.setProgramname(lstProgram.get(0).getName());
+					}
+					//project inforamtion
+					projExample.createCriteria().andUseridEqualTo(userId).andIdEqualTo(study.getProjectid());
+					List<Project> lstProject = projMapper.selectByExample(projExample);
+					if(lstProject != null && lstProject.size() != 0)
+					{
+						ssrm.setProjectid(lstProject.get(0).getId());
+						ssrm.setProjectname(lstProject.get(0).getName());
+					}
+					//studylocation information
+					slExample.createCriteria().andStudyidEqualTo(study.getId());
+					List<StudyLocation> lstStudyLocation = slMapper.selectByExample(slExample);
+					if(lstStudyLocation != null && lstStudyLocation.size() != 0)
+					{
+						StudyLocation studyLocation = lstStudyLocation.get(0);
+						//location information
+						lExample.createCriteria().andIdEqualTo(studyLocation.getLocationid());
+						List<Location> lstLocation = lMapper.selectByExample(lExample);
+						if(lstLocation != null && lstLocation.size() != 0)
+						{
+							ssrm.setLocationid(lstLocation.get(0).getId());
+							ssrm.setLocationname(lstLocation.get(0).getLocationname());
+							ssrm.setCountry(lstLocation.get(0).getCountry());
+						}
+					}
+					//studytype information
+					stExample.createCriteria().andIdEqualTo(study.getStudytypeid());
+					List<StudyType> lstStudyType = stMapper.selectByExample(stExample);
+					if(lstStudyType != null && lstStudyType.size() != 0)
+					{
+						ssrm.setStudytypeid(lstStudyType.get(0).getId());
+						ssrm.setStudytypename(lstStudyType.get(0).getStudytype());
+					}
+					
+					toreturn.add(ssrm);
+				}
+				
+			}
+			if(toreturn.size() == 0)
+				return null;
+			return toreturn;
+		} finally
+		{
+			session.close();
+		}
+	}
+	
 
 
 	public List<Germplasm> getGermplasmKeyCharacteristicsAbiotic(ArrayList<String> keyCharList, String keyChar) {

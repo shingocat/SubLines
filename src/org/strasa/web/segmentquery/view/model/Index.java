@@ -101,8 +101,9 @@ public class Index
 			studyInformationPage
 			        .setSrc("/user/browsestudy/studyinformation.zul");
 			studyInformationPage
-			        .setDynamicProperty("parentSource", "segment");
+			        .setDynamicProperty("parentSource", "study");
 			studyInformationPage.setDynamicProperty("studyId", studyId);
+			studyInformationPage.setDynamicProperty("studyName", studyName);
 			tabPanels.appendChild(newPanel);
 			
 			int index = tabs.getChildren().size();
@@ -118,4 +119,13 @@ public class Index
 			tab.setSelected(true);
 		}
 	}
+	
+	public Tab getResultTab() {
+		return resultTab;
+	}
+
+	public void setResultTab(Tab resultTab) {
+		this.resultTab = resultTab;
+	}
+
 }

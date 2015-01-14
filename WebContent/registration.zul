@@ -20,7 +20,8 @@
 		style="padding:10px"
 		viewModel="@id('vm') @init('org.strasa.web.main.view.model.Registration')"
 		validationMessages="@id('vmsgs')"
-		form="@id('fx') @load(vm.user) @save(vm.user, before='submit') @validator('org.strasa.web.main.view.model.RegistrationValidator', retypedPassword=vm.retypedPassword, captcha=vm.captcha, captchaInput=vm.captchaInput)">
+		form="@id('fx') @load(vm.user) @save(vm.user, before='submit') 
+			@validator('org.strasa.web.main.view.model.RegistrationValidator', retypedPassword=vm.retypedPassword, captcha=vm.captcha, captchaInput=vm.captchaInput)">
 <!-- <label visible="@load(empty vmsgs)" value="@load(empty vmsgs ? 'Form successfully submitted! The administrator will informed you that your account has been validated and activated' : '', before='submit')" />  -->
 
 		<div align="left" width="60%">
@@ -46,8 +47,8 @@
 				</row>
 
 				<row>
-					MI
-					<textbox value="@bind(fx.mi)" width="30px"
+					Middlename
+					<textbox value="@bind(fx.mi)" width="150px"
 						tabindex="3" />
 				</row>
 

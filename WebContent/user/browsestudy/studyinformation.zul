@@ -11,7 +11,8 @@
 	</style>
 	<window apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('org.strasa.web.browsestudy.view.model.StudyInformation')">
-		<tabbox id="tb" mold="accordion">
+<!-- 		<tabbox id="tb" mold="accordion"> -->
+		<tabbox id="tb" orient="top">
 			<tabs>
 				<tab label="Study Detail" />
 				<tab label="Germplasm Information"

@@ -30,28 +30,28 @@ import org.zkoss.zul.Tabs;
 import org.zkoss.zul.Window;
 
 public class Index {	
-//public static ArrayList<Integer> activeStudyIds = new ArrayList<Integer>();
-private static HashMap<String,Tab> activeStudyIds;
+	//public static ArrayList<Integer> activeStudyIds = new ArrayList<Integer>();
+	private static HashMap<String,Tab> activeStudyIds;
 
-private Tab resultTab;
+	private Tab resultTab;
 
 	public static void removeFromTab(int studyId){
 		activeStudyIds.remove(studyId);
 	}
 
-	 @AfterCompose
+	@AfterCompose
 	public void init(@ContextParam(ContextType.COMPONENT) Component component,
 			@ContextParam(ContextType.VIEW) Component view){
 		activeStudyIds = new HashMap<String,Tab>();
-		
+
 		Tabpanels tabPanels = (Tabpanels) component.getFellow("resultPanels");
 		Tabs tabs = (Tabs) component.getFellow("resultTabs");
 		Tabbox tabBox = (Tabbox) component.getFellow("resultTabBox");
-		
+
 		Tabpanel newPanel = new Tabpanel();
 		Tab newTab = new Tab();
 		newTab.setLabel("Study List");
-		
+
 		//initialize view after view construction.
 		Include studyInformationPage = new Include();
 		studyInformationPage.setParent(newPanel);
@@ -60,104 +60,104 @@ private Tab resultTab;
 		tabPanels.appendChild(newPanel);
 		tabs.appendChild(newTab);
 		tabBox.setSelectedPanel(newPanel);
-		
+
 		tabBox.setSelectedIndex(0);
-//		setResultTab(newTab);
+		//		setResultTab(newTab);
 	}
-	
+
 	@NotifyChange
 	@GlobalCommand
 	public void openStudyDetailInStudy(@ContextParam(ContextType.COMPONENT) Component component,
 			@ContextParam(ContextType.VIEW) Component view,@BindingParam("studyid")  Integer studyId, @BindingParam("studyName")String studyName){
-		
+
 		Tabpanels tabPanels = (Tabpanels) component.getFellow("tabPanels");
 		Tabs tabs = (Tabs) component.getFellow("tabs");
 		Tabbox tabBox = (Tabbox) component.getFellow("tabBox");
-		
+
 		if(!activeStudyIds.containsKey(Integer.toString(studyId))){
-		final int id=studyId;
-		Tab newTab = new Tab();
-		newTab.setImage("/images/study16.png");
-		newTab.setLabel(studyName);
-		newTab.setClosable(true);
-		newTab.addEventListener("onClose", new EventListener() {
-			@Override
-			public void onEvent(Event event) throws Exception {
-				activeStudyIds.remove(Integer.toString(id));
-			}
-		});
-		Tabpanel newPanel = new Tabpanel();
-		
-		//initialize view after view construction.
-		Include studyInformationPage = new Include();
-		studyInformationPage.setParent(newPanel);
-		studyInformationPage.setSrc("/user/browsestudy/studyinformation.zul");
-		studyInformationPage.setDynamicProperty("studyId", studyId);
-		studyInformationPage.setDynamicProperty("parentSource", "study");
-		tabPanels.appendChild(newPanel);
-		tabs.appendChild(newTab);
-		tabBox.setSelectedPanel(newPanel);
-		
-		newTab.setSelected(true);
-		activeStudyIds.put(Integer.toString(studyId), newTab);
-		
+			final int id=studyId;
+			Tab newTab = new Tab();
+			newTab.setImage("/images/study16.png");
+			newTab.setLabel(studyName);
+			newTab.setClosable(true);
+			newTab.addEventListener("onClose", new EventListener() {
+				@Override
+				public void onEvent(Event event) throws Exception {
+					activeStudyIds.remove(Integer.toString(id));
+				}
+			});
+			Tabpanel newPanel = new Tabpanel();
+
+			//initialize view after view construction.
+			Include studyInformationPage = new Include();
+			studyInformationPage.setParent(newPanel);
+			studyInformationPage.setSrc("/user/browsestudy/studyinformation.zul");
+			studyInformationPage.setDynamicProperty("studyId", studyId);
+			studyInformationPage.setDynamicProperty("parentSource", "study");
+			tabPanels.appendChild(newPanel);
+			tabs.appendChild(newTab);
+			tabBox.setSelectedPanel(newPanel);
+
+			newTab.setSelected(true);
+			activeStudyIds.put(Integer.toString(studyId), newTab);
+
 		}
 		else{
-		Tab tab = activeStudyIds.get(Integer.toString(studyId));
-		tab.setSelected(true);
+			Tab tab = activeStudyIds.get(Integer.toString(studyId));
+			tab.setSelected(true);
 		}
 	}
-	
+
 	@NotifyChange
 	@GlobalCommand
 	public void openGermplasmDetailInStudy(@ContextParam(ContextType.COMPONENT) Component component,
 			@ContextParam(ContextType.VIEW) Component view, @BindingParam("studyId")  String studyId, @BindingParam("gname")  String gname,  @BindingParam("germplasmId")  Integer germplasmId){
-		
+
 		Tabpanels tabPanels = (Tabpanels) component.getFellow("tabPanels");
 		Tabs tabs = (Tabs) component.getFellow("tabs");
 		Tabbox tabBox = (Tabbox) component.getFellow("tabBox");
-		
-		if(!activeStudyIds.containsKey(gname)){
-		final String id=gname;
-		Tab newTab = new Tab();
-		newTab.setImage("/images/Germplasm16.png");
-		newTab.setLabel(gname);
-		newTab.setClosable(true);
-		newTab.addEventListener("onClose", new EventListener() {
-			@Override
-			public void onEvent(Event event) throws Exception {
-				activeStudyIds.remove(id);
-			}
-		});
-		Tabpanel newPanel = new Tabpanel();
-		
-		//initialize view after view construction.
 
-		Include studyInformationPage = new Include();
-		studyInformationPage.setSrc("/user/browsegermplasm/germplasmdetail.zul");
-		studyInformationPage.setDynamicProperty("gname", gname);
-		studyInformationPage.setDynamicProperty("parentSource", "study");
-		studyInformationPage.setParent(newPanel);
-		
-		tabPanels.appendChild(newPanel);
-		tabs.appendChild(newTab);
-		tabBox.setSelectedPanel(newPanel);
-		
-		newTab.setSelected(true);
-		activeStudyIds.put(gname, newTab);
-		
+		if(!activeStudyIds.containsKey(gname)){
+			final String id=gname;
+			Tab newTab = new Tab();
+			newTab.setImage("/images/Germplasm16.png");
+			newTab.setLabel(gname);
+			newTab.setClosable(true);
+			newTab.addEventListener("onClose", new EventListener() {
+				@Override
+				public void onEvent(Event event) throws Exception {
+					activeStudyIds.remove(id);
+				}
+			});
+			Tabpanel newPanel = new Tabpanel();
+
+			//initialize view after view construction.
+
+			Include studyInformationPage = new Include();
+			studyInformationPage.setSrc("/user/browsegermplasm/germplasmdetail.zul");
+			studyInformationPage.setDynamicProperty("gname", gname);
+			studyInformationPage.setDynamicProperty("parentSource", "study");
+			studyInformationPage.setParent(newPanel);
+
+			tabPanels.appendChild(newPanel);
+			tabs.appendChild(newTab);
+			tabBox.setSelectedPanel(newPanel);
+
+			newTab.setSelected(true);
+			activeStudyIds.put(gname, newTab);
+
 		}
 		else{
-		Tab tab = activeStudyIds.get(gname);
-		tab.setSelected(true);
+			Tab tab = activeStudyIds.get(gname);
+			tab.setSelected(true);
 		}
 	}
-	
+
 	@NotifyChange
 	@Command
 	public void openSearchFilterWindow(@ContextParam(ContextType.COMPONENT) Component component,
 			@ContextParam(ContextType.VIEW) Component view){
-		
+
 		//initialize view after view construction.
 		Include studyInformationPage = (Include) component.getFellow("searchFilterPanel");
 		Window win = (Window) studyInformationPage.getChildren().get(0);

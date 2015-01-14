@@ -11,7 +11,7 @@
 						<hlayout>
 							<label value="Chromosome: " />
 							<separator spacing="10px" orient="vertical" />
-							<textbox id="tbChromosome" value="@bind(vm.chromosome)" />
+							<intbox id="tbChromosome" value="@bind(vm.chromosome)" constraint="no negative"/>
 						</hlayout>
 						<hlayout>
 							<label value="Donor Parent :" />
@@ -143,7 +143,7 @@
 						<caption label="@load(vm.searchSegmentResultLabel)" />
 						<listbox oddRowSclass="odd" sclass="gridMaxBodyHeight550" sizedByContent="true"
 							emptyMessage="No Record Found" multiple="false" id="tblSegmentInfo"
-							model="@load(vm.lstSegmentExt)" rows="10">
+							model="@load(vm.lstSegmentExt)" rows="5">
 							<listhead>
 								<listheader label="Chr." sort="auto(chromosome)"
 									style="color:red" />

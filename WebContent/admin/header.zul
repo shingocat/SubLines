@@ -98,11 +98,11 @@
 			<space />
 			<toolbarbutton label="Account" src="/images/account48.png" height="70px"
 				tooltiptext="User Account" orient="vertical"
-				href="http://localhost:8080/StrasaWeb/admin/usermanagement.zul" />
+				href="http://localhost:8080/SubLines/admin/usermanagement.zul" />
 			<space />
 			<toolbarbutton label="Settings" src="/images/settings48.png" height="70px"
 				orient="vertical"
-				href="http://localhost:8080/StrasaWeb/admin/adminsettings.zul" />
+				href="http://localhost:8080/SubLines/admin/adminsettings.zul" />
 			<space />
 		</hbox>
 	</hlayout>

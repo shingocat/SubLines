@@ -43,7 +43,7 @@ public class GermplasmInfo {
 	private String grainQualityCharacteristics;
 	private String majorGenesCharacteristics;
 	private List<StudySearchResultModel> studyTested;
-	private HashMap<String, Integer> germplasmTypeKey = new HashMap<String, Integer>();
+	private HashMap<Integer, GermplasmType> germplasmTypeKey = new HashMap<Integer, GermplasmType>();
 	private String searchResultLabel;
 
 	private String parentSource;
@@ -52,6 +52,7 @@ public class GermplasmInfo {
 	public void init(@ExecutionArgParam("studyid") Integer studyId, @ExecutionArgParam("parentSource") String source) {
 		setParentSource(source);
 		System.out.println("studyid " + studyId);
+		this.getGermplasmTypeList();
 		for (Germplasm sg : getGermplasmById(studyId)) {
 			germplasmList.add(new GermplasmInfoModel(sg));
 		}
@@ -334,7 +335,8 @@ public class GermplasmInfo {
 		GermplasmTypeManagerImpl mgr = new GermplasmTypeManagerImpl();
 		germplasmType = mgr.getAllGermplasmType();
 		for (GermplasmType type : germplasmType) {
-			germplasmTypeKey.put(type.getGermplasmtype(), type.getId());
+//			germplasmTypeKey.put(type.getGermplasmtype(), type.getId());
+			germplasmTypeKey.put(type.getId(), type);
 		}
 		return germplasmType;
 	}
@@ -366,7 +368,9 @@ public class GermplasmInfo {
 			this.setMaleparent(sg.getMaleparent());
 			this.setSelectionhistory(sg.getSelectionhistory());
 			this.setSource(sg.getSource());
-			setType(getGermplasmTypeList().get(sg.getGermplasmtypeid()));
+			// Jan 13 Modify by QIN MAO
+			setType(germplasmTypeKey.get(sg.getGermplasmtypeid()));
+//			setType(getGermplasmTypeList().get(sg.getGermplasmtypeid()));
 			sb.append(" ");
 			// sb.append(getGermplasmCharacteristics("Biotic",
 			// getGermplasmname()));

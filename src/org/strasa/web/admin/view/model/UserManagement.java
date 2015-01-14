@@ -36,6 +36,10 @@ public class UserManagement {
 	@Command("onChecked")
 	public void addUser(@BindingParam("user") DbUser user){
 		UserManagerImpl userManagerImp =  new UserManagerImpl();
+		//modify by QIN MAO on JAN 14, 2015
+		// adding role and active attribute of this user
+		user.setRole("ROLE_USER");
+		user.setActive(true);
 		userManagerImp.updateUser(user);
 		if(user.getStatus()==true){
 			createUserFolder(user);

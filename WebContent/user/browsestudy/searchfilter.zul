@@ -12,23 +12,23 @@
 					<row>
 						Data
 
-						<radiogroup onCreate="self.setSelectedIndex(2)" 
+						<radiogroup onCreate="self.setSelectedIndex(2)" id="dataRG"
 							selectedItem="@bind(vm.searchFilter.shared)">
-							<radio label="My Data" value="private" style="padding:10px" /> 
-							<radio label="Shared Data" value="public"  style="padding:10px" />
-							<radio label="Both" value="both" />
+							<radio id="privateR" label="My Data" value="private" style="padding:10px" /> 
+							<radio id="publicR" label="Shared Data" value="public"  style="padding:10px" />
+							<radio id="bothR" label="Both" value="both" />
 						</radiogroup>
 
 
 					</row>
 					<row>
 						Study Name
-						<textbox hflex="1"
+						<textbox hflex="1" id="studyTB"
 							value="@bind(vm.searchFilter.studyname)" />
 					</row>
 					<row>
 						Program
-						<combobox model="@load(vm.programList)"
+						<combobox model="@load(vm.programList)" id="programCB"
 							hflex="1" readonly="true"
 							onChange="@command('updateLists', programName=self.value)">
 							<template name="model">
@@ -50,7 +50,7 @@
 					</row>
 					<row>
 						StudyType
-						<combobox model="@load(vm.studyTypeList)"
+						<combobox model="@load(vm.studyTypeList)" id="studyTypeCB"
 							hflex="1" readonly="true"
 							selectedIndex="@bind(vm.searchFilter.studytypeid)">
 							<template name="model">
@@ -61,16 +61,16 @@
 					</row>
 					<row>
 						Start Year
-						<intbox
+						<intbox id="startYearIB"
 							value="@bind(vm.searchFilter.startyear)" />
 					</row>
 					<row>
 						End Year
-						<intbox value="@bind(vm.searchFilter.endyear)" />
+						<intbox id="endYearIB" value="@bind(vm.searchFilter.endyear)" />
 					</row>
 					<row>
 						Country
-						<combobox model="@load(vm.countryList)"
+						<combobox model="@load(vm.countryList)" id="countryCB"
 							hflex="1" autodrop="true"
 							value="@bind(vm.searchFilter.country)"
 							onChange="@command('updateLocationList', countryName=self.value)">

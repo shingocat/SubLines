@@ -32,6 +32,9 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Intbox;
+import org.zkoss.zul.Radio;
+import org.zkoss.zul.Radiogroup;
 import org.zkoss.zul.Textbox;
 
 public class SearchFilter {
@@ -133,12 +136,33 @@ public class SearchFilter {
 			locationListKey.put(l.getLocationname(), l.getId());
 		}
 	}
-
+	
+	// it need to modify when reset buttion click
 	@NotifyChange("searchFilter")
 	@Command
-	public void reset(){
+	public void reset(@ContextParam(ContextType.COMPONENT) Component component, 
+			@ContextParam(ContextType.VIEW) Component view){
 		searchFilter = new StudySearchFilterModel();
-		searchFilter.shared="";
+		Radiogroup dataRG = (Radiogroup) component.getFellow("dataRG");
+		Radio bothR = (Radio) component.getFellow("bothR");
+		Textbox studyTB = (Textbox) component.getFellow("studyTB");
+		Combobox programCB = (Combobox) component.getFellow("programCB");
+		Combobox projectComboBox = (Combobox) component.getFellow("projectComboBox");
+		Combobox studyTypeCB = (Combobox) component.getFellow("studyTypeCB");
+		Intbox startYearIB = (Intbox) component.getFellow("startYearIB");
+		Intbox endYearIB = (Intbox) component.getFellow("endYearIB");
+		Combobox countryCB = (Combobox) component.getFellow("countryCB");
+		Combobox locationCombobox = (Combobox) component.getFellow("locationCombobox");
+		
+		dataRG.setSelectedItem(bothR);
+		studyTB.setValue(null);
+		programCB.setSelectedIndex(0);
+		projectComboBox.setSelectedIndex(0);
+		studyTypeCB.setSelectedIndex(0);
+		startYearIB.setValue(null);
+		endYearIB.setValue(null);
+		countryCB.setSelectedIndex(0);
+		locationCombobox.setSelectedIndex(0);
 	}
 	
 	@NotifyChange("projectList")

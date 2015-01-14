@@ -53,7 +53,7 @@ public interface DbUserMapper {
 			"dateregistered)",
 			"values (#{lastname,jdbcType=VARCHAR}, #{firstname,jdbcType=VARCHAR}, ",
 			"#{mi,jdbcType=VARCHAR}, #{agency,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, ",
-			"#{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, ",
+			"md5(#{password,jdbcType=VARCHAR}), #{email,jdbcType=VARCHAR}, ",
 			"#{address,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, ",
 			"#{status,jdbcType=BIT}, #{role,jdbcType=VARCHAR}, #{active,jdbcType=BIT}, ",
 			"#{dateregistered,jdbcType=TIMESTAMP})" })

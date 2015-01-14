@@ -41,10 +41,18 @@ public class Registration extends RegistrationModel {
 	public void submit() {
 
 		UserManagerImpl userManger= new UserManagerImpl();
-		userManger.addUser(this.getUser());
-		Executions.sendRedirect("registrationmsg.zul");
-		
-		
+		// check whether the username exist in database
+		DbUser users = userManger.getUserByName(this.getUser().getUsername());
+		if(users == null)
+		{
+			if(userManger.addUser(this.getUser()))
+				Executions.sendRedirect("registrationmsg.zul");
+			else
+				Executions.sendRedirect("registrationmsgfalse.zul");
+		} else
+		{
+			Executions.sendRedirect("registrationmsguserexist.zul");
+		}
 	}
 
 }

@@ -5,7 +5,8 @@
 		<vbox hflex="1" vflex="1" align="center">
 			<space height="10px"></space>
 			<label sclass="label-footer"
-				value="STRASA - Stress-tolerant Rice for Africa and South Asia &#169; 2013 IRRI">
+					value="SubLines - Substitution Lines  &#169; 2014 PMBL">
+<!-- 				value="STRASA - Stress-tolerant Rice for Africa and South Asia &#169; 2013 IRRI"> -->
 			</label>
 		</vbox>
 	</div>
