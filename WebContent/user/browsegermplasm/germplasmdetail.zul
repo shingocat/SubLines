@@ -2,8 +2,15 @@
 
 	<div apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('org.strasa.web.germplasmquery.view.model.GermplasmDetail')">
+		<tabbox>
+		<tabs>
+			<tab label="Germplasm Information" />
+			<tab label="Study(s) Information" />
+		</tabs>
+		<tabpanels>
+		<tabpanel>
 		<groupbox id="GermplasmDetailId" mold="3d">
-			<caption label="Germplasm Information" />
+			<caption label="Germplasm Information" visible="false"/>
 			<grid oddRowSclass="empty">
 				<columns width="200px">
 					<column label="" width="200px" />
@@ -102,9 +109,10 @@
 				</rows>
 			</grid>
 		</groupbox>
-
+</tabpanel>
+<tabpanel>
 		<groupbox id="StudyTestedId" mold="3d">
-			<caption label="Studies where this germplasm is tested" />
+			<caption label="Studies where this germplasm is tested" visible="false"/>
 			<grid height="200px" model="@load(vm.studyTested)" oddRowSclass="odd"
 				emptyMessage="No Record Found" sizedByContent="true"
 				zclass="none">
@@ -149,7 +157,9 @@
 				</template>
 			</grid>
 		</groupbox>
+	</tabpanel>
+</tabpanels>
+		</tabbox>
 	</div>
-
 
 </zk>

@@ -55,7 +55,7 @@
 								checkmark="true" multiple="false" id="tblStudyGerm"
 								sizedByContent="true" hflex="1"
 								model="@load(vm.lstStudyGermplasm) @template(each.templateMode)"
-								rows="10" selectedItem="@bind(vm.selectedGermplasm)">
+								rows="7" selectedItem="@bind(vm.selectedGermplasm)">
 								<auxhead sclass="category-center">
 									<auxheader colspan="1">
 										<image src="/images/filter.png" />
@@ -251,7 +251,7 @@
 						<listbox id="tblKnownGerm" oddRowSclass="odd"
 							sizedByContent="true" hflex="1"
 							model="@load(vm.lstKnownGermplasm) @template((each.known) ? 'display' : 'editable')"
-							sclass="gridMaxBodyHeight550" rows="10"
+							sclass="gridMaxBodyHeight550" rows="7"
 							selectedItem="@bind(vm.selectedGermplasm)">
 							<auxhead sclass="category-center">
 								<auxheader colspan="1">

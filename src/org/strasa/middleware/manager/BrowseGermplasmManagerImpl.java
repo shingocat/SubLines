@@ -62,14 +62,18 @@ public class BrowseGermplasmManagerImpl {
 	public List<StudySearchResultModel> getStudyWithGermplasmTested(String gname, Integer userId)
 	{
 		SqlSession session = connectionFactory.sqlSessionFactory.openSession();
-		List<StudySearchResultModel> toreturn = new ArrayList<StudySearchResultModel>();
-		try{
-			
-			return toreturn;
-		} finally
-		{
-			session.close();
-		}
+		GermplasmMapper  gMapper = session.getMapper(GermplasmMapper.class);
+		GermplasmExample gExample = new GermplasmExample();
+		gExample.createCriteria().andGermplasmnameEqualTo(gname);
+		List<Germplasm> lstGermplasm = gMapper.selectByExample(gExample);
+		List<StudySearchResultModel> lstSSRM = new ArrayList<StudySearchResultModel>();
+		if(lstGermplasm != null && lstGermplasm.size() != 0)
+			lstSSRM =  this.getStudyWithGermplasmTested(lstGermplasm.get(0), userId);
+		if(lstSSRM.size() == 0)
+			return null;
+		else
+			return lstSSRM;
+		
 	}
 	//for introgressionline 
 	public List<StudySearchResultModel> getStudyWithGermplasmTested(Germplasm g, Integer userId)

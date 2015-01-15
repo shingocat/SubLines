@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.spring.security.model.SecurityUtil;
 import org.strasa.middleware.manager.BrowseGermplasmManagerImpl;
 import org.strasa.middleware.manager.GermplasmCharacteristicMananagerImpl;
 import org.strasa.middleware.manager.GermplasmManagerImpl;
@@ -66,6 +67,8 @@ public class GermplasmDetail {
 	private List<String> listKeyCharFilter= new ArrayList<String>();
 
 	private String parentSource;
+	
+	private Integer userId = SecurityUtil.getDbUser().getId();
 
 	@Init
 	public void init(@ExecutionArgParam("gname")String germplasmName, @ExecutionArgParam("parentSource")String source){
@@ -408,9 +411,10 @@ public class GermplasmDetail {
 
 	private List<StudySearchResultModel> getStudyTested(String gname) {
 		BrowseGermplasmManagerImpl browseStudyManagerImpl= new BrowseGermplasmManagerImpl(); 
-		return browseStudyManagerImpl.getStudyWithGemrplasmTested(gname);
-
+		//return browseStudyManagerImpl.getStudyWithGemrplasmTested(gname);
+		return browseStudyManagerImpl.getStudyWithGermplasmTested(gname, userId);
 	}
+	
 
 
 	private String getGermplasmCharacteristics(String keyChar, String gname) {
