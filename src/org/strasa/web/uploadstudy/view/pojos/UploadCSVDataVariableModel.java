@@ -29,9 +29,10 @@ public class UploadCSVDataVariableModel {
 	private boolean isHeaderExisting = false;
 	List<String> systemHeader = Arrays.asList("GName","Site","Location","Season","Year");
 	public boolean modified;
+	
 	public boolean isEditable() {
-		if(systemHeader.contains(currentVariable)) return false;
-		
+		if(systemHeader.contains(currentVariable)) 
+			return false;
 		return true;
 	}
 

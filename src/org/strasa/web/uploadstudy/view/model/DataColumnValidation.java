@@ -73,7 +73,11 @@ public class DataColumnValidation {
 	}
 
 	@Init
-	public void Init(@ContextParam(ContextType.BIND_CONTEXT) BindContext ctx, @ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("CSVPath") String CSVPath, @ExecutionArgParam("showAll") boolean showAll, @ExecutionArgParam("tabModel") ProcessTabViewModel model) {
+	public void Init(@ContextParam(ContextType.BIND_CONTEXT) BindContext ctx, 
+			@ContextParam(ContextType.VIEW) Component view, 
+			@ExecutionArgParam("CSVPath") String CSVPath, 
+			@ExecutionArgParam("showAll") boolean showAll, 
+			@ExecutionArgParam("tabModel") ProcessTabViewModel model) {
 		mainView = view;
 		this.model = model;
 		parBinder = (Binder) view.getParent().getAttribute("binder");
@@ -97,8 +101,7 @@ public class DataColumnValidation {
 					invalidHeader.add(column);
 
 				}
-				System.out.println(invalidHeader.size());
-
+				System.out.println("invalidHeader size " + invalidHeader.size());
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -212,7 +215,7 @@ public class DataColumnValidation {
 	public void changeVar(@ContextParam(ContextType.BIND_CONTEXT) BindContext ctx, @ContextParam(ContextType.VIEW) Component view, @BindingParam("oldVar") String oldVar) {
 
 		Map<String, Object> params = new HashMap<String, Object>();
-		System.out.println(oldVar);
+		System.out.println("old variable " + oldVar);
 		params.put("oldVar", oldVar);
 		params.put("parent", view);
 		params.put("multiselect", false);

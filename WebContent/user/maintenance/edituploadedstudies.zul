@@ -20,7 +20,7 @@
 			<button id="btnUploadId" label="Upload New Study"
 				sclass="btn-success" src="/images/add.png" orient="horizontal"
 				tooltiptext="Add Study" onClick="@command('addStudy')" />
-				<button id="btnUploadTemplateId" label="Upload Template"
+			<button id="btnUploadTemplateId" label="Upload Template"
 				sclass="btn-success" src="/images/add.png" orient="horizontal"
 				tooltiptext="Add Study" onUpload="@command('uploadTemplate')" upload="true" />
 

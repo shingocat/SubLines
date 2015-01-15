@@ -403,8 +403,7 @@ public class UploadData extends ProcessTabViewModel {
 					isHeaderValid = false;
 				}
 			}
-			System.out.println(invalidHeader.size());
-
+			System.out.println("invalidHeader size " + invalidHeader.size());
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -501,9 +500,8 @@ public class UploadData extends ProcessTabViewModel {
 		System.out.println("SID: " + this.studyID);
 		refreshProgramList(null);
 		refreshProjectList(null);
-		System.out.println("LOADED");
+		System.out.println("LOADED UploadData.java");
 
-		System.out.println("AFTERLOAD");
 	}
 
 	public void openCSVHeaderValidator(String CSVPath, boolean showAll) {
@@ -512,7 +510,6 @@ public class UploadData extends ProcessTabViewModel {
 		params.put("parent", getMainView());
 		params.put("showAll", showAll);
 		Window popup = (Window) Executions.createComponents(DataColumnValidation.ZUL_PATH, getMainView(), params);
-
 		popup.doModal();
 	}
 
@@ -542,8 +539,9 @@ public class UploadData extends ProcessTabViewModel {
 			dataList.clear();
 			columnList.clear();
 			isDataUploaded = false;
-
-			divDatagrid.getFirstChild().detach();
+			
+			if(divDatagrid.getFirstChild() != null)
+				divDatagrid.getFirstChild().detach();
 			return;
 		}
 		Messagebox.show("Are you sure you want to delete the previous uploaded data? WARNING! This cannot be undone.", "Delete all data?", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION, new EventListener() {
@@ -557,8 +555,8 @@ public class UploadData extends ProcessTabViewModel {
 					columnList.clear();
 
 					isDataUploaded = false;
-
-					divDatagrid.getFirstChild().detach();
+					if(divDatagrid.getFirstChild() != null)
+						divDatagrid.getFirstChild().detach();
 					BindUtils.postGlobalCommand(null, null, "disableTabs", null);
 					BindUtils.postNotifyChange(null, null, UploadData.this, "*");
 					new StudyRawDataManagerImpl(studyType.equalsIgnoreCase("rawdata")).deleteByStudyId(study.getId());
@@ -599,7 +597,8 @@ public class UploadData extends ProcessTabViewModel {
 					dataList.clear();
 					columnList.clear();
 					isDataUploaded = false;
-					divDatagrid.getFirstChild().detach();
+					if(divDatagrid.getFirstChild() != null)
+						divDatagrid.getFirstChild().detach();
 					BindUtils.postGlobalCommand(null, null, "disableTabs", null);
 					BindUtils.postNotifyChange(null, null, UploadData.this, "*");
 
