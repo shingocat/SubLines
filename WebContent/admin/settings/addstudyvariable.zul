@@ -1,10 +1,8 @@
 <zk>
 	<window title="Add Study Type" border="normal" closable="true"
 		apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm') @init('org.strasa.web.admin.view.model.AddStudyType')"
+		viewModel="@id('vm') @init('org.strasa.web.admin.view.model.AddStudyVariable')"
 		width="35%">
-
-
 		<grid vflex="1">
 			<columns>
 				<column label="Type" width="150px" />
@@ -12,9 +10,58 @@
 			</columns>
 			<rows>
 				<row>
-					<label value="Name" width="150px" />
-					<textbox value='@bind(vm.model.studytype)'
+					<label value="Variable Code" width="150px" />
+					<textbox value='@bind(vm.variableCode)'
 						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<label value="Description" width="150px" />
+					<textbox value='@bind(vm.description)'
+						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<label value="Property" width="150px" />
+					<textbox value='@bind(vm.property)'
+						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<label value="Method" width="150px" />
+					<textbox value='@bind(vm.method)'
+						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<label value="Scale" width="150px" />
+					<textbox value='@bind(vm.scale)'
+						constraint="no empty" width="150px" />
+				</row>
+				<row>
+					<label value="Apply to Filter" width="150px" />
+					<radiogroup id="applyToFilterRG">
+						<radio label="No" value="No" checked="true"/>
+						<radio label="Yes" value="Yes" />
+					</radiogroup>
+				</row>
+				<row>
+					<label value="Default Column" width="150px" />
+					<radiogroup  id="defaultColumnRG">
+						<radio label="No" value="No" checked="true"/>
+						<radio label="Yes" value="Yes" />
+					</radiogroup>
+				</row>
+				<row>
+					<label value="Data Type" width="150px" />
+					<radiogroup id="dataTypeRG">
+						<radio label="Numeric" value="N"  checked="true"/>
+						<radio label="Character" value="C" />
+					</radiogroup>
+				</row>
+				<row>
+					<label value="Category" width="150px" />
+					<radiogroup id="categoryRG">
+						<radio label="Variate" value="VARIATE" checked="true"/>
+						<radio label="Factor" value="FACTOR" />
+						<radio label="Condition" value="CONDITION" />
+					</radiogroup>
 				</row>
 				<row>
 					<button label="Save" onClick="@command('add')"></button>

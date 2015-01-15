@@ -229,4 +229,37 @@ public class StudyVariableManagerImpl {
 			session.close();
 		}
 	}
+	
+	public StudyVariable getStudyVariableByVariableCode(String variableCode)
+	{
+		SqlSession session = connectionFactory.sqlSessionFactory.openSession();
+		try{
+			StudyVariableExample example = new StudyVariableExample();
+			example.createCriteria().andVariablecodeEqualTo(variableCode);
+			List<StudyVariable> lstStudyVariable = getMapper(session).selectByExample(example);
+			if(lstStudyVariable == null || lstStudyVariable.size() == 0)
+				return null;
+			return lstStudyVariable.get(0);
+			
+		} finally
+		{
+			session.close();
+		}
+	}
+
+	public boolean addStudyVariable(StudyVariable model) {
+		// TODO Auto-generated method stub
+		SqlSession session = connectionFactory.sqlSessionFactory.openSession();
+		try{
+			getMapper(session).insert(model);
+			session.commit();
+			return true;
+		}catch(Exception e)
+		{
+			return false;
+		}finally
+		{
+			session.close();
+		}
+	}
 }

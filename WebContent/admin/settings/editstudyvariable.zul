@@ -2,19 +2,19 @@
 	<window id="editStudyVariableWindow" apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('org.strasa.web.admin.view.model.EditStudyVariable')">
 		<button label="Add New" onClick="@command('add')" />
-		<grid
-			model="@load(vm.rowList)"
-			sizedByContent="true" width="95%">
-			<columns width="200px">
-				<column label="Variable Code" />
-				<column label="Description"/>
-				<column label="Property"/>
-				<column label="Method"/>
-				<column label="Scale"/>
-				<column label="Apply to Filter"/>
-				<column label="Default Column"/>
-				<column label="Data Type"/>
-				<column label="Action"/>
+		<grid pagingPosition="both"
+			model="@load(vm.rowList)" mold="paging" pageSize="10"
+			>
+			<columns>
+				<column hflex="1" label="Variable Code" />
+				<column hflex="1" label="Description"/>
+				<column hflex="1" label="Property"/>
+				<column hflex="1" label="Method"/>
+				<column hflex="1" label="Scale"/>
+				<column hflex="1" label="Apply to Filter"/>
+				<column hflex="1" label="Default Column"/>
+				<column hflex="1" label="Data Type"/>
+				<column hflex="1" label="Action"/>
 			</columns>
 			<template name="model">
 				<row>
