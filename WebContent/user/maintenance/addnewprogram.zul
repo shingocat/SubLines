@@ -2,49 +2,50 @@
 	<window apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('org.strasa.web.maintenance.view.model.AddNewProgram')"
 		width="98%">
-
-
-		<grid vflex="1" hflex="1">
-			<auxhead>
-				<auxheader label="Add New Program" colspan="2"></auxheader>
-			</auxhead>
-			<columns>
-				<column label="Field" />
-				<column label="Value" />
+		<grid height="350px">
+<!-- 			<auxhead> -->
+<!-- 				<auxheader label="Add New Program" colspan="2"></auxheader> -->
+<!-- 			</auxhead> -->
+			<columns visible="false">
+				<column label="Field" width="100px"/>
+				<column label="Value" width="450px"/>
 			</columns>
 			<rows>
 				<row>
-					<label value="Name" width="150px" />
-					<textbox value='@bind(vm.programModel.name)'
-						constraint="no empty" width="150px" />
+					<label value="Name" width="100px" />
+					<textbox id="nameTB" value='@bind(vm.programModel.name)'
+						constraint="no empty" width="200px" />
 				</row>
 				<row>
-					<label value="Objective" width="150px" />
-					<textbox value='@bind(vm.programModel.objective)'
-						constraint="no empty" width="150px" />
+					<label value="Objective" width="100px" />
+					<textbox id="objectiveTB" value='@bind(vm.programModel.objective)'
+						constraint="no empty" width="400px" rows="5"/>
 				</row>
 				<row>
-					<label value="Coordinator" width="150px" />
-					<textbox value='@bind(vm.programModel.coordinator)'
-						constraint="no empty" width="150px" />
+					<label value="Coordinator" width="100px" />
+					<textbox id="coordinatorTB" value='@bind(vm.programModel.coordinator)'
+						constraint="no empty" width="200px" />
 				</row>
 				<row>
-					<label value="Leading Institute" width="150px" />
-					<textbox
+					<label value="Leading Institute" width="100px" />
+					<textbox id="leadingInstituteTB"
 						value='@bind(vm.programModel.leadinginstitute)'
-						constraint="no empty" width="150px" />
+						constraint="no empty" width="200px" />
 				</row>
 				<row>
-					<label value="Collaborator" width="150px" />
-					<textbox value='@bind(vm.programModel.collaborator)'
-						constraint="no empty" width="150px" />
+					<label value="Collaborator" width="100px" />
+					<textbox id="collaboratorTB" value='@bind(vm.programModel.collaborator)'
+						constraint="no empty" width="200px" />
 				</row>
 
 				<row>
 					<label></label>
+					<hbox>
 					<button label="Save" onClick="@command('add')"
-						image="/images/save16.png" sclass="btn-warning">
-					</button>
+						image="/images/save16.png" sclass="btn-warning" />
+					<button label="Reset" onClick="@command('reset')"
+						image="/images/Reset16.png" sclass="btn-warning" />
+					</hbox>
 				</row>
 			</rows>
 		</grid>

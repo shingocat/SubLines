@@ -37,6 +37,7 @@ public class EditProgram {
 	public void setProgramList(List<ProgramStatus> programList) {
 		this.programList = programList;
 	}
+	
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view){
 		programMan = new ProgramManagerImpl();
@@ -46,7 +47,8 @@ public class EditProgram {
 
 //		programList = makeProgramStatus(programMan.getProgramByUserId(userId));
 	}
-
+	
+	@NotifyChange("*")
 	private void makeProgramStatus(List<Program> programByUserId) {
 		// TODO Auto-generated method stub
 		
@@ -57,12 +59,14 @@ public class EditProgram {
 		}
 	}
 	
+	@NotifyChange("*")
 	@Command
 	public void changeEditableStatus(@BindingParam("ProgramStatus") ProgramStatus ps) {
 		ps.setEditingStatus(!ps.getEditingStatus());
 		refreshRowTemplate(ps);
 	}
-
+	
+	@NotifyChange("*")
 	@Command
 	public void confirm(@BindingParam("ProgramStatus") ProgramStatus ps) {
 		changeEditableStatus(ps);
@@ -80,7 +84,7 @@ public class EditProgram {
 		BindUtils.postNotifyChange(null, null, ps, "editingStatus");
 	}
 	@SuppressWarnings("unchecked")
-	@NotifyChange("programList")
+	@NotifyChange("*")
 	@Command("deleteProgram")
 	public void deleteStudy(@BindingParam("programId") final Integer programId){
 
@@ -118,7 +122,7 @@ public class EditProgram {
 		makeProgramStatus(programMan.getProgramByUserId());
 	}
 
-	@NotifyChange("programList")
+	@NotifyChange("*")
 	@GlobalCommand("refreshProgramList")
 	public void refreshProgramList() {
 		makeProgramStatus(programMan.getProgramByUserId());

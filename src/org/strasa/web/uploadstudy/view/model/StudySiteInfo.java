@@ -595,9 +595,7 @@ public class StudySiteInfo extends ProcessTabViewModel {
 
 	@Init
 	public void init(@ExecutionArgParam("uploadModel") ProcessTabViewModel uploadModel) {
-
 		Clients.showBusy("Loading data please wait...");
-
 		this.initValues(uploadModel);
 		studySiteMan = new StudySiteManagerImpl(isRaw);
 		studyAgroMan = new StudyAgronomyManagerImpl();
@@ -697,8 +695,8 @@ public class StudySiteInfo extends ProcessTabViewModel {
 		boolean hasSite = studySiteMan.hasSiteHeader(this.studyID, this.dataset.getId());
 
 		if (!hasSite) {
-			sites.removeRange(1, sites.size() - 1);
-
+			if(sites.size() >= 2)
+				sites.removeRange(1, sites.size() - 1);
 		}
 
 		System.out.println("SITE FINAL COUNT: " + sites.size());

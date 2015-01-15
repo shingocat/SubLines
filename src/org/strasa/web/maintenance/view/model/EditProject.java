@@ -62,7 +62,7 @@ public class EditProject {
 		makeProjectStatus(projectMan.getProjectByUserId());
 		setProgramList(programMan.getAllProgram());
 	}
-
+	@NotifyChange("*")
 	private void makeProjectStatus(List<Project> projectByUserId) {
 		// TODO Auto-generated method stub
 
@@ -74,14 +74,14 @@ public class EditProject {
 			projectList.add(ps);
 		}
 	}
-
+	@NotifyChange("*")
 	@Command
 	public void changeEditableStatus(@BindingParam("ProjectStatus") ProjectStatus ps) {
 		unCheckAllRowStatusExcept(ps);
 		ps.setEditingStatus(!ps.getEditingStatus());
 		refreshRowTemplate(ps);
 	}
-
+	@NotifyChange("*")
 	private void unCheckAllRowStatusExcept(ProjectStatus ps) {
 		// TODO Auto-generated method stub
 		for(ProjectStatus rs: projectList){
@@ -89,7 +89,7 @@ public class EditProject {
 			refreshRowTemplate(rs);
 		}
 	}
-	
+	@NotifyChange("*")
 	@Command
 	public void confirm(@ContextParam(ContextType.COMPONENT) Component component,
 			@ContextParam(ContextType.VIEW) Component view, @BindingParam("ProjectStatus") ProjectStatus ps) {
@@ -103,7 +103,7 @@ public class EditProject {
 		projectMan.updateProject(ps.getProject());
 		Messagebox.show("Changes saved.");
 	}
-
+	@NotifyChange("*")
 	public void refreshRowTemplate(ProjectStatus ps) {
 		/*
 		 * This code is special and notifies ZK that the bean's value
@@ -114,7 +114,7 @@ public class EditProject {
 	}
 
 	@SuppressWarnings("unchecked")
-	@NotifyChange("projectList")
+	@NotifyChange("*")
 	@Command("deleteProject")
 	public void deleteStudy(@BindingParam("projectId") final Integer projectId){
 
@@ -157,7 +157,7 @@ public class EditProject {
 
 	}
 
-	@NotifyChange("projectList")
+	@NotifyChange("*")
 	@GlobalCommand("refreshProjectList")
 	public void refreshProjectList() {
 		makeProjectStatus(projectMan.getProjectByUserId());

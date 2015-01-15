@@ -53,8 +53,8 @@
 				</row>
 
 				<row>
-					MI
-					<textbox value="@bind(fx.mi)" width="10px"
+					Middlename
+					<textbox value="@bind(fx.mi)" width="150px"
 						tabindex="3" />
 				</row>
 				<row>

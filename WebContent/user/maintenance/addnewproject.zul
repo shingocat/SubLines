@@ -4,18 +4,18 @@
 		width="98%">
 		<style src="../css/main.css" />
 
-		<grid vflex="1" hflex="1">
-			<auxhead>
+		<grid height="400px">
+			<auxhead visible="false">
 				<auxheader label="Add New Project" colspan="2"></auxheader>
 			</auxhead>
-			<columns>
-				<column label="Field" />
-				<column label="Value" />
+			<columns visible="false">
+				<column label="Field" width="150px"/>
+				<column label="Value" width="400px" />
 			</columns>
 			<rows>
 				<row>
 					<label value="Program Name" />
-					<combobox id="programComboBox" hflex="1"
+					<combobox id="programComboBox" width="200px"
 						model="@load(vm.programList)" readonly="true"
 						onChange="@command('updateLists', program=self.selectedItem)"
 						value="@bind(vm.program.name)">
@@ -27,43 +27,47 @@
 				</row>
 				<row>
 					<label value="Project Name" width="150px" />
-					<textbox value='@bind(vm.projectModel.name)'
-						hflex="1" constraint="no empty" />
+					<textbox id="nameTB" value='@bind(vm.projectModel.name)'
+						width="200px" constraint="no empty" />
 				</row>
 				<row>
 					<label value="Objective" width="150px" />
-					<textbox value='@bind(vm.projectModel.objective)'
-						hflex="1" constraint="no empty" />
+					<textbox id="objectiveTB" value='@bind(vm.projectModel.objective)'
+						hflex="1" constraint="no empty" rows="5"/>
 				</row>
 				<row>
 					<label value="Funding Agency" />
-					<textbox
+					<textbox id="fundingAgencyTB"
 						value='@bind(vm.projectModel.fundingagency)' constraint="no empty"
-						hflex="1" width="150px" />
+						width="200px" />
 				</row>
 				<row>
 					<label value="PI" width="150px" />
-					<textbox value='@bind(vm.projectModel.pi)' hflex="1"
+					<textbox id="piTB" value='@bind(vm.projectModel.pi)' width="200px"
 						constraint="no empty" />
 				</row>
 				<row>
 					<label value="Leading Institute" />
-					<textbox
-						value='@bind(vm.projectModel.leadinginstitute)' hflex="1"
+					<textbox id="leadingInstituteTB"
+						value='@bind(vm.projectModel.leadinginstitute)' width="200px"
 						constraint="no empty" />
 				</row>
 				<row>
 					<label value="Collaborators" width="150px" />
-					<textbox
+					<textbox id="collaboratorTB"
 						value='@bind(vm.projectModel.collaborators)' constraint="no empty"
-						hflex="1" />
+						width="200px" />
 				</row>
 
 				<row>
 					<label></label>
+					<hbox>
 					<button label="Save" image="../images/save16.png"
 						sclass="btn-warning" onClick="@command('add')">
 					</button>
+					<button label="Reset" image="/images/Reset16.png"
+						sclass="btn-warning" onClick="@command('reset')" />
+					</hbox>
 				</row>
 			</rows>
 		</grid>

@@ -11,6 +11,7 @@ import org.strasa.web.common.api.FormValidator;
 import org.zkoss.bind.BindContext;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.Binder;
+import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
@@ -18,8 +19,10 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Textbox;
 
 public class AddNewProject {
 	public static String ZUL_PATH = "/user/maintenance/addnewproject.zul";
@@ -32,6 +35,14 @@ public class AddNewProject {
 	private List<Program> programList = null;
 	private Program program = new Program();
 	private ProgramManagerImpl programMan;
+	
+	Combobox programComboBox;
+	Textbox nameTB;
+	Textbox objectiveTB;
+	Textbox fundingAgencyTB;
+	Textbox piTB;
+	Textbox leadingInstituteTB;
+	Textbox collaboratorTB;
 
 	@Init
 	public void Init(@ContextParam(ContextType.BIND_CONTEXT) BindContext ctx, @ContextParam(ContextType.VIEW) Component view) {
@@ -41,6 +52,19 @@ public class AddNewProject {
 
 		programMan = new ProgramManagerImpl();
 		setProgramList(programMan.getAllProgram());
+	}
+	
+	@AfterCompose
+	public void afterCompose(@ContextParam(ContextType.COMPONENT) Component comp,
+			@ContextParam(ContextType.VIEW) Component view)
+	{
+		programComboBox = (Combobox) comp.getFellow("programComboBox");
+		nameTB = (Textbox) comp.getFellow("nameTB");
+		objectiveTB = (Textbox) comp.getFellow("objectiveTB");
+		fundingAgencyTB = (Textbox) comp.getFellow("fundingAgencyTB");
+		piTB = (Textbox) comp.getFellow("piTB");
+		leadingInstituteTB = (Textbox) comp.getFellow("leadingInstituteTB");
+		collaboratorTB = (Textbox) comp.getFellow("collaboratorTB");
 	}
 
 	@NotifyChange("*")
@@ -75,6 +99,28 @@ public class AddNewProject {
 		BindUtils.postGlobalCommand(null, null, "refreshProjectList", null);
 		setProjectModel(new Project());
 		// bind.postCommand("changeProjectList", params);
+	}
+	
+	@Command
+	public void reset()
+	{
+		if(projectModel != null)
+		{
+			projectModel.setName(null);
+			projectModel.setObjective(null);
+			projectModel.setFundingagency(null);
+			projectModel.setPi(null);
+			projectModel.setLeadinginstitute(null);
+			projectModel.setCollaborators(null);
+		}
+		if(programComboBox != null)
+			programComboBox.setSelectedIndex(-1);
+		this.nameTB.setRawValue(null);
+		this.objectiveTB.setRawValue(null);
+		this.fundingAgencyTB.setRawValue(null);
+		this.piTB.setRawValue(null);
+		this.leadingInstituteTB.setRawValue(null);
+		this.collaboratorTB.setRawValue(null);
 	}
 
 	@Command
