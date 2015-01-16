@@ -209,46 +209,21 @@ public class Specifications {
 	private String analysisEnvType;
 	private SSSLAnalysisModel ssslAnalysisModel;
 	private String resultRServe;
-	private List<String> columnList = new ArrayList<String>(); // column list
-																// from raw data
-	private List<String[]> dataList = new ArrayList<String[]>(); // raw data
-																	// from
-																	// selected
-																	// data
+	// column list from raw data
+	private List<String> columnList = new ArrayList<String>(); 
+	// raw data from selected data
+	private List<String[]> dataList = new ArrayList<String[]>(); 
 	private List<String> contrastColumnList = new ArrayList<String>();
 	private List<String[]> contrastDataList = new ArrayList<String[]>();
-	private List<String> contrastColumnListOnGenotype = new ArrayList<String>(); // for
-																					// storing
-																					// column
-																					// name
-																					// of
-																					// contrast
-																					// file
-																					// column
-																					// on
-																					// genotype
-	private List<String[]> contrastDataListOnGenotype = new ArrayList<String[]>(); // storing
-																					// data
-																					// of
-																					// contrast
-																					// file
-																					// on
-																					// genotype
-	private List<String> contrastColumnListOnEnv = new ArrayList<String>(); // storing
-																			// column
-																			// name
-																			// of
-																			// contrast
-																			// file
-																			// on
-																			// env;
-	private List<String[]> contrastDataListOnEnv = new ArrayList<String[]>(); // storing
-																				// data
-																				// of
-																				// contrast
-																				// file
-																				// on
-																				// env;
+	// for storing column name of contrast column on genotype
+	private List<String> contrastColumnListOnGenotype = new ArrayList<String>(); 
+	// storing data of contrast file on genotype
+	private List<String[]> contrastDataListOnGenotype = new ArrayList<String[]>(); 
+	// storing column name of contrast file on env;
+	private List<String> contrastColumnListOnEnv = new ArrayList<String>(); 
+	// storing of contrast file one env;
+	private List<String[]> contrastDataListOnEnv = new ArrayList<String[]>(); 
+	
 	private int pageSize = 10;
 	private int activePage = 0;
 	private boolean isDataReUploaded = false;
@@ -533,6 +508,7 @@ public class Specifications {
 			ArrayList<String> newRow = new ArrayList<String>();
 			for (StudyDataColumn d : columns) {
 				String value = rec.get(d.getColumnheader());
+				System.out.println("return value " + value);
 				newRow.add(value);
 				// System.out.print("on " + d.getColumnheader() + " value is " +
 				// value + "\t");

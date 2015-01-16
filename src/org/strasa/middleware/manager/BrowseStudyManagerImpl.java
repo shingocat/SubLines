@@ -10,8 +10,10 @@ import org.strasa.middleware.factory.ConnectionFactory;
 import org.strasa.middleware.mapper.LocationMapper;
 import org.strasa.middleware.mapper.ProgramMapper;
 import org.strasa.middleware.mapper.ProjectMapper;
+import org.strasa.middleware.mapper.StudyDerivedDataMapper;
 import org.strasa.middleware.mapper.StudyLocationMapper;
 import org.strasa.middleware.mapper.StudyMapper;
+import org.strasa.middleware.mapper.StudyRawDataMapper;
 import org.strasa.middleware.mapper.StudyTypeMapper;
 import org.strasa.middleware.mapper.other.StudySummaryMapper;
 import org.strasa.middleware.model.Location;
@@ -22,9 +24,13 @@ import org.strasa.middleware.model.Project;
 import org.strasa.middleware.model.ProjectExample;
 import org.strasa.middleware.model.Study;
 import org.strasa.middleware.model.StudyDataColumn;
+import org.strasa.middleware.model.StudyDerivedData;
+import org.strasa.middleware.model.StudyDerivedDataExample;
 import org.strasa.middleware.model.StudyExample;
 import org.strasa.middleware.model.StudyLocation;
 import org.strasa.middleware.model.StudyLocationExample;
+import org.strasa.middleware.model.StudyRawData;
+import org.strasa.middleware.model.StudyRawDataExample;
 import org.strasa.middleware.model.StudyType;
 import org.strasa.middleware.model.StudyTypeExample;
 import org.strasa.web.browsestudy.view.model.StudyDataColumnModel;
@@ -83,7 +89,7 @@ public class BrowseStudyManagerImpl {
 				rec.setStudyGenetics(6);
 				List<StudySummaryModel> genetics = mapper.selectCountOfStudyByStudyType(p.getProgramId(), rec.getStudyGenetics(), SecurityUtil.getDbUser().getId());
 				rec.setCountStudyGenetics(genetics.get(0).getCountStudyTypeId());
-				
+
 				System.out.println("rec:" + rec.toString());
 				s.add(rec);
 
@@ -95,7 +101,7 @@ public class BrowseStudyManagerImpl {
 		}
 
 	}
-	
+
 	public List<StudySearchResultModel> getStudySearchResult(StudySearchFilterModel filter) {
 		SqlSession session = connectionFactory.sqlSessionFactory.openSession();
 		try {
@@ -109,8 +115,8 @@ public class BrowseStudyManagerImpl {
 		}
 
 	}
-	
-//	adding by QIN MAO to implement simple search by study name
+
+	//	adding by QIN MAO to implement simple search by study name
 	public List<StudySearchResultModel> getStudySearchResult(StudySearchFilterModel filter, Integer userID)
 	{
 		SqlSession session = connectionFactory.sqlSessionFactory.openSession();
@@ -126,7 +132,7 @@ public class BrowseStudyManagerImpl {
 			String country = null;
 			Integer locationId = null;
 			Integer userId = userID;
-			
+
 			if(filter.getShared() != null)
 				shared = filter.getShared();
 			if(filter.getProgramid() != 0)
@@ -157,7 +163,7 @@ public class BrowseStudyManagerImpl {
 			System.out.println("locationid " + locationId);
 			System.out.println("userId " + userId);
 			System.out.println("------------------------------");
-			
+
 			//first checking whether country and location is null;
 			StudyMapper sMapper = session.getMapper(StudyMapper.class);
 			StudyExample sExample = new StudyExample();
@@ -171,7 +177,7 @@ public class BrowseStudyManagerImpl {
 			ProjectExample projExample = new ProjectExample();
 			StudyTypeMapper stMapper = session.getMapper(StudyTypeMapper.class);
 			StudyTypeExample stExample = new StudyTypeExample();
-			
+
 			if(country == null)
 			{
 				if(locationId != null)
@@ -229,7 +235,7 @@ public class BrowseStudyManagerImpl {
 												if(endYear != null && s.getEndyear().equalsIgnoreCase(endYear))
 													continue;
 												lstStudyFilter.add(s);
-												
+
 											} else if(shared.equals("both"))
 											{
 												if(studyName != null && !s.getName().contains(studyName))
@@ -287,9 +293,9 @@ public class BrowseStudyManagerImpl {
 							}
 							slExample.clear();
 						} // end of for(Location loc : lstLocation)
-						
+
 					} // end of if(lstLocation != null && lstLocation.size() != 0)
-					
+
 					lExample.clear();
 				} else
 				{
@@ -512,7 +518,7 @@ public class BrowseStudyManagerImpl {
 						}
 						sExample.clear();
 					}
-					
+
 				}
 			} else
 			{	
@@ -571,7 +577,7 @@ public class BrowseStudyManagerImpl {
 												if(endYear != null && s.getEndyear().equalsIgnoreCase(endYear))
 													continue;
 												lstStudyFilter.add(s);
-												
+
 											} else if(shared.equals("both"))
 											{
 												if(studyName != null && !s.getName().contains(studyName))
@@ -629,9 +635,9 @@ public class BrowseStudyManagerImpl {
 							}
 							slExample.clear();
 						} // end of for(Location loc : lstLocation)
-						
+
 					} // end of if(lstLocation != null && lstLocation.size() != 0)
-					
+
 					lExample.clear();
 				} else
 				{
@@ -688,7 +694,7 @@ public class BrowseStudyManagerImpl {
 												if(endYear != null && s.getEndyear().equalsIgnoreCase(endYear))
 													continue;
 												lstStudyFilter.add(s);
-												
+
 											} else if(shared.equals("both"))
 											{
 												if(studyName != null && !s.getName().contains(studyName))
@@ -746,20 +752,20 @@ public class BrowseStudyManagerImpl {
 							}
 							slExample.clear();
 						} // end of for(Location loc : lstLocation)
-						
+
 					} // end of if(lstLocation != null && lstLocation.size() != 0)
-					
+
 					lExample.clear();
 				} // end of if(locationId != null)
 			} // end of if(country.length == 0)
-			
+
 			return toreturn;			
 		} finally{
 			session.close();
 		}
 	}
-	
-	
+
+
 
 	public List<HashMap<String, String>> getStudyData(int studyId, String dataType, Integer dataset) {
 		List<HashMap<String, String>> toreturn = new ArrayList<HashMap<String, String>>();
@@ -769,7 +775,9 @@ public class BrowseStudyManagerImpl {
 
 			List<StudyDataColumn> studyDataColumn = mgr.getStudyDataColumnByStudyId(studyId, dataType, dataset);
 			ArrayList<StudyDataColumnModel> dataColumns = new ArrayList<StudyDataColumnModel>();
-
+			//			on JAN 16, 2015, checking whether the return studyDataColumn is null
+			if(studyDataColumn == null || studyDataColumn.size() == 0)
+				return toreturn;
 			int count = 1;
 			int columnCount = studyDataColumn.size();
 			for (StudyDataColumn s : studyDataColumn) {
@@ -782,24 +790,148 @@ public class BrowseStudyManagerImpl {
 				dataColumns.add(m);
 				count++;
 			}
-
-			System.out.println(studyDataColumn.toString());
-
-			if (!studyDataColumn.isEmpty()) {
-				if (dataset != null) {
-					if (dataType.equals("rd")) {
-						toreturn = session.selectList("BrowseStudy.getStudyRawData", dataColumns);
-					} else {
-						toreturn = session.selectList("BrowseStudy.getStudyDerivedData", dataColumns);
+			StudyRawDataMapper srdMapper = session.getMapper(StudyRawDataMapper.class);
+			StudyRawDataExample srdExample = new StudyRawDataExample();
+			StudyDerivedDataMapper sddMapper = session.getMapper(StudyDerivedDataMapper.class);
+			StudyDerivedDataExample sddExample = new StudyDerivedDataExample();
+			if(!dataColumns.isEmpty())
+			{
+				if(dataset != null)
+				{
+					if(dataType.equals("rd"))
+					{
+						srdExample.createCriteria().andStudyidEqualTo(studyId).andDatasetEqualTo(dataset);
+						List<StudyRawData> lstStudyRawData = srdMapper.selectByExample(srdExample);
+						if(lstStudyRawData != null && lstStudyRawData.size() != 0)
+						{
+							//get the rows records of raw data;
+							int rows = lstStudyRawData.size() / dataColumns.size();
+							//columns number of raw data;
+							
+							//set each element of temp to be null;
+							for(int i = 0; i < rows; i++)
+								toreturn.add(i, null);
+							for(StudyRawData srd : lstStudyRawData)
+							{
+								if(toreturn.get(srd.getDatarow() - 1) != null)
+								{
+									HashMap<String, String> tempHM = toreturn.get(srd.getDatarow() - 1);
+									tempHM.put(String.valueOf(srd.getDatacolumn()), srd.getDatavalue());
+									toreturn.set(srd.getDatarow() - 1, tempHM);
+								} else
+								{
+									HashMap<String, String> tempHM = new HashMap<String, String>();
+									tempHM.put(String.valueOf(srd.getDatacolumn()), srd.getDatavalue());
+									toreturn.set(srd.getDatarow() - 1, tempHM);
+								}
+							}
+						}
+						srdExample.clear();
+					} else
+					{
+						sddExample.createCriteria().andStudyidEqualTo(studyId).andDatasetEqualTo(dataset);
+						List<StudyDerivedData> lstStudyDerivedData = sddMapper.selectByExample(sddExample);
+						if(lstStudyDerivedData != null && lstStudyDerivedData.size() != 0)
+						{
+							//get the rows records of raw data;
+							int rows = lstStudyDerivedData.size() / dataColumns.size();
+							//set each element of temp to be null;
+							for(int i = 0; i < rows; i++)
+								toreturn.add(i, null);
+							for(StudyDerivedData sdd : lstStudyDerivedData)
+							{
+								if(toreturn.get(sdd.getDatarow() - 1) != null)
+								{
+									HashMap<String, String> hm = toreturn.get(sdd.getDatarow() -1);
+									hm.put(String.valueOf(sdd.getDatacolumn()), sdd.getDatavalue());
+									toreturn.set(sdd.getDatarow() - 1, hm);
+								} else
+								{
+									HashMap<String, String> hm = new HashMap<String, String>();
+									hm.put(String.valueOf(sdd.getDatacolumn()), sdd.getDatavalue());
+									toreturn.set(sdd.getDatarow() - 1, hm);
+								}
+							}
+						}
+						sddExample.clear();
 					}
-				} else {
-					if (dataType.equals("rd")) {
-						toreturn = session.selectList("BrowseStudy.getStudyRawDataNoDataset", dataColumns);
-					} else {
-						toreturn = session.selectList("BrowseStudy.getStudyDerivedDataNoDataset", dataColumns);
+				} else
+				{
+					if(dataType.equals("rd"))
+					{
+						srdExample.createCriteria().andStudyidEqualTo(studyId);
+						List<StudyRawData> lstStudyRawData = srdMapper.selectByExample(srdExample);
+						if(lstStudyRawData != null && lstStudyRawData.size() != 0)
+						{
+							//get the rows records of raw data;
+							int rows = lstStudyRawData.size() / dataColumns.size();
+							//columns number of raw data;
+							
+							//set each element of temp to be null;
+							for(int i = 0; i < rows; i++)
+								toreturn.add(i, null);
+							for(StudyRawData srd : lstStudyRawData)
+							{
+								if(toreturn.get(srd.getDatarow() - 1) != null)
+								{
+									HashMap<String, String> tempHM = toreturn.get(srd.getDatarow() - 1);
+									tempHM.put(String.valueOf(srd.getDatacolumn()), srd.getDatavalue());
+									toreturn.set(srd.getDatarow() - 1, tempHM);
+								} else
+								{
+									HashMap<String, String> tempHM = new HashMap<String, String>();
+									tempHM.put(String.valueOf(srd.getDatacolumn()), srd.getDatavalue());
+									toreturn.set(srd.getDatarow() - 1, tempHM);
+								}
+							}
+						}
+						srdExample.clear();
+					} else
+					{
+						sddExample.createCriteria().andStudyidEqualTo(studyId);
+						List<StudyDerivedData> lstStudyDerivedData = sddMapper.selectByExample(sddExample);
+						if(lstStudyDerivedData != null && lstStudyDerivedData.size() != 0)
+						{
+							//get the rows records of raw data;
+							int rows = lstStudyDerivedData.size() / dataColumns.size();
+							//set each element of temp to be null;
+							for(int i = 0; i < rows; i++)
+								toreturn.add(i, null);
+							for(StudyDerivedData sdd : lstStudyDerivedData)
+							{
+								if(toreturn.get(sdd.getDatarow() - 1) != null)
+								{
+									HashMap<String, String> hm = toreturn.get(sdd.getDatarow() -1);
+									hm.put(String.valueOf(sdd.getDatacolumn()), sdd.getDatavalue());
+									toreturn.set(sdd.getDatarow() - 1, hm);
+								} else
+								{
+									HashMap<String, String> hm = new HashMap<String, String>();
+									hm.put(String.valueOf(sdd.getDatacolumn()), sdd.getDatavalue());
+									toreturn.set(sdd.getDatarow() - 1, hm);
+								}
+							}
+						}
+						sddExample.clear();
 					}
 				}
 			}
+			// original implemented
+			//			if (!dataColumns.isEmpty()) {
+			//				if (dataset != null) {
+			//					if (dataType.equals("rd")) {
+			//						toreturn = session.selectList("BrowseStudy.getStudyRawData", dataColumns);
+			//					} else {
+			//						toreturn = session.selectList("BrowseStudy.getStudyDerivedData", dataColumns);
+			//					}
+			//				} else {
+			//					if (dataType.equals("rd")) {
+			//						toreturn = session.selectList("BrowseStudy.getStudyRawDataNoDataset", dataColumns);
+			//					} else {
+			//						toreturn = session.selectList("BrowseStudy.getStudyDerivedDataNoDataset", dataColumns);
+			//					}
+			//				}
+			//			}
 			return toreturn;
 
 		} finally {
