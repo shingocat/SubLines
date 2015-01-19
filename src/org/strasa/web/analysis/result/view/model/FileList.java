@@ -28,15 +28,54 @@ public class FileList {
 		folderNameOfSSSLAnalysis = Executions.getCurrent().getDesktop().getWebApp().getResourcePaths("/resultanalysis/"+SecurityUtil.getUserName()+"/SSSL_Analysis");
 		root = new FileModelTreeNode(null,new FileModelTreeNode[] {
 				new FileModelTreeNode(new FileModel("Single-Site"),getFolderList(folderNameOfSingleSite),true),
-				
+
 				new FileModelTreeNode(new FileModel("Multi-Site"),getFolderList(folderNameOfMultiSite),true),
-				
+
 				new FileModelTreeNode(new FileModel("SSSL_Analysis"), getFolderList(folderNameOfSSSLAnalysis), true),
 		},true);
 
 	}
+	//adding by QIN MAO on JAN 19, 2015
+	public FileList(String type)
+	{
+		if(type.equalsIgnoreCase("SSSL_Analysis"))
+		{
+			Set<String> folderNameOfSingleEnv = Executions.getCurrent().getDesktop().getWebApp().getResourcePaths("/resultanalysis/" + 
+					SecurityUtil.getUserName() + "/SSSL_Analysis/" + "Single_Environment");
+			Set<String> folderNameOfMultiEnv = Executions.getCurrent().getDesktop().getWebApp().getResourcePaths("/resultanalysis/" + 
+					SecurityUtil.getUserName() + "/SSSL_Analysis/" + "Multi_Environment");
+			root = new FileModelTreeNode(null, new FileModelTreeNode[]{
+					new FileModelTreeNode(new FileModel("Single_Environment"), getFolderList(folderNameOfSingleEnv), true),
+					new FileModelTreeNode(new FileModel("Multi_Environment"), getFolderList(folderNameOfMultiEnv), true)
+			}, true);
+		}
+		else if(type.equalsIgnoreCase("PL_Analysis"))
+		{
+			Set<String> folderNameOfSingleEnv = Executions.getCurrent().getDesktop().getWebApp().getResourcePaths("/resultanalysis/" + 
+					SecurityUtil.getUserName() + "/PL_Analysis/" + "Single_Environment");
+			Set<String> folderNameOfMultiEnv = Executions.getCurrent().getDesktop().getWebApp().getResourcePaths("/resultanalysis/" + 
+					SecurityUtil.getUserName() + "/PL_Analysis/" + "Multi_Environment");
+			root = new FileModelTreeNode(null, new FileModelTreeNode[]{
+					new FileModelTreeNode(new FileModel("Single_Environment"), getFolderList(folderNameOfSingleEnv), true),
+					new FileModelTreeNode(new FileModel("Multi_Environment"), getFolderList(folderNameOfMultiEnv), true)
+			}, true);
+		}
+		else if(type.equalsIgnoreCase("IL_Analysis"))
+		{
+			Set<String> folderNameOfChisq = Executions.getCurrent().getDesktop().getWebApp().getResourcePaths("/resultanalysis/" + 
+					SecurityUtil.getUserName() + "/IL_Analysis/" + "Chisq");
+			Set<String> folderNameOfSingleMarker = Executions.getCurrent().getDesktop().getWebApp().getResourcePaths("/resultanalysis/" + 
+					SecurityUtil.getUserName() + "/IL_Analysis/" + "Single_Marker");
+			Set<String> folderNameOfMultiMarker = Executions.getCurrent().getDesktop().getWebApp().getResourcePaths("/resultanalysis/" + 
+					SecurityUtil.getUserName() + "/IL_Analysis/" + "Multi_Marker");
+			root = new FileModelTreeNode(null, new FileModelTreeNode[]{
+					new FileModelTreeNode(new FileModel("Chisq"), getFolderList(folderNameOfChisq), true),
+					new FileModelTreeNode(new FileModel("Single_Marker"), getFolderList(folderNameOfSingleMarker), true),
+					new FileModelTreeNode(new FileModel("Multi_Marker"), getFolderList(folderNameOfMultiMarker), true)
+			},true);
+		}
+	}
 
-		
 
 
 
@@ -49,7 +88,7 @@ public class FileList {
 			String[] nf=l.split("/");
 			String nfn=nf[nf.length-1];
 			/*nfn=nfn.substring(0, nf.length-1);*/
-			
+
 			Set<String> files;
 			files=Executions.getCurrent().getDesktop().getWebApp().getResourcePaths(l);
 			FileModelTreeNode x = new FileModelTreeNode(new FileModel(nfn),getFileList(files));
@@ -57,12 +96,12 @@ public class FileList {
 		}
 		return fm.toArray(tmp);
 	}
-	
-	
+
+
 	private FileModelTreeNode[] getFileList(Set<String> files) {
 		FileModelTreeNode[] tmp=new FileModelTreeNode[files.size()];
 		List<FileModelTreeNode> fm= new ArrayList<FileModelTreeNode>();
-		
+
 		List<String> myList = new ArrayList(files);
 		Collections.sort(myList);
 		for(String name : myList){

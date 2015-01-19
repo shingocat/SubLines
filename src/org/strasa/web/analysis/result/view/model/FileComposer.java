@@ -25,6 +25,7 @@ import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zk.ui.event.Event;
@@ -79,7 +80,21 @@ public class FileComposer extends SelectorComposer<Component> {
 
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
-		fileTreeModel = new AdvancedFileTreeModel(new FileList().getRoot());
+		final Execution execution = Executions.getCurrent();
+		String type = (String) execution.getArg().get("Type");
+		String username = (String) execution.getArg().get("Username");
+		if(type.equalsIgnoreCase("SSSL_Analysis"))
+		{
+			FileComposer.RESULT_ANALYSIS_PATH = FileComposer.RESULT_ANALYSIS_PATH + "SSSL_Analysis" + FILE_SEPARATOR;
+		} else if(type.equalsIgnoreCase("PL_Analysis"))
+		{
+			FileComposer.RESULT_ANALYSIS_PATH = FileComposer.RESULT_ANALYSIS_PATH + "PL_Analysis" + FILE_SEPARATOR;
+		} else if(type.equalsIgnoreCase("IL_Analysis"))
+		{
+			FileComposer.RESULT_ANALYSIS_PATH = FileComposer.RESULT_ANALYSIS_PATH + "IL_Analysis" + FILE_SEPARATOR;
+		}
+		fileTreeModel = new AdvancedFileTreeModel(new FileList(type).getRoot());
+		//fileTreeModel = new AdvancedFileTreeModel(new FileList().getRoot());
 		tree.setItemRenderer(new FileTreeRenderer());
 		tree.setModel(fileTreeModel);
 	}

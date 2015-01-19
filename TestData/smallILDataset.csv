@@ -1,0 +1,8 @@
+gname,Total Segment Number,isHomogenous,Chromosome,Recurrent Parent,Donor Parent,Genetic Position 1,Genetic Position 2,Genetic Position 3,Genetic Position 4,Physical Start,Physical End,Genetic Estimated Length,Genetic Minimum Length,Genetic Maximum Length,Segment Description
+Gen176,3,YES,1,Fparent1,Mparent49,49,50,51,52,1048,2048,1.5,1,3,RM1—RM2-RM3—RM4
+Gen176,3,YES,2,Fparent1,Mparent49,49,50,51,52,1048,2048,1.5,1,3,RM1—RM2-RM3—RM4
+Gen177,1,YES,4,Fparent1,Mparent40,40,41,42,43,1039,2039,1.5,1,3,RM1—RM2-RM3—RM4
+Gen178,2,YES,5,Fparent1,Mparent41,41,42,43,44,1040,2040,1.5,1,3,RM1—RM2-RM3—RM4
+Gen178,2,YES,6,Fparent1,Mparent42,42,43,44,45,1041,2041,1.5,1,3,RM1—RM2-RM3—RM4
+Gen176,3,YES,12,Fparent1,Mparent48,48,49,50,51,1047,2047,1.5,1,3,RM1—RM2-RM3—RM4
+IL176,1,YES,12,Fparent1,Mparent48,48,49,50,51,1047,2047,1.5,1,3,RM1—RM2-RM3—RM4

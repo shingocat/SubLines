@@ -1,6 +1,7 @@
 package org.strasa.web.analysis.sssl.view.model;
 
 import java.io.File;
+import java.util.HashMap;
 
 import org.analysis.rserve.manager.RServeManager;
 import org.analysis.rserve.manager.SSSLRserveManager;
@@ -15,6 +16,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zul.Include;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Tabpanels;
@@ -49,8 +51,14 @@ public class Index {
 			@ContextParam(ContextType.VIEW) Component view, @BindingParam("ssslModel") SSSLAnalysisModel ssslModel) {
 		System.out.println("running displaySSSLResult method...");
 		ssslRServeManager = new SSSLRserveManager();
-		ssslRServeManager.doAnalysis(ssslModel);
-		
+		HashMap<String, String> outcomes = ssslRServeManager.doAnalysis(ssslModel);
+		if(outcomes.get("Success").equalsIgnoreCase("TRUE"))
+		{
+			Messagebox.show(outcomes.get("Message"), "Note", Messagebox.OK, Messagebox.NONE);
+		} else
+		{
+			Messagebox.show(outcomes.get("Message"), "Note", Messagebox.OK, Messagebox.NONE);
+		}
 		Tabpanels tabPanels = (Tabpanels) component.getFellow("tabPanels");
 		Tabs tabs = (Tabs) component.getFellow("tabs");
 

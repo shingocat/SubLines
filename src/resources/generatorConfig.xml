@@ -8,7 +8,7 @@
 	
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
 			connectionURL="jdbc:mysql://localhost:3306/strasa" userId="root"
-			password="root" />
+			password="cat@8221016" />
 		<javaModelGenerator targetPackage="org.strasa.middleware.model"
 			targetProject="StrasaIL/src/main/java" />
 

@@ -91,10 +91,15 @@ public class AnalysisUtils {
 					+ FILE_SEPARATOR
 					+ SecurityUtil.getDbUser().getUsername()
 					+ FILE_SEPARATOR + "Single_Site";
-		} else if (analysisType.equals("ssslAnalysis")) {
+		} else if (analysisType.equals("ssslAnalysisSEA")) {
 			userFolderPath = Sessions.getCurrent().getWebApp().getRealPath("resultanalysis") 
 					+ FILE_SEPARATOR + SecurityUtil.getDbUser().getUsername()
-					+ FILE_SEPARATOR + "SSSL_Analysis";
+					+ FILE_SEPARATOR + "SSSL_Analysis" + FILE_SEPARATOR + "Single_Environment";
+		} else if (analysisType.equals("ssslAnalysisMEA"))
+		{
+			userFolderPath = Sessions.getCurrent().getWebApp().getRealPath("resultanalysis") 
+					+ FILE_SEPARATOR + SecurityUtil.getDbUser().getUsername()
+					+ FILE_SEPARATOR + "SSSL_Analysis" + FILE_SEPARATOR + "Multi_Environment";
 		}
 
 		String outputStudyPath = userFolderPath + FILE_SEPARATOR

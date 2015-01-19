@@ -1,5 +1,8 @@
 package org.strasa.web.page.navigation.user;
 
+import java.util.HashMap;
+
+import org.spring.security.model.SecurityUtil;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.SelectorComposer;
@@ -11,6 +14,7 @@ import org.zkoss.zkmax.zul.Navitem;
 import org.zkoss.zul.A;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hlayout;
+import org.zkoss.zul.Include;
 
 public class SidebarComposer extends SelectorComposer<Component>  {
 
@@ -60,11 +64,20 @@ public class SidebarComposer extends SelectorComposer<Component>  {
 	@Wire
 	Navitem ssslAnalysis; // adding by QIN MAO
 	
+	@Wire
+	Navitem ssslAnalysisOutcome; // adding by QIN MAO on JAN 19, 2015
+	
 	@Wire 
 	Navitem pyramidedAnalysis; // adding by QIN MAO
 	
 	@Wire
+	Navitem pyramidedLineAnalysisOutcome; // adding by QIN MAO on JAN 19, 2015
+	
+	@Wire
 	Navitem introgressionLineAnalysis; // adding by QIN MAO
+	
+	@Wire
+	Navitem introgressionLineAnalysisOutcome; // adding by QIN MAO on JAN 19, 2015
 	
 	@Wire
 	Navitem genomicselection; // adding by QIN MAO
@@ -212,12 +225,31 @@ public class SidebarComposer extends SelectorComposer<Component>  {
 		Executions.createComponents("../user/analysis/sssl/index.zul", d, null);
 	}
 	
+	@Listen("onClick = #ssslAnalysisOutcome")
+	public void ssslAnalysisOutcome()
+	{
+		Div d = (Div) sidebar.getRoot().query("#contentui");
+		d.getChildren().clear();
+		HashMap<String, String> args = new HashMap<String, String>();
+		args.put("Type", "SSSL_Analysis");
+		args.put("Username", SecurityUtil.getDbUser().getUsername());
+		Executions.createComponents("../user/analysis/resultanalysistree.zul", d, args);
+	}
+	
 	@Listen("onClick = #pyramidedLineAnalysis") // adding by QIN MAO
 	public void pyramidedLineAnalysis()
 	{
 		Div d = (Div) sidebar.getRoot().query("#contentui");
 		d.getChildren().clear();
 		Executions.createComponents("../user/analysis/pyramidedline/index.zul", d, null);
+	}
+	
+	@Listen("onClick = #pyramidedLineAnalysisOutcome")
+	public void pyramidedLineAnalysisOutcome()
+	{
+		Div d = (Div) sidebar.getRoot().query("#contentui");
+		d.getChildren().clear();
+		Executions.createComponents("../user/analysis/resultanalysistree.zul", d, null);
 	}
 	
 	@Listen("onClick = #introgressionLineAnalysis") // adding by QIN MAO 
@@ -228,6 +260,13 @@ public class SidebarComposer extends SelectorComposer<Component>  {
 		Executions.createComponents("../user/analysis/introgressionline/index.zul", d, null);
 	}
 	
+	@Listen("onClick = #introgressionLineAnalysisOutcome")
+	public void introgressionLineAnalysisOutcome()
+	{
+		Div d = (Div) sidebar.getRoot().query("#contentui");
+		d.getChildren().clear();
+		Executions.createComponents("../user/analysis/resultanalysistree.zul", d, null);
+	}
 	@Listen("onClick = #linkagemapping")
 	public void linkagemapping(){
 		Div d=(Div) sidebar.getRoot().query("#contentui");

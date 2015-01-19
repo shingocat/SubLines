@@ -39,7 +39,7 @@
 				<property name="url"
 					value="jdbc:mysql://localhost:3306/strasa?useUnicode=true&amp;characterEncoding=utf8" />
 				<property name="username" value="root" />
-				<property name="password" value="root" /> <!-- Modify by QIN MAO for local database setting -->
+				<property name="password" value="cat@8221016" /> <!-- Modify by QIN MAO for local database setting -->
 			</dataSource>
 		</environment>
 	</environments>

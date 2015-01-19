@@ -508,7 +508,6 @@ public class Specifications {
 			ArrayList<String> newRow = new ArrayList<String>();
 			for (StudyDataColumn d : columns) {
 				String value = rec.get(d.getColumnheader());
-				System.out.println("return value " + value);
 				newRow.add(value);
 				// System.out.print("on " + d.getColumnheader() + " value is " +
 				// value + "\t");
@@ -1377,8 +1376,13 @@ public class Specifications {
 		}
 
 		System.out.println("File name is " + fileName.toString());
-		String folderPath = AnalysisUtils.createOutputFolder(
-				fileName.replaceAll(" ", ""), "ssslAnalysis");
+		String folderPath = null;
+		if(ssslAnalysisModel.getAnalysisEnvType().equals(lstTypeOfAnalysisEnv.get(1)))
+			 folderPath = AnalysisUtils.createOutputFolder(
+				fileName.replaceAll(" ", ""), "ssslAnalysisSEA");
+		else
+			folderPath = AnalysisUtils.createOutputFolder(
+					fileName.replaceAll(" ", ""), "ssslAnalysisMEA");
 		ssslAnalysisModel.setResultFolderPath(folderPath);
 
 		userFileManager.moveUploadedFileToOutputFolder(folderPath,
