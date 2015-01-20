@@ -119,8 +119,9 @@ public class ResultViewer {
 //							temp = path
 //						}
 //					}
-					final String imageRelativePath = StringConstants.FSLASH + StringConstants.FSLASH + temp.toString().replace(StringConstants.BSLASH, StringConstants.FSLASH);
-					System.out.println("Image relative path is " + imageRelativePath);
+					final String imageRelativePath = StringConstants.FSLASH + StringConstants.FSLASH + 
+							temp.toString().replace(StringConstants.BSLASH, StringConstants.FSLASH);
+//					System.out.println("Image relative path is " + imageRelativePath);
 					final Groupbox newGroupBox = new Groupbox();
 					// newGroupBox.setStyle("overflow: auto");
 					newGroupBox.setTitle(file.replaceAll(".csv", ""));
@@ -144,7 +145,7 @@ public class ResultViewer {
 							IMAGE_THUMBNAIL_HEIGHT);
 					studyInformationPage.setDynamicProperty("width",
 							IMAGE_THUMBNAIL_WIDTH);
-					studyInformationPage.setDynamicProperty("imageName", imageRelativePath);
+					studyInformationPage.setDynamicProperty("filepath", imageRelativePath);
 					studyInformationPage.setSrc("/user/analysis/imgviewer.zul");
 					studyInformationPage.setParent(newGroupBox);
 //					System.out.println("imgPath " + path);
@@ -304,7 +305,7 @@ public class ResultViewer {
 				FileComposer.IMAGE_HEIGHT);
 		studyInformationPage.setDynamicProperty("width",
 				FileComposer.IMAGE_WIDTH);
-		studyInformationPage.setDynamicProperty("imageName", dynamicProperty);
+		studyInformationPage.setDynamicProperty("filepath", dynamicProperty);
 		studyInformationPage.setSrc("/user/analysis/imgviewer.zul");
 		studyInformationPage.setParent(div);
 		div.appendChild(studyInformationPage);

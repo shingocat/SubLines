@@ -3252,217 +3252,8 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 		}
 
 	}
-	public HashMap<String, String> doMEA(SSSLAnalysisModel model)
-	{
-		return null;
-	}
-	// single environment analysis for my redesign PBTools, JAN 19, 2015
-	public HashMap<String, String> doSEA(SSSLAnalysisModel model)
-	{
-		HashMap<String, String> toreturn = new HashMap<String, String>();
-		String resultFolderPath = model.getResultFolderPath().replace(
-				StringConstants.BSLASH, StringConstants.FSLASH);
-		String outFileName = model.getOutFileName().replace(
-				StringConstants.BSLASH, StringConstants.FSLASH);
-		String dataFileName = model.getDataFileName().replace(
-				StringConstants.BSLASH, StringConstants.FSLASH);
-		int designIndex = model.getDesign();
-		String[] respvars = model.getResponseVars();
-		String environment = model.getEnvFactor() == null ? "NULL" : model.getEnvFactor();
-		String[] environmentLevels = model.getEnvFactorLevels();
-		String genotype = model.getGenotypeFactor();
-		String[] genotypeLevels = model.getGenotypeFactorLevels();
-		String block = model.getBlockFactor();
-		String rep = model.getReplicateFactor();
-		String row = model.getRowFactor();
-		String column = model.getColumnFactor();
-		boolean descriptiveStat = model.isDescriptiveStat();
-		boolean varianceComponents = model.isVarComponent();
-		boolean boxplotRawData = model.isBoxplotOnSingleEnv();
-		boolean histogramRawData = model.isHistogramOnSingleEnv();
-		boolean heatmapResiduals = false; // set to be false;
-		String heatmapRow = null; // set to be null
-		String heatmapColumn = null; // set to be null
-		boolean diagnosticPlot = model.isDiagnosticPlotOnSingleEnv();
-		boolean genotypeFixed = true; // genotype is set as fixed by default in sssl analysis
-		boolean perforPairwise = true;
-		String pairwiseAlpha = String.valueOf(model.getSignificantAlpha()); // default is 0.05
-		String[] controlLevels = new String[] { model.getRecurrentParent() };
-		boolean compareControl = model.isCompareWithRecurrent();
-		boolean performAllPairwise = false; // no need to perform all pairwise comparing;
-		boolean excludeControls = true; // set to be true
-		boolean genoPhenoCorrelation = true; // set to be true
-		boolean specifiedContrast = false;
-		String contrastFileName = null;
-		if (model.getGenotypeContrastFile() != null
-				&& model.getGenotypeContrastFile().length() != 0) {
-			specifiedContrast = true;
-			contrastFileName = model.getGenotypeContrastFile().replace(
-					StringConstants.BSLASH, StringConstants.FSLASH);
-		}
-
-		String respvarVector = getInputTransform().createRVector(respvars);
-		// String genotypeLevelsVector=
-		// inputTransform.createRVector(genotypeLevels);
-		String controlLevelsVector = getInputTransform().createRVector(controlLevels);
-		boolean runningFixedSuccess = true;
-		boolean printAllOutputFixed = true;
-		boolean printAllOutputRandom = true;
-		
-		String designUsed = new String();
-		String design = new String();
-		String designString = null;
-
-		switch (designIndex) {
-			case 0: {
-				designUsed = "Randomized Complete Block (RCB)";
-				design = "RCB";
-				designString = "exptl.design = \"RCB\", block = \"" + block + "\", ";
-				break;
-			}
-			case 1: {
-				designUsed = "Augmented RCB";
-				design = "AugRCB";
-				designString = "exptl.design = \"AugRCB\", block = \"" + block + "\", ";
-				break;
-			}
-			case 2: {
-				designUsed = "Augmented Latin Square";
-				design = "AugLS";
-				designString = "exptl.design = \"AugLS\", row = \"" + row + "\", column = \"" + column + "\", ";
-				break;
-			}
-			case 3: {
-				designUsed = "Alpha-Lattice";
-				design = "Alpha";
-				designString = "exptl.design = \"Alpha\", block = \"" + block + "\", rep = \"" + rep + "\", ";
-				break;
-			}
-			case 4: {
-				designUsed = "Row-Column";
-				design = "RowCol";
-				designString = "exptl.design = \"RowCol\", rep = \"" + rep + "\", row = \"" + row + "\", column = \"" + column + "\", ";
-				break;
-			}
-			case 5: {
-				designUsed = "Latinized Alpha-Lattice";
-				design = "LatinAlpha";
-				designString = "exptl.design = \"LatinAlpha\", block = \"" + block + "\", rep = \"" + rep + "\", ";
-				break;
-			}
-			case 6: {
-				designUsed = "Latinized Row-Column";
-				design = "LatinRowCol";
-				designString = "exptl.design = \"LatinRowCol\", block = \"" + block + "\", rep = \"" + rep + "\", ";
-				break;
-			}
-			default: {
-				designUsed = "Randomized Complete Block (RCB)";
-				design = "RCB";
-				designString = "exptl.design = \"RCB\", block = \"" + block + "\", ";
-				break;
-			}
-		}
-
-		try{
-			String data = null;
-			if(environment.equalsIgnoreCase("NULL"))
-			{
-				data = "data <- read.pheno.data(\""
-						+ dataFileName + "\", " 
-						+ "type=\"RAW\", "
-						+ "pop.type=\"SSSL\", "
-						+ "resp.var = c(" + respvarVector + "), "
-						+ "geno = \"" + genotype + "\", "
-						+ designString
-						+ "na.code = c(\"NA\",\".\",\" \",\"\"))";
-			} else
-			{
-				data = "data <- read.pheno.data(\""
-						+ dataFileName + "\", " 
-						+ "type=\"RAW\", "
-						+ "pop.type=\"SSSL\", "
-						+ "resp.var = " + respvarVector + ", "
-						+ "geno = \"" + genotype + "\", "
-						+ designString
-						+ "env = \"" + environment + "\", "
-						+ "na.code = c(\"NA\",\".\",\" \",\"\"))";
-			}
-
-//			System.out.println(data);
-			getConn().eval(data);
-			String run = getConn().eval("class(data)").asString();
-			//checking whether read data to be PhenotypicData object is successful.
-			if (run != null && run.equals("try-error")) {
-				System.out.println("error");
-//				getConn().eval("capture.output(cat(\"\n***Error reading data.***\n\"),file=\""
-//						+ outFileName + "\",append = FALSE)");
-				toreturn.put("Success", "FALSE");
-				toreturn.put("Message", "Error Reading Phenootypic Data!");
-				return toreturn;
-			} else {
-				String setWd = "setwd(\"" + resultFolderPath + "\")";
-				System.out.println(setWd);
-				getConn().eval(setWd);
-				
-				String usedData = "capture.output(cat(\"\nDATA FILE: "
-						+ new File(dataFileName).getName() + "\"), file=\"" + outFileName + "\");";
-				String outFile = "capture.output(cat(\"\nSINGLE-ENVIRONMENT ANALYSIS On SSSL\n\"), file=\""
-						+ outFileName + "\", append = TRUE);";
-				String usedDesign = "capture.output(cat(\"DESIGN: " + designUsed + "\n\"), file=\""
-						+ outFileName + "\", append = TRUE);";
-				String sep = "capture.output(cat(\"---------------------------------------------\"),file=\""
-						+ outFileName + "\", append = TRUE);";
-				String sep2 = "capture.output(cat(\"============================================\"),file=\""
-						+ outFileName + "\", append = TRUE);";
-				String outspace = "capture.output(cat(\"\n\"), file=\"" + outFileName + "\", append = TRUE);";
-				
-				getConn().eval(usedData);
-				getConn().eval(outFile);
-				getConn().eval(usedDesign);
-				
-				String dataRestricted = "dataRestricted <- restrict.pheno.data(data)";
-				getConn().eval(dataRestricted);
-				run = getConn().eval("class(dataRestricted)").asString();
-				if(run != null && run.equalsIgnoreCase("try-error"))
-				{
-					toreturn.put("Success", "FALSE");
-					toreturn.put("Message", "Restricted Phenotypic Data Error!");
-					return toreturn;
-				}
-				
-				String doSEA = "outcomes <- doSEA(dataRestricted)";
-				getConn().eval(doSEA);
-				run = getConn().eval("class(outcomes)").asString();
-				if(run != null && run.equalsIgnoreCase("try-error"))
-				{
-					toreturn.put("Success", "FALSE");
-					toreturn.put("Message", "Do Single Environment Analysis Error!");
-					return toreturn;
-				}
-				getConn().eval("capture.output(print(outcomes),file=\"" + outFileName + "\", append=TRUE);");
-				
-			}
-		} catch (RserveException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			toreturn.put("Success", "FALSE");
-			toreturn.put("Message", "Rserve Exception!");
-			return toreturn;
-		} catch (REXPMismatchException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			toreturn.put("Success", "FALSE");
-			toreturn.put("Message", "Rserve Evaluation Exception!");
-			return toreturn;
-		} finally{
-			getConn().close();
-		}
-		toreturn.put("Success", "TURE");
-		toreturn.put("Message", "Successful Do Single Environment Analysis!");
-		return toreturn;
-		
-	}
+	
+	
 	public void doSingleEnvironmentAnalysis(SSSLAnalysisModel model) {
 
 		// rjava manager for single site analysisn for DMAS
@@ -6270,5 +6061,457 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 			getConn().close();
 		}
 	}
+	// single environment analysis for my redesign PBTools, JAN 19, 2015
+		public HashMap<String, String> doSEA(SSSLAnalysisModel model)
+		{
+			HashMap<String, String> toreturn = new HashMap<String, String>();
+			String resultFolderPath = model.getResultFolderPath().replace(
+					StringConstants.BSLASH, StringConstants.FSLASH);
+			String outFileName = model.getOutFileName().replace(
+					StringConstants.BSLASH, StringConstants.FSLASH);
+			String dataFileName = model.getDataFileName().replace(
+					StringConstants.BSLASH, StringConstants.FSLASH);
+			int designIndex = model.getDesign();
+			String[] respvars = model.getResponseVars();
+			String environment = model.getEnvFactor() == null ? "NULL" : model.getEnvFactor();
+			String[] environmentLevels = model.getEnvFactorLevels();
+			String genotype = model.getGenotypeFactor();
+			String[] genotypeLevels = model.getGenotypeFactorLevels();
+			String block = model.getBlockFactor();
+			String rep = model.getReplicateFactor();
+			String row = model.getRowFactor();
+			String column = model.getColumnFactor();
+			boolean descriptiveStat = model.isDescriptiveStat();
+			boolean varianceComponents = model.isVarComponent();
+			boolean boxplotRawData = model.isBoxplotOnSingleEnv();
+			boolean histogramRawData = model.isHistogramOnSingleEnv();
+			boolean heatmapResiduals = false; // set to be false;
+			String heatmapRow = null; // set to be null
+			String heatmapColumn = null; // set to be null
+			boolean diagnosticPlot = model.isDiagnosticPlotOnSingleEnv();
+			boolean genotypeFixed = true; // genotype is set as fixed by default in sssl analysis
+			boolean perforPairwise = true;
+			String pairwiseAlpha = String.valueOf(model.getSignificantAlpha()); // default is 0.05
+			String[] controlLevels = new String[] { model.getRecurrentParent() };
+			boolean compareControl = model.isCompareWithRecurrent();
+			boolean performAllPairwise = false; // no need to perform all pairwise comparing;
+			boolean excludeControls = true; // set to be true
+			boolean genoPhenoCorrelation = true; // set to be true
+			boolean specifiedContrast = false;
+			String contrastFileName = null;
+			if (model.getGenotypeContrastFile() != null
+					&& model.getGenotypeContrastFile().length() != 0) {
+				specifiedContrast = true;
+				contrastFileName = model.getGenotypeContrastFile().replace(
+						StringConstants.BSLASH, StringConstants.FSLASH);
+			}
 
+			String respvarVector = getInputTransform().createRVector(respvars);
+			// String genotypeLevelsVector=
+			// inputTransform.createRVector(genotypeLevels);
+			String controlLevelsVector = getInputTransform().createRVector(controlLevels);
+			boolean runningFixedSuccess = true;
+			boolean printAllOutputFixed = true;
+			boolean printAllOutputRandom = true;
+			
+			String designUsed = new String();
+			String design = new String();
+			String designString = null;
+
+			switch (designIndex) {
+				case 0: {
+					designUsed = "Randomized Complete Block (RCB)";
+					design = "RCB";
+					designString = "exptl.design = \"RCB\", block = \"" + block + "\", ";
+					break;
+				}
+				case 1: {
+					designUsed = "Augmented RCB";
+					design = "AugRCB";
+					designString = "exptl.design = \"AugRCB\", block = \"" + block + "\", ";
+					break;
+				}
+				case 2: {
+					designUsed = "Augmented Latin Square";
+					design = "AugLS";
+					designString = "exptl.design = \"AugLS\", row = \"" + row + "\", column = \"" + column + "\", ";
+					break;
+				}
+				case 3: {
+					designUsed = "Alpha-Lattice";
+					design = "Alpha";
+					designString = "exptl.design = \"Alpha\", block = \"" + block + "\", rep = \"" + rep + "\", ";
+					break;
+				}
+				case 4: {
+					designUsed = "Row-Column";
+					design = "RowCol";
+					designString = "exptl.design = \"RowCol\", rep = \"" + rep + "\", row = \"" + row + "\", column = \"" + column + "\", ";
+					break;
+				}
+				case 5: {
+					designUsed = "Latinized Alpha-Lattice";
+					design = "LatinAlpha";
+					designString = "exptl.design = \"LatinAlpha\", block = \"" + block + "\", rep = \"" + rep + "\", ";
+					break;
+				}
+				case 6: {
+					designUsed = "Latinized Row-Column";
+					design = "LatinRowCol";
+					designString = "exptl.design = \"LatinRowCol\", block = \"" + block + "\", rep = \"" + rep + "\", ";
+					break;
+				}
+				default: {
+					designUsed = "Randomized Complete Block (RCB)";
+					design = "RCB";
+					designString = "exptl.design = \"RCB\", block = \"" + block + "\", ";
+					break;
+				}
+			}
+
+			try{
+				String data = null;
+				data = "data <- read.csv(file=\"" + dataFileName + "\", header = TRUE, " +
+						"na.strings = c(\"NA\",\".\",\" \",\"\"), blank.lines.skip = TRUE);";
+				System.out.println(data);
+				getConn().eval(data);
+				String run = getConn().eval("class(data)").asString();
+				//checking whether read data to be PhenotypicData object is successful.
+				if (run != null && run.equals("try-error")) {
+					System.out.println("error");
+//					getConn().eval("capture.output(cat(\"\n***Error reading data.***\n\"),file=\""
+//							+ outFileName + "\",append = FALSE)");
+					toreturn.put("Success", "FALSE");
+					toreturn.put("Message", "Error Reading CSV File Data!");
+					return toreturn;
+				} else {
+					String pheno = null;
+					if(environment.equalsIgnoreCase("NULL"))
+					{
+						 pheno = "pheno <- read.pheno.data(data," 
+								+ "type=\"RAW\", "
+								+ "pop.type=\"SSSL\", "
+								+ "resp.var = c(" + respvarVector + "), "
+								+ "geno = \"" + genotype + "\", "
+								+ designString
+								+ "na.code = NA)";
+					} else
+					{
+						pheno = "pheno <- read.pheno.data(data," 
+								+ "type=\"RAW\", "
+								+ "pop.type=\"SSSL\", "
+								+ "resp.var = " + respvarVector + ", "
+								+ "geno = \"" + genotype + "\", "
+								+ designString
+								+ "env = \"" + environment + "\", "
+								+ "na.code = NA)";
+					}
+					System.out.println(pheno);
+					getConn().eval(pheno);
+					run = getConn().eval("class(data)").asString();
+					//checking whether read data to be PhenotypicData object is successful.
+					if (run != null && run.equals("try-error")) {
+						toreturn.put("Success", "FALSE");
+						toreturn.put("Message", "Error Reading Phenotypic Data!");
+						return toreturn;
+					}
+					String setWd = "setwd(\"" + resultFolderPath + "\")";
+					System.out.println(setWd);
+					getConn().eval(setWd);
+					
+					String usedData = "capture.output(cat(\"\nDATA FILE: "
+							+ new File(dataFileName).getName() + "\"), file=\"" + outFileName + "\");";
+					String outFile = "capture.output(cat(\"\nSINGLE-ENVIRONMENT ANALYSIS On SSSL\n\"), file=\""
+							+ outFileName + "\", append = TRUE);";
+					String usedDesign = "capture.output(cat(\"DESIGN: " + designUsed + "\n\"), file=\""
+							+ outFileName + "\", append = TRUE);";
+					String sep = "capture.output(cat(\"---------------------------------------------\"),file=\""
+							+ outFileName + "\", append = TRUE);";
+					String sep2 = "capture.output(cat(\"============================================\"),file=\""
+							+ outFileName + "\", append = TRUE);";
+					String outspace = "capture.output(cat(\"\n\"), file=\"" + outFileName + "\", append = TRUE);";
+					
+					getConn().eval(usedData);
+					getConn().eval(outFile);
+					getConn().eval(usedDesign);
+					getConn().eval(outspace);
+
+					//print the descriptive statistic when the descriptiveStat is true;
+					String descriptiveStatString = "capture.output(DescriptiveStatistics(data," + respvarVector + 
+							",,c(\"max\",\"min\",\"mean\",\"sd\")), file=\"" + outFileName + "\", append = TRUE);";
+					getConn().eval(descriptiveStatString);
+					getConn().eval(outspace);
+					getConn().eval(outspace);
+					
+					String dataRestricted = "dataRestricted <- restrict.pheno.data(pheno)";
+					getConn().eval(dataRestricted);
+					run = getConn().eval("class(dataRestricted)").asString();
+					if(run != null && run.equalsIgnoreCase("try-error"))
+					{
+						toreturn.put("Success", "FALSE");
+						toreturn.put("Message", "Restricted Phenotypic Data Error!");
+						return toreturn;
+					}
+					
+					String doSEA = "outcomes <- doSEA(dataRestricted)";
+					getConn().eval(doSEA);
+					run = getConn().eval("class(outcomes)").asString();
+					if(run != null && run.equalsIgnoreCase("try-error"))
+					{
+						toreturn.put("Success", "FALSE");
+						toreturn.put("Message", "Do Single Environment Analysis Error!");
+						return toreturn;
+					}
+					getConn().eval("capture.output(print(outcomes,2),file=\"" + outFileName + "\", append=TRUE);");
+					//this if for contrast analysis 
+					
+					// the is for plot funcitons
+					if(boxplotRawData)
+					{
+						String boxplot = "graph.boxplot(outcomes, single.env = FALSE)";
+						getConn().eval(boxplot);
+					} 
+					if(histogramRawData)
+					{
+						String histplot = "graph.hist(outcomes, single.env = TRUE)";
+						getConn().eval(histplot);
+					}
+					if(heatmapResiduals)
+					{
+						
+					}
+					//diagnosticPlot for genotype fixed
+					if(diagnosticPlot)
+					{
+						String diagnostic = "graph.diag(outcomes)";
+						getConn().eval(diagnostic);
+					}
+				} // end of checking whether could read the csv file into R.
+			} catch (RserveException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				toreturn.put("Success", "FALSE");
+				toreturn.put("Message", "Rserve Exception!");
+				return toreturn;
+			} catch (REXPMismatchException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				toreturn.put("Success", "FALSE");
+				toreturn.put("Message", "Rserve Evaluation Exception!");
+				return toreturn;
+			} finally{
+				getConn().close();
+			}
+			toreturn.put("Success", "TURE");
+			toreturn.put("Message", "Successful Do Single Environment Analysis!");
+			return toreturn;
+			
+		}
+		
+		// using my design doMEA R funciton
+		public HashMap<String, String> doMEA(SSSLAnalysisModel model)
+		{
+			HashMap<String, String> toreturn = new HashMap<String, String>();
+			String resultFolderPath = model.getResultFolderPath().replace(
+					StringConstants.BSLASH, StringConstants.FSLASH);
+			String outFileName = model.getOutFileName().replace(
+					StringConstants.BSLASH, StringConstants.FSLASH);
+			String dataFileName = model.getDataFileName().replace(
+					StringConstants.BSLASH, StringConstants.FSLASH);
+			int designIndex = model.getDesign();
+			String[] respvars = model.getResponseVars();
+			String environment = model.getEnvFactor() == null ? "NULL" : model.getEnvFactor();
+			String[] environmentLevels = model.getEnvFactorLevels();
+			String genotype = model.getGenotypeFactor();
+			String[] genotypeLevels = model.getGenotypeFactorLevels();
+			String block = model.getBlockFactor();
+			String rep = model.getReplicateFactor();
+			String row = model.getRowFactor();
+			String column = model.getColumnFactor();
+			boolean descriptiveStat = model.isDescriptiveStat();
+			boolean varianceComponents = model.isVarComponent();
+			boolean boxplotRawData = model.isBoxplotOnSingleEnv();
+			boolean histogramRawData = model.isHistogramOnSingleEnv();
+			boolean heatmapResiduals = false; // set to be false;
+			String heatmapRow = null; // set to be null
+			String heatmapColumn = null; // set to be null
+			boolean diagnosticPlot = model.isDiagnosticPlotOnSingleEnv();
+			boolean genotypeFixed = true; // genotype is set as fixed by default in sssl analysis
+			boolean perforPairwise = true;
+			String pairwiseAlpha = String.valueOf(model.getSignificantAlpha()); // default is 0.05
+			String[] controlLevels = new String[] { model.getRecurrentParent() };
+			boolean compareControl = model.isCompareWithRecurrent();
+			boolean performAllPairwise = false; // no need to perform all pairwise comparing;
+			boolean excludeControls = true; // set to be true
+			boolean genoPhenoCorrelation = true; // set to be true
+			boolean specifiedContrast = false;
+			String contrastFileName = null;
+			if (model.getGenotypeContrastFile() != null
+					&& model.getGenotypeContrastFile().length() != 0) {
+				specifiedContrast = true;
+				contrastFileName = model.getGenotypeContrastFile().replace(
+						StringConstants.BSLASH, StringConstants.FSLASH);
+			}
+
+			String respvarVector = getInputTransform().createRVector(respvars);
+			// String genotypeLevelsVector=
+			// inputTransform.createRVector(genotypeLevels);
+			String controlLevelsVector = getInputTransform().createRVector(controlLevels);
+			boolean runningFixedSuccess = true;
+			boolean printAllOutputFixed = true;
+			boolean printAllOutputRandom = true;
+			
+			String designUsed = new String();
+			String design = new String();
+			String designString = null;
+
+			switch (designIndex) {
+				case 0: {
+					designUsed = "Randomized Complete Block (RCB)";
+					design = "RCB";
+					designString = "exptl.design = \"RCB\", block = \"" + block + "\", ";
+					break;
+				}
+				case 1: {
+					designUsed = "Augmented RCB";
+					design = "AugRCB";
+					designString = "exptl.design = \"AugRCB\", block = \"" + block + "\", ";
+					break;
+				}
+				case 2: {
+					designUsed = "Augmented Latin Square";
+					design = "AugLS";
+					designString = "exptl.design = \"AugLS\", row = \"" + row + "\", column = \"" + column + "\", ";
+					break;
+				}
+				case 3: {
+					designUsed = "Alpha-Lattice";
+					design = "Alpha";
+					designString = "exptl.design = \"Alpha\", block = \"" + block + "\", rep = \"" + rep + "\", ";
+					break;
+				}
+				case 4: {
+					designUsed = "Row-Column";
+					design = "RowCol";
+					designString = "exptl.design = \"RowCol\", rep = \"" + rep + "\", row = \"" + row + "\", column = \"" + column + "\", ";
+					break;
+				}
+				case 5: {
+					designUsed = "Latinized Alpha-Lattice";
+					design = "LatinAlpha";
+					designString = "exptl.design = \"LatinAlpha\", block = \"" + block + "\", rep = \"" + rep + "\", ";
+					break;
+				}
+				case 6: {
+					designUsed = "Latinized Row-Column";
+					design = "LatinRowCol";
+					designString = "exptl.design = \"LatinRowCol\", block = \"" + block + "\", rep = \"" + rep + "\", ";
+					break;
+				}
+				default: {
+					designUsed = "Randomized Complete Block (RCB)";
+					design = "RCB";
+					designString = "exptl.design = \"RCB\", block = \"" + block + "\", ";
+					break;
+				}
+			}
+
+			try{
+				String data = null;
+				if(environment.equalsIgnoreCase("NULL"))
+				{
+					data = "data <- read.pheno.data(\""
+							+ dataFileName + "\", " 
+							+ "type=\"RAW\", "
+							+ "pop.type=\"SSSL\", "
+							+ "resp.var = c(" + respvarVector + "), "
+							+ "geno = \"" + genotype + "\", "
+							+ designString
+							+ "na.code = c(\"NA\",\".\",\" \",\"\"))";
+				} else
+				{
+					data = "data <- read.pheno.data(\""
+							+ dataFileName + "\", " 
+							+ "type=\"RAW\", "
+							+ "pop.type=\"SSSL\", "
+							+ "resp.var = " + respvarVector + ", "
+							+ "geno = \"" + genotype + "\", "
+							+ designString
+							+ "env = \"" + environment + "\", "
+							+ "na.code = c(\"NA\",\".\",\" \",\"\"))";
+				}
+
+//				System.out.println(data);
+				getConn().eval(data);
+				String run = getConn().eval("class(data)").asString();
+				//checking whether read data to be PhenotypicData object is successful.
+				if (run != null && run.equals("try-error")) {
+					System.out.println("error");
+//					getConn().eval("capture.output(cat(\"\n***Error reading data.***\n\"),file=\""
+//							+ outFileName + "\",append = FALSE)");
+					toreturn.put("Success", "FALSE");
+					toreturn.put("Message", "Error Reading Phenootypic Data!");
+					return toreturn;
+				} else {
+					String setWd = "setwd(\"" + resultFolderPath + "\")";
+					System.out.println(setWd);
+					getConn().eval(setWd);
+					
+					String usedData = "capture.output(cat(\"\nDATA FILE: "
+							+ new File(dataFileName).getName() + "\"), file=\"" + outFileName + "\");";
+					String outFile = "capture.output(cat(\"\nMulti-ENVIRONMENT ANALYSIS On SSSL\n\"), file=\""
+							+ outFileName + "\", append = TRUE);";
+					String usedDesign = "capture.output(cat(\"DESIGN: " + designUsed + "\n\"), file=\""
+							+ outFileName + "\", append = TRUE);";
+					String sep = "capture.output(cat(\"---------------------------------------------\"),file=\""
+							+ outFileName + "\", append = TRUE);";
+					String sep2 = "capture.output(cat(\"============================================\"),file=\""
+							+ outFileName + "\", append = TRUE);";
+					String outspace = "capture.output(cat(\"\n\"), file=\"" + outFileName + "\", append = TRUE);";
+					
+					getConn().eval(usedData);
+					getConn().eval(outFile);
+					getConn().eval(usedDesign);
+					
+					String dataRestricted = "dataRestricted <- restrict.pheno.data(data)";
+					getConn().eval(dataRestricted);
+					run = getConn().eval("class(dataRestricted)").asString();
+					if(run != null && run.equalsIgnoreCase("try-error"))
+					{
+						toreturn.put("Success", "FALSE");
+						toreturn.put("Message", "Restricted Phenotypic Data Error!");
+						return toreturn;
+					}
+					
+					String doMEA = "outcomes <- doMEA(dataRestricted)";
+					getConn().eval(doMEA);
+					run = getConn().eval("class(outcomes)").asString();
+					if(run != null && run.equalsIgnoreCase("try-error"))
+					{
+						toreturn.put("Success", "FALSE");
+						toreturn.put("Message", "Do Multi Environment Analysis Error!");
+						return toreturn;
+					}
+					getConn().eval("capture.output(print(outcomes),file=\"" + outFileName + "\", append=TRUE);");
+					
+				}
+			} catch (RserveException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				toreturn.put("Success", "FALSE");
+				toreturn.put("Message", "Rserve Exception!");
+				return toreturn;
+			} catch (REXPMismatchException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				toreturn.put("Success", "FALSE");
+				toreturn.put("Message", "Rserve Evaluation Exception!");
+				return toreturn;
+			} finally{
+				getConn().close();
+			}
+			toreturn.put("Success", "TRUE");
+			toreturn.put("Message", "Do Multi-Environment Analysis on SSSL successfully!");
+			return toreturn;
+		}
 }

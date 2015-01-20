@@ -100,6 +100,30 @@ public class AnalysisUtils {
 			userFolderPath = Sessions.getCurrent().getWebApp().getRealPath("resultanalysis") 
 					+ FILE_SEPARATOR + SecurityUtil.getDbUser().getUsername()
 					+ FILE_SEPARATOR + "SSSL_Analysis" + FILE_SEPARATOR + "Multi_Environment";
+		} else if(analysisType.equals("plAnalysisSEA")){
+			userFolderPath = Sessions.getCurrent().getWebApp().getRealPath("resultanalysis") 
+					+ FILE_SEPARATOR + SecurityUtil.getDbUser().getUsername()
+					+ FILE_SEPARATOR + "PL_Analysis" + FILE_SEPARATOR + "Single_Environment";
+		} else if(analysisType.equals("plAnalysisMEA"))
+		{
+			userFolderPath = Sessions.getCurrent().getWebApp().getRealPath("resultanalysis") 
+					+ FILE_SEPARATOR + SecurityUtil.getDbUser().getUsername()
+					+ FILE_SEPARATOR + "PL_Analysis" + FILE_SEPARATOR + "Multi_Environment";
+		} else if(analysisType.equals("ilChisq"))
+		{
+			userFolderPath = Sessions.getCurrent().getWebApp().getRealPath("resultanalysis") 
+					+ FILE_SEPARATOR + SecurityUtil.getDbUser().getUsername()
+					+ FILE_SEPARATOR + "IL_Analysis" + FILE_SEPARATOR + "Chisq";
+		} else if(analysisType.equals("ilSingleMarker"))
+		{
+			userFolderPath = Sessions.getCurrent().getWebApp().getRealPath("resultanalysis") 
+					+ FILE_SEPARATOR + SecurityUtil.getDbUser().getUsername()
+					+ FILE_SEPARATOR + "IL_Analysis" + FILE_SEPARATOR + "Single_Marker";
+		} else if(analysisType.equals("ilMultiMarker"))
+		{
+			userFolderPath = Sessions.getCurrent().getWebApp().getRealPath("resultanalysis") 
+					+ FILE_SEPARATOR + SecurityUtil.getDbUser().getUsername()
+					+ FILE_SEPARATOR + "IL_Analysis" + FILE_SEPARATOR + "Multi_Makrer";
 		}
 
 		String outputStudyPath = userFolderPath + FILE_SEPARATOR

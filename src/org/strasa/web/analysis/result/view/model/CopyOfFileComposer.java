@@ -52,7 +52,7 @@ import org.zkoss.zul.Window;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-public class FileComposer extends SelectorComposer<Component> {
+public class CopyOfFileComposer extends SelectorComposer<Component> {
 	private static final long serialVersionUID = 3814570327995355261L;
 
 	@Wire
@@ -85,13 +85,13 @@ public class FileComposer extends SelectorComposer<Component> {
 		String username = (String) execution.getArg().get("Username");
 		if(type.equalsIgnoreCase("SSSL_Analysis"))
 		{
-			FileComposer.RESULT_ANALYSIS_PATH = FileComposer.RESULT_ANALYSIS_PATH + "SSSL_Analysis" + FILE_SEPARATOR;
+			CopyOfFileComposer.RESULT_ANALYSIS_PATH = CopyOfFileComposer.RESULT_ANALYSIS_PATH + "SSSL_Analysis" + FILE_SEPARATOR;
 		} else if(type.equalsIgnoreCase("PL_Analysis"))
 		{
-			FileComposer.RESULT_ANALYSIS_PATH = FileComposer.RESULT_ANALYSIS_PATH + "PL_Analysis" + FILE_SEPARATOR;
+			CopyOfFileComposer.RESULT_ANALYSIS_PATH = CopyOfFileComposer.RESULT_ANALYSIS_PATH + "PL_Analysis" + FILE_SEPARATOR;
 		} else if(type.equalsIgnoreCase("IL_Analysis"))
 		{
-			FileComposer.RESULT_ANALYSIS_PATH = FileComposer.RESULT_ANALYSIS_PATH + "IL_Analysis" + FILE_SEPARATOR;
+			CopyOfFileComposer.RESULT_ANALYSIS_PATH = CopyOfFileComposer.RESULT_ANALYSIS_PATH + "IL_Analysis" + FILE_SEPARATOR;
 		}
 		fileTreeModel = new AdvancedFileTreeModel(new FileList(type).getRoot());
 		//fileTreeModel = new AdvancedFileTreeModel(new FileList().getRoot());
@@ -126,71 +126,76 @@ public class FileComposer extends SelectorComposer<Component> {
 					new EventListener<Event>() {
 						@Override
 						public void onEvent(Event event) throws Exception {
-							System.out.println("Folder double click");
-							FileModelTreeNode clickedNodeValue = (FileModelTreeNode) ((Treeitem)
-									event.getTarget().getParent()).getValue();
+							System.out.println("folder double clicked");
+							FileModelTreeNode clickedNodeValue = (FileModelTreeNode) ((Treeitem) event
+									.getTarget().getParent()).getValue();
 							FileModel fm = clickedNodeValue.getData();
 							FileModel upperFM = clickedNodeValue.getParent().getData();
-							if(upperFM != null && isFolder(upperFM))
-							{
-								if(upperFM.getFoldername().equals("Single_Environment"))
-								{
-									if(isFolder(fm))
-									{
-										System.out.println("Browse result of single environment on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Single_Environment" +
-												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
+							if (upperFM != null && isFolder(upperFM)) {
+								if (upperFM.getFoldername().equals(
+										"Single-Site")) {
+									if (isFolder(fm)) {
+										System.out
+												.println("Browse result of single site on "
+														+ fm.getFoldername());
+										addResultViewer(
+												fm.getFoldername(),
+												RESULT_ANALYSIS_PATH
+														+ "Single-Site"
+														+ FILE_SEPARATOR
+														+ clickedNodeValue
+																.getData()
+																.getFoldername()
+														+ FILE_SEPARATOR);
+										// // Window w = new Window(((FileModel)
+										// clickedNodeValue.getData()).getFoldername(),
+										// "normal",
+										// true);
+										// w.setPosition("parent");
+										// w.setParent(demoWindow);
+										// HashMap<String, String> dataArgs =
+										// new HashMap<String, String>();
+										// dataArgs.put("name",
+										// clickedNodeValue.getData().getFilename());
+										//
+										// w.doOverlapped();
 									}
-								} else if(upperFM.getFoldername().equals("Multi_Environment"))
-								{
-									if(isFolder(fm))
-									{
-										System.out.println("Browse result of multi environment on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Multi_Environment" +
-												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername()+ FILE_SEPARATOR);
+								} else if (upperFM.getFoldername().equals(
+										"Multi-Site")) {
+									if (isFolder(fm)) {
+										System.out
+												.println("Browse result of single site on "
+														+ fm.getFoldername());
+										addResultViewer(
+												fm.getFoldername(),
+												RESULT_ANALYSIS_PATH
+														+ "Multi-Site"
+														+ FILE_SEPARATOR
+														+ clickedNodeValue
+																.getData()
+																.getFoldername()
+														+ FILE_SEPARATOR);
 									}
-								} else if(upperFM.getFoldername().equals("Chisq"))
-								{
-									if(isFolder(fm))
-									{
-										System.out.println("Browse result of chisq on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Chisq" +
-												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
+								} else if (upperFM.getFoldername().equals(
+										"SSSL_Analysis")) {
+									if (isFolder(fm)) {
+										System.out
+												.println("Browse result of single site on "
+														+ fm.getFoldername());
+										addResultViewer(
+												fm.getFoldername(),
+												RESULT_ANALYSIS_PATH
+														+ "SSSL_Analysis"
+														+ FILE_SEPARATOR
+														+ clickedNodeValue
+																.getData()
+																.getFoldername()
+														+ FILE_SEPARATOR);
 									}
-								} else if(upperFM.getFoldername().equals("Single_Marker"))
-								{
-									if(isFolder(fm))
-									{
-										System.out.println("Browse result of Single marker on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Single_Marker" +
-												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
-									}
-								} else if(upperFM.getFoldername().equals("Multi_Marker"))
-								{
-									if(isFolder(fm))
-									{
-										System.out.println("Browse result of Multi marker on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Multi_Marker" + 
-												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
-									}
-								} else if(upperFM.getFoldername().equals("Single-Site"))
-								{
-									if(isFolder(fm))
-									{
-										System.out.println("Browse result of single site on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Single-Site" + 
-												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
-									}
-								} else if(upperFM.getFoldername().equals("Multi-Site"))
-								{
-									if(isFolder(fm))
-									{
-										System.out.println("Browse result of multi site on  " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Multi-Site" + 
-												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
-									}
+
 								}
 							}
+
 						}
 					});
 			treeItem.setValue(ctn);
@@ -208,19 +213,34 @@ public class FileComposer extends SelectorComposer<Component> {
 				dataRow.addEventListener(Events.ON_CLICK,
 						new EventListener<Event>() {
 							private File tempFile;
+
 							@Override
 							public void onEvent(Event event) throws Exception {
 								FileModelTreeNode clickedNodeValue = (FileModelTreeNode) ((Treeitem) event
 										.getTarget().getParent()).getValue();
-								FileModel f = (FileModel) clickedNodeValue.getParent().getData();
-								String rootAnalysisFolder = clickedNodeValue.getParent().getParent().getData()
+
+								FileModel f = (FileModel) clickedNodeValue
+										.getParent().getData();
+								String rootAnalysisFolder = clickedNodeValue
+										.getParent().getParent().getData()
 										.getFoldername();
 								String fileFolderName = f.getFoldername();
-								String filenamePath = RESULT_ANALYSIS_PATH + rootAnalysisFolder + FILE_SEPARATOR
-										+ fileFolderName + FILE_SEPARATOR + clickedNodeValue.getData().getFilename();
-								String webFolderPath = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/");
-								File fileToCreate = new File(webFolderPath + filenamePath);
-								Window w = new Window(((FileModel) clickedNodeValue.getData()).getFilename(), "normal", true);
+								String filenamePath = RESULT_ANALYSIS_PATH
+										+ rootAnalysisFolder
+										+ "/"
+										+ fileFolderName
+										+ "/"
+										+ clickedNodeValue.getData()
+												.getFilename();
+								String webFolderPath = Executions.getCurrent()
+										.getDesktop().getWebApp()
+										.getRealPath("/");
+								File fileToCreate = new File(webFolderPath
+										+ filenamePath);
+
+								Window w = new Window(
+										((FileModel) clickedNodeValue.getData())
+												.getFilename(), "normal", true);
 								w.setPosition("parent");
 								w.setParent(demoWindow);
 								w.setMaximizable(true);
@@ -229,22 +249,34 @@ public class FileComposer extends SelectorComposer<Component> {
 								w.setPosition("center");
 
 								String dType = filenamePath;
-								dType = dType.substring(dType.length() - 3, dType.length());
-								System.out.println("dtype " + dType);
-								
-								HashMap<String, String> dataArgs = new HashMap<String, String>();
-								dataArgs.put("name", clickedNodeValue.getData().getFilename());
+								dType = dType.substring(dType.length() - 3,
+										dType.length());
+								System.out.println(dType);
 
-								if (clickedNodeValue.getData().getFilename().contains(".png")) {
+								HashMap<String, String> dataArgs = new HashMap<String, String>();
+								dataArgs.put("name", clickedNodeValue.getData()
+										.getFilename());
+
+								if (clickedNodeValue.getData().getFilename()
+										.contains(".png")) {
+
 									System.out.println(filenamePath);
-									addImageViewer(clickedNodeValue.getData().getFilename(), FILE_SEPARATOR + filenamePath);
-								} else if (clickedNodeValue.getData().getFilename().contains(".pdf")) {
-									byte[] buffer = new byte[(int) fileToCreate.length()];
-									FileInputStream fs = new FileInputStream(fileToCreate);
+									addImageViewer(clickedNodeValue.getData()
+											.getFilename(), filenamePath);
+
+								} else if (clickedNodeValue.getData()
+										.getFilename().contains(".pdf")) {
+
+									byte[] buffer = new byte[(int) fileToCreate
+											.length()];
+									FileInputStream fs = new FileInputStream(
+											fileToCreate);
 									fs.read(buffer);
 									fs.close();
-									ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-									fileContent = new AMedia("report", "pdf","application/pdf", is);
+									ByteArrayInputStream is = new ByteArrayInputStream(
+											buffer);
+									fileContent = new AMedia("report", "pdf",
+											"application/pdf", is);
 									// HashMap<String, AMedia> dataArgsPdf = new
 									// HashMap<String, AMedia>();
 									// dataArgsPdf.put("pdfFile", fileContent);
@@ -252,40 +284,69 @@ public class FileComposer extends SelectorComposer<Component> {
 									// Executions.createComponents("analysis/pdfviewer.zul",
 									// w, dataArgsPdf);
 									// w.doOverlapped();
-									addPdfViewer(clickedNodeValue.getData().getFilename(), fileContent);
-								} else if (clickedNodeValue.getData().getFilename().contains(".txt")) {
-									byte[] buffer = new byte[(int) fileToCreate.length()];
-									FileInputStream fs = new FileInputStream(fileToCreate);
-									fs.read(buffer);
-									fs.close();
-									ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-									fileContent = new AMedia("report", "text","text/plain", is);
-									HashMap<String, AMedia> dataArgsTxt = new HashMap<String, AMedia>();
-									addTxtViewer(clickedNodeValue.getData().getFilename(), fileContent);
-								} else if (clickedNodeValue.getData().getFilename().contains(".csv")) {
-									byte[] buffer = new byte[(int) fileToCreate.length()];
-									FileInputStream fs = new FileInputStream(fileToCreate);
-									fs.read(buffer);
-									fs.close();
-									ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-									fileContent = new AMedia("report", "text","text/plain", is);
-									tempFile = File.createTempFile("csvdata",".tmp");
-									InputStream in = fileContent.isBinary() ? fileContent.getStreamData()
-											: new ReaderInputStream(fileContent.getReaderData());
-									FileUtilities.uploadFile(tempFile.getAbsolutePath(), in);
+									addPdfViewer(clickedNodeValue.getData()
+											.getFilename(), fileContent);
 
-									CSVReader reader = new CSVReader(new FileReader(tempFile.getAbsolutePath()));
+								} else if (clickedNodeValue.getData()
+										.getFilename().contains(".txt")) {
+
+									byte[] buffer = new byte[(int) fileToCreate
+											.length()];
+									FileInputStream fs = new FileInputStream(
+											fileToCreate);
+									fs.read(buffer);
+									fs.close();
+									ByteArrayInputStream is = new ByteArrayInputStream(
+											buffer);
+									fileContent = new AMedia("report", "text",
+											"text/plain", is);
+									HashMap<String, AMedia> dataArgsTxt = new HashMap<String, AMedia>();
+
+									addTxtViewer(clickedNodeValue.getData()
+											.getFilename(), fileContent);
+									//
+
+								} else if (clickedNodeValue.getData()
+										.getFilename().contains(".csv")) {
+
+									byte[] buffer = new byte[(int) fileToCreate
+											.length()];
+									FileInputStream fs = new FileInputStream(
+											fileToCreate);
+									fs.read(buffer);
+									fs.close();
+									ByteArrayInputStream is = new ByteArrayInputStream(
+											buffer);
+									fileContent = new AMedia("report", "text",
+											"text/plain", is);
+									tempFile = File.createTempFile("csvdata",
+											".tmp");
+									InputStream in = fileContent.isBinary() ? fileContent
+											.getStreamData()
+											: new ReaderInputStream(fileContent
+													.getReaderData());
+									FileUtilities.uploadFile(
+											tempFile.getAbsolutePath(), in);
+
+									CSVReader reader = new CSVReader(
+											new FileReader(tempFile
+													.getAbsolutePath()));
 									// HashMap<String, CSVReader>
 									// dataArgsCsvReader = new HashMap<String,
 									// CSVReader>();
 									// dataArgsCsvReader.put("csvReader",
 									// reader);
-									addCsvViewer(clickedNodeValue.getData().getFilename(), reader);
+
+									addCsvViewer(clickedNodeValue.getData()
+											.getFilename(), reader);
 									// Executions.createComponents("analysis/csvviewer.zul",
 									// w, dataArgsCsvReader);
 									// w.doOverlapped();
 
-								}else {
+								}
+
+								else {
+
 									/*
 									 * HashMap<String, String> dataArgsTxt2 =
 									 * new HashMap<String, String>();
@@ -294,8 +355,11 @@ public class FileComposer extends SelectorComposer<Component> {
 									 * .createComponents("testprint.zul", w,
 									 * dataArgsTxt2); w.doOverlapped();
 									 */
+
 								}
+
 							}
+
 						});
 			} else { // Category Row
 				dataRow.appendChild(new Treecell(filename.getFoldername()));
@@ -350,15 +414,15 @@ public class FileComposer extends SelectorComposer<Component> {
 		if (viewPanel.getChildren().size() > 0)
 			viewPanel.getChildren().get(0).detach();
 		Include studyInformationPage = new Include();
-		filenamePath = FILE_SEPARATOR + FILE_SEPARATOR + filenamePath.replaceAll("\\\\", "//");
-		System.out.println("add image on FileCompser : " + filenamePath);
-		studyInformationPage.setDynamicProperty("filepath",filenamePath);
+		studyInformationPage.setDynamicProperty("imageName",
+				filenamePath.replaceAll("\\\\", "//"));
 		studyInformationPage.setDynamicProperty("height", IMAGE_HEIGHT);
 		studyInformationPage.setDynamicProperty("width", IMAGE_WIDTH);
 		studyInformationPage.setSrc("/user/analysis/imgviewer.zul");
 		studyInformationPage.setParent(viewPanel);
 		System.out.println("imgPath " + filenamePath);
 		viewPanel.appendChild(studyInformationPage);
+
 	}
 
 	protected void addPdfViewer(String name, AMedia fileContent) {

@@ -1377,10 +1377,10 @@ public class Specifications {
 
 		System.out.println("File name is " + fileName.toString());
 		String folderPath = null;
-		if(ssslAnalysisModel.getAnalysisEnvType().equals(lstTypeOfAnalysisEnv.get(1)))
+		if(analysisEnvType.equals("Single Environment"))
 			 folderPath = AnalysisUtils.createOutputFolder(
 				fileName.replaceAll(" ", ""), "ssslAnalysisSEA");
-		else
+		else if(analysisEnvType.equals("Multi-Environment"))
 			folderPath = AnalysisUtils.createOutputFolder(
 					fileName.replaceAll(" ", ""), "ssslAnalysisMEA");
 		ssslAnalysisModel.setResultFolderPath(folderPath);
