@@ -77,6 +77,8 @@ public class FileComposer extends SelectorComposer<Component> {
 
 	private AdvancedFileTreeModel fileTreeModel;
 	AMedia fileContent;
+	private String path;
+
 
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
@@ -85,13 +87,13 @@ public class FileComposer extends SelectorComposer<Component> {
 		String username = (String) execution.getArg().get("Username");
 		if(type.equalsIgnoreCase("SSSL_Analysis"))
 		{
-			FileComposer.RESULT_ANALYSIS_PATH = FileComposer.RESULT_ANALYSIS_PATH + "SSSL_Analysis" + FILE_SEPARATOR;
+			path = FileComposer.RESULT_ANALYSIS_PATH + "SSSL_Analysis" + FILE_SEPARATOR;
 		} else if(type.equalsIgnoreCase("PL_Analysis"))
 		{
-			FileComposer.RESULT_ANALYSIS_PATH = FileComposer.RESULT_ANALYSIS_PATH + "PL_Analysis" + FILE_SEPARATOR;
+			path = FileComposer.RESULT_ANALYSIS_PATH + "PL_Analysis" + FILE_SEPARATOR;
 		} else if(type.equalsIgnoreCase("IL_Analysis"))
 		{
-			FileComposer.RESULT_ANALYSIS_PATH = FileComposer.RESULT_ANALYSIS_PATH + "IL_Analysis" + FILE_SEPARATOR;
+			path = FileComposer.RESULT_ANALYSIS_PATH + "IL_Analysis" + FILE_SEPARATOR;
 		}
 		fileTreeModel = new AdvancedFileTreeModel(new FileList(type).getRoot());
 		//fileTreeModel = new AdvancedFileTreeModel(new FileList().getRoot());
@@ -138,7 +140,7 @@ public class FileComposer extends SelectorComposer<Component> {
 									if(isFolder(fm))
 									{
 										System.out.println("Browse result of single environment on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Single_Environment" +
+										addResultViewer(fm.getFoldername(), path + "Single_Environment" +
 												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
 									}
 								} else if(upperFM.getFoldername().equals("Multi_Environment"))
@@ -146,7 +148,7 @@ public class FileComposer extends SelectorComposer<Component> {
 									if(isFolder(fm))
 									{
 										System.out.println("Browse result of multi environment on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Multi_Environment" +
+										addResultViewer(fm.getFoldername(), path + "Multi_Environment" +
 												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername()+ FILE_SEPARATOR);
 									}
 								} else if(upperFM.getFoldername().equals("Chisq"))
@@ -154,7 +156,7 @@ public class FileComposer extends SelectorComposer<Component> {
 									if(isFolder(fm))
 									{
 										System.out.println("Browse result of chisq on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Chisq" +
+										addResultViewer(fm.getFoldername(), path + "Chisq" +
 												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
 									}
 								} else if(upperFM.getFoldername().equals("Single_Marker"))
@@ -162,7 +164,7 @@ public class FileComposer extends SelectorComposer<Component> {
 									if(isFolder(fm))
 									{
 										System.out.println("Browse result of Single marker on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Single_Marker" +
+										addResultViewer(fm.getFoldername(), path + "Single_Marker" +
 												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
 									}
 								} else if(upperFM.getFoldername().equals("Multi_Marker"))
@@ -170,7 +172,7 @@ public class FileComposer extends SelectorComposer<Component> {
 									if(isFolder(fm))
 									{
 										System.out.println("Browse result of Multi marker on " + fm.getFoldername());
-										addResultViewer(fm.getFoldername(), RESULT_ANALYSIS_PATH + "Multi_Marker" + 
+										addResultViewer(fm.getFoldername(), path + "Multi_Marker" + 
 												FILE_SEPARATOR + clickedNodeValue.getData().getFoldername() + FILE_SEPARATOR);
 									}
 								} else if(upperFM.getFoldername().equals("Single-Site"))
@@ -216,7 +218,7 @@ public class FileComposer extends SelectorComposer<Component> {
 								String rootAnalysisFolder = clickedNodeValue.getParent().getParent().getData()
 										.getFoldername();
 								String fileFolderName = f.getFoldername();
-								String filenamePath = RESULT_ANALYSIS_PATH + rootAnalysisFolder + FILE_SEPARATOR
+								String filenamePath = path + rootAnalysisFolder + FILE_SEPARATOR
 										+ fileFolderName + FILE_SEPARATOR + clickedNodeValue.getData().getFilename();
 								String webFolderPath = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/");
 								File fileToCreate = new File(webFolderPath + filenamePath);
@@ -350,7 +352,7 @@ public class FileComposer extends SelectorComposer<Component> {
 		if (viewPanel.getChildren().size() > 0)
 			viewPanel.getChildren().get(0).detach();
 		Include studyInformationPage = new Include();
-		filenamePath = FILE_SEPARATOR + FILE_SEPARATOR + filenamePath.replaceAll("\\\\", "//");
+		filenamePath = FILE_SEPARATOR + filenamePath.replaceAll("\\\\", "//");
 		System.out.println("add image on FileCompser : " + filenamePath);
 		studyInformationPage.setDynamicProperty("filepath",filenamePath);
 		studyInformationPage.setDynamicProperty("height", IMAGE_HEIGHT);

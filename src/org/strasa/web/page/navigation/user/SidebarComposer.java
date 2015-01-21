@@ -249,7 +249,10 @@ public class SidebarComposer extends SelectorComposer<Component>  {
 	{
 		Div d = (Div) sidebar.getRoot().query("#contentui");
 		d.getChildren().clear();
-		Executions.createComponents("../user/analysis/resultanalysistree.zul", d, null);
+		HashMap<String, String> args = new HashMap<String, String>();
+		args.put("Type", "PL_Analysis");
+		args.put("Username", SecurityUtil.getDbUser().getUsername());
+		Executions.createComponents("../user/analysis/resultanalysistree.zul", d, args);
 	}
 	
 	@Listen("onClick = #introgressionLineAnalysis") // adding by QIN MAO 
@@ -265,7 +268,10 @@ public class SidebarComposer extends SelectorComposer<Component>  {
 	{
 		Div d = (Div) sidebar.getRoot().query("#contentui");
 		d.getChildren().clear();
-		Executions.createComponents("../user/analysis/resultanalysistree.zul", d, null);
+		HashMap<String, String> args = new HashMap<String, String>();
+		args.put("Type", "IL_Analysis");
+		args.put("Username", SecurityUtil.getDbUser().getUsername());
+		Executions.createComponents("../user/analysis/resultanalysistree.zul", d, args);
 	}
 	@Listen("onClick = #linkagemapping")
 	public void linkagemapping(){
