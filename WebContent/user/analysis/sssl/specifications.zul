@@ -114,9 +114,7 @@
 							</vbox>
 						</tabpanel>
 						<tabpanel id="otherOptionsTP" vflex="1" hflex="1">
-							<vbox vflex="1" hflex="1" style="overflow:auto">
 								<include id="includeOtherOptions" src="/user/analysis/sssl/otheroptions.zul" />
-							</vbox>
 						</tabpanel>
 						<tabpanel id="graphOptionsTP">
 							<include id="includeGraphOptions" src="/user/analysis/sssl/graphoptions.zul"></include>

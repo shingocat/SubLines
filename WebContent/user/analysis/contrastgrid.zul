@@ -1,0 +1,18 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<div>
+		<grid model="@bind(vm.dataList)" sizedByContent="true" vflex="true"
+			hflex="1" emptyMessage="No data loaded..." height="300px">
+			<columns children="@load(vm.columnList)">
+				<template name="children">
+					<column hflex="1" label="@load(each)" />
+				</template>
+			</columns>
+			<template name="model" var="data">
+				<row>
+					<label forEach="${data}" value="${each}" />
+				</row>
+			</template>
+		</grid>
+	</div>
+</zk>

@@ -1,0 +1,12 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window apply="org.zkoss.bind.BindComposer" vflex="1" hflex="1"
+	viewModel="@id('vm') @init('org.strasa.web.analysis.view.model.ContrastTabbox')">
+	<div>
+		<tabbox id="tabbox">
+			<tabs id="tabs"/>
+			<tabpanels id="tabpanels"/>
+		</tabbox>
+	</div>
+</window>
+</zk>

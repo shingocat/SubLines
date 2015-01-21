@@ -1,0 +1,31 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window apply="org.zkoss.bind.BindComposer" hflex="1" vflex="1"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.view.model.Contrast')">
+		<vlayout>
+			<div>
+				<label id="fileNameLB" value="@bind(vm.filename)" />
+				<button id="uploadBtn" label="Upload From (.CSV)" sclass="btn-primary"
+					upload="true, maxsize=-1" disabled="false" onUpload="@command('upload')" />
+				<button id="resetBtn" sclass="btn-danger" label="Reset"
+					onClick="@command('reset')" visible="false" />
+			</div>
+			<div hflex="1" vflex="1" style="overflow:auto;" id="dataGridDiv">
+				<grid model="@bind(vm.dataList)" id="dataGrid" height="300px"
+					sizedByContent="ture" emptyMessage="No data loaded..."  vflex="1">
+					<columns children="@load(vm.columnList)">
+						<template name="children">
+							<column hflex="1" label="@load(each)" />
+						</template>
+					</columns>
+					<template name="model" var="data">
+						<row>
+							<label forEach="${data}" value="${each}" />
+						</row>
+					</template>
+				</grid>
+			</div>
+			<label>end of grid</label>
+		</vlayout>
+	</window>
+</zk>

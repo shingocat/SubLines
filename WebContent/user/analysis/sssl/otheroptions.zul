@@ -1,20 +1,16 @@
 <?page title="new page title" contentType="text/html;charset=UTF-8"?>
 <zk>
 	<div align="left" hflex="1">
-		<groupbox width="100%">
+		<groupbox >
 			<caption>Basic:</caption>
 			<vbox hflex="1">
 				<checkbox label="Descriptive Statistics" id="descriptiveStatCB"
 					checked="true" />
 				<checkbox label="Variance Components" id="varComponentCB"
 					checked="true" />
-				<hlayout>
-				<label>Alpha Level</label>
-				<doublebox id="alphaLevelDB" constraint="no empty,no negative, no zero" value="@bind(vm.alphalevel)" />
-				</hlayout>
 			</vbox>
 		</groupbox>
-		<groupbox width="100%">
+		<groupbox>
 			<caption>Contrasts:</caption>
 			<vlayout hflex="1">
 				<div visible="true">
@@ -29,6 +25,10 @@
 							</template>
 						</combobox>
 					</hlayout>
+					<hlayout>
+							<label>Alpha Level</label>
+							<doublebox id="alphaLevelDB" constraint="no empty,no negative, no zero" value="@bind(vm.alphalevel)" />
+					</hlayout>
 				</div>
 			</vlayout>
 		</groupbox>
@@ -41,12 +41,17 @@
 					<groupbox>
 						<caption>On Genotype:</caption>
 						<hlayout>
-							<label id="fileNameOfContrastOnGenotypeLb" value="@load(vm.contrastFileNameOnGenotype)"
-								sclass="label-search" />
-							<separator width="10px" />
+<!-- 							<label id="fileNameOfContrastOnGenotypeLb" value="@load(vm.contrastFileNameOnGenotype)" -->
+<!-- 								sclass="label-search" /> -->
+							<checkbox id="acrossEnvCB" label="Across Env" onCheck="@command('acrossEnvCBCheck')" checked="true"/>
+							<separator width="20px" />
+<!-- 							<button id="contrastFromFileOnGenotypeBtn" label="From File(.csv)" -->
+<!-- 								sclass="btn-primary" upload="true, maxsize=-1" disabled="false" -->
+<!-- 								onUpload="@command('uploadContrastFromFileOnGenotype')" /> -->
+
 							<button id="contrastFromFileOnGenotypeBtn" label="From File(.csv)"
-								sclass="btn-primary" upload="true, maxsize=-1" disabled="false"
-								onUpload="@command('uploadContrastFromFileOnGenotype')" />
+									sclass="btn-primary"  disabled="false"
+									onClick="@command('uploadContrastFromFileOnGenotype')" />
 							<separator width="10px" />
 							<button id="contrastByManuallyOnGenotypeBtn" label="Manually Input"
 								sclass="btn-primary" disabled="false"
@@ -71,7 +76,7 @@
 						</div>
 						<separator height="20px" />
 						<hlayout>
-							<div id="contrastGridOnGenotypeDiv" width="98%" height="98%">
+							<div id="contrastGridOnGenotypeDiv" hflex="1" style="overflow:auto;">
 								<!-- <include id="includeContrast" src="/user/analysis/sssl/contrast.zul" 
 									/> -->
 							</div>

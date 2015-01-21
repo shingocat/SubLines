@@ -143,6 +143,7 @@ public class Specifications {
 	private Doublebox alphaLevelDB;
 	private Checkbox compareWithControlCB;
 	private Combobox controlCBB;
+	private Checkbox acrossEnvCB;
 	private Div specifiedContrastOnGenotypeDiv;
 	private Label fileNameOfContrastOnGenotypeLb;
 	private Button contrastFromFileOnGenotypeBtn;
@@ -259,6 +260,7 @@ public class Specifications {
 	private String errorMessage;
 
 	private Double alphalevel;
+	private Boolean isAcrossEnv = true;
 
 	@Init
 	public void init() {
@@ -361,14 +363,15 @@ public class Specifications {
 				.getFellow("varComponentCB");
 		this.alphaLevelDB = (Doublebox) this.includeOtherOptions
 				.getFellow("alphaLevelDB");
+		this.acrossEnvCB = (Checkbox) this.includeOtherOptions.getFellow("acrossEnvCB");
 		this.compareWithControlCB = (Checkbox) this.includeOtherOptions
 				.getFellow("compareWithControlCB");
 		this.controlCBB = (Combobox) this.includeOtherOptions
 				.getFellow("controlCBB");
 		this.specifiedContrastOnGenotypeDiv = (Div) includeOtherOptions
 				.getFellow("specifiedContrastOnGenotypeDiv");
-		this.fileNameOfContrastOnGenotypeLb = (Label) includeOtherOptions
-				.getFellow("fileNameOfContrastOnGenotypeLb");
+//		this.fileNameOfContrastOnGenotypeLb = (Label) includeOtherOptions
+//				.getFellow("fileNameOfContrastOnGenotypeLb");
 		this.contrastFromFileOnGenotypeBtn = (Button) includeOtherOptions
 				.getFellow("contrastFromFileOnGenotypeBtn");
 		this.contrastByManuallyOnGenotypeBtn = (Button) includeOtherOptions
@@ -666,6 +669,13 @@ public class Specifications {
 		// contrastByManuallyDiv.setVisible(false);
 
 	}
+	
+	@NotifyChange("*")
+	@Command("acrossEnvCBCheck")
+	public void acrossEnvCBCheck()
+	{
+		isAcrossEnv  = this.acrossEnvCB.isChecked();
+	}
 
 	@NotifyChange("*")
 	@Command("uploadContrastFromFileOnGenotype")
@@ -678,22 +688,39 @@ public class Specifications {
 							"Error", Messagebox.OK, Messagebox.ERROR);
 			return;
 		}
-
-		UploadEvent event = (UploadEvent) bindContext.getTriggerEvent();
-		this.contrastFileNameOnGenotype = event.getMedia().getName();
-		if (!this.contrastFileNameOnGenotype.endsWith(".csv")) {
-			Messagebox.show("Error: File must be a text-based csv format",
-					"Upload Error", Messagebox.OK, Messagebox.ERROR);
-			return;
+		// basing on whether user choose across env
+		Include inc = new Include();
+		inc.setParent(this.contrastGridOnGenotypeDiv);
+		if(isAcrossEnv)
+		{
+			inc.setDynamicProperty("TabNames", new String[]{"Across Env"});
+		} else
+		{
+			if(envTB.getValue() != null || envTB.getValue().length() != 0)
+			{
+				inc.setDynamicProperty("TabNames", ssslRServeManager.getLevels(columnList, dataList, envTB.getValue()));
+			} else
+			{
+				inc.setDynamicProperty("TabNames", new String[]{"Across Env"});
+			}
 		}
-		this.uploadedContrastFileOnGenotype = FileUtilities.getFileFromUpload(
-				bindContext, view);
-		ssslAnalysisModel
-				.setGenotypeContrastFile(this.uploadedContrastFileOnGenotype
-						.getAbsolutePath());
-		refreshContrastCSVOnGenotype();
-		this.fileNameOfContrastOnGenotypeLb.setVisible(true);
+		inc.setSrc("/user/analysis/contrasttabbox.zul");
+//		UploadEvent event = (UploadEvent) bindContext.getTriggerEvent();
+//		this.contrastFileNameOnGenotype = event.getMedia().getName();
+//		if (!this.contrastFileNameOnGenotype.endsWith(".csv")) {
+//			Messagebox.show("Error: File must be a text-based csv format",
+//					"Upload Error", Messagebox.OK, Messagebox.ERROR);
+//			return;
+//		}
+//		this.uploadedContrastFileOnGenotype = FileUtilities.getFileFromUpload(
+//				bindContext, view);
+//		ssslAnalysisModel
+//				.setGenotypeContrastFile(this.uploadedContrastFileOnGenotype
+//						.getAbsolutePath());
+//		refreshContrastCSVOnGenotype();
+//		this.fileNameOfContrastOnGenotypeLb.setVisible(true);
 		this.contrastFromFileOnGenotypeBtn.setVisible(false);
+		this.acrossEnvCB.setVisible(false);
 		this.contrastByManuallyOnGenotypeBtn.setVisible(false);
 		this.contrastByManuallyOnGenotypeDiv.setVisible(false);
 		this.contrastResetOnGenotypeBtn.setVisible(true);
@@ -929,10 +956,11 @@ public class Specifications {
 
 		contrastGridOnGenotypeDiv.appendChild(gridManuallyOnGenotype);
 
-		fileNameOfContrastOnGenotypeLb.setVisible(false);
+//		fileNameOfContrastOnGenotypeLb.setVisible(false);
 		contrastFromFileOnGenotypeBtn.setVisible(false);
 		contrastByManuallyOnGenotypeBtn.setVisible(false);
 		contrastResetOnGenotypeBtn.setVisible(true);
+		acrossEnvCB.setVisible(false);
 		contrastByManuallyOnGenotypeDiv.setVisible(true);
 	}
 
@@ -1022,8 +1050,9 @@ public class Specifications {
 		if (!this.contrastGridOnGenotypeDiv.getChildren().isEmpty())
 			this.contrastGridOnGenotypeDiv.getFirstChild().detach();
 
-		this.fileNameOfContrastOnGenotypeLb.setVisible(false);
+//		this.fileNameOfContrastOnGenotypeLb.setVisible(false);
 		this.contrastFromFileOnGenotypeBtn.setVisible(true);
+		this.acrossEnvCB.setVisible(true);
 		this.contrastByManuallyOnGenotypeBtn.setVisible(true);
 		this.contrastByManuallyOnGenotypeDiv.setVisible(false);
 		this.contrastResetOnGenotypeBtn.setVisible(false);

@@ -6081,20 +6081,19 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 			String rep = model.getReplicateFactor();
 			String row = model.getRowFactor();
 			String column = model.getColumnFactor();
-			boolean descriptiveStat = model.isDescriptiveStat();
-			boolean varianceComponents = model.isVarComponent();
-			boolean boxplotRawData = model.isBoxplotOnSingleEnv();
-			boolean histogramRawData = model.isHistogramOnSingleEnv();
-			boolean heatmapResiduals = false; // set to be false;
+			boolean isDescriptiveStat = model.isDescriptiveStat();
+			boolean isVarianceComponents = model.isVarComponent();
+			boolean isBoxplotRawData = model.isBoxplotOnSingleEnv();
+			boolean isHistogramRawData = model.isHistogramOnSingleEnv();
+			boolean isHeatmapResiduals = false; // set to be false;
 			String heatmapRow = null; // set to be null
 			String heatmapColumn = null; // set to be null
-			boolean diagnosticPlot = model.isDiagnosticPlotOnSingleEnv();
-			boolean genotypeFixed = true; // genotype is set as fixed by default in sssl analysis
-			boolean perforPairwise = true;
-			String pairwiseAlpha = String.valueOf(model.getSignificantAlpha()); // default is 0.05
-			String[] controlLevels = new String[] { model.getRecurrentParent() };
-			boolean compareControl = model.isCompareWithRecurrent();
-			boolean performAllPairwise = false; // no need to perform all pairwise comparing;
+			boolean isDiagnosticPlot = model.isDiagnosticPlotOnSingleEnv();
+			// comparing with recurrent 
+			String alpha = String.valueOf(model.getSignificantAlpha()); // default is 0.05
+			String recurrent = model.getRecurrentParent();
+			boolean isCompareWithRecurrent = model.isCompareWithRecurrent();
+			// specifying contrast
 			boolean excludeControls = true; // set to be true
 			boolean genoPhenoCorrelation = true; // set to be true
 			boolean specifiedContrast = false;
@@ -6109,7 +6108,6 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 			String respvarVector = getInputTransform().createRVector(respvars);
 			// String genotypeLevelsVector=
 			// inputTransform.createRVector(genotypeLevels);
-			String controlLevelsVector = getInputTransform().createRVector(controlLevels);
 			boolean runningFixedSuccess = true;
 			boolean printAllOutputFixed = true;
 			boolean printAllOutputRandom = true;
@@ -6171,8 +6169,8 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 
 			try{
 				String data = null;
-				data = "data <- read.csv(file=\"" + dataFileName + "\", header = TRUE, " +
-						"na.strings = c(\"NA\",\".\",\" \",\"\"), blank.lines.skip = TRUE);";
+				data = "data <- try(read.csv(file=\"" + dataFileName + "\", header = TRUE, " +
+						"na.strings = c(\"NA\",\".\",\" \",\"\"), blank.lines.skip = TRUE),silent = TRUE);";
 				System.out.println(data);
 				getConn().eval(data);
 				String run = getConn().eval("class(data)").asString();
@@ -6188,23 +6186,23 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 					String pheno = null;
 					if(environment.equalsIgnoreCase("NULL"))
 					{
-						 pheno = "pheno <- read.pheno.data(data," 
+						 pheno = "pheno <- try(read.pheno.data(data," 
 								+ "type=\"RAW\", "
 								+ "pop.type=\"SSSL\", "
 								+ "resp.var = c(" + respvarVector + "), "
 								+ "geno = \"" + genotype + "\", "
 								+ designString
-								+ "na.code = NA)";
+								+ "na.code = NA),silent = TRUE)";
 					} else
 					{
-						pheno = "pheno <- read.pheno.data(data," 
+						pheno = "pheno <- try(read.pheno.data(data," 
 								+ "type=\"RAW\", "
 								+ "pop.type=\"SSSL\", "
 								+ "resp.var = " + respvarVector + ", "
 								+ "geno = \"" + genotype + "\", "
 								+ designString
 								+ "env = \"" + environment + "\", "
-								+ "na.code = NA)";
+								+ "na.code = NA),silent = TRUE)";
 					}
 					System.out.println(pheno);
 					getConn().eval(pheno);
@@ -6243,7 +6241,7 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 					getConn().eval(outspace);
 					getConn().eval(outspace);
 					
-					String dataRestricted = "dataRestricted <- restrict.pheno.data(pheno)";
+					String dataRestricted = "dataRestricted <- try(restrict.pheno.data(pheno),silent=TRUE);";
 					getConn().eval(dataRestricted);
 					run = getConn().eval("class(dataRestricted)").asString();
 					if(run != null && run.equalsIgnoreCase("try-error"))
@@ -6253,7 +6251,7 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 						return toreturn;
 					}
 					
-					String doSEA = "outcomes <- doSEA(dataRestricted)";
+					String doSEA = "outcomes <- try(doSEA(dataRestricted),silent=TRUE);";
 					getConn().eval(doSEA);
 					run = getConn().eval("class(outcomes)").asString();
 					if(run != null && run.equalsIgnoreCase("try-error"))
@@ -6262,26 +6260,32 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 						toreturn.put("Message", "Do Single Environment Analysis Error!");
 						return toreturn;
 					}
+					//this if for contrast analysis
+					if(isCompareWithRecurrent)
+					{
+						String doContrast = "outcomes <- try(doContrast(outcomes, contrastOpt = \"RecurrentParent\","
+								+ "recurrentParent = \"" + recurrent + "\",alpha = as.numeric(\"" + alpha + "\")),silent=TRUE);";
+						getConn().eval(doContrast);
+					}
 					getConn().eval("capture.output(print(outcomes,2),file=\"" + outFileName + "\", append=TRUE);");
-					//this if for contrast analysis 
 					
 					// the is for plot funcitons
-					if(boxplotRawData)
+					if(isBoxplotRawData)
 					{
 						String boxplot = "graph.boxplot(outcomes, single.env = FALSE)";
 						getConn().eval(boxplot);
 					} 
-					if(histogramRawData)
+					if(isHistogramRawData)
 					{
 						String histplot = "graph.hist(outcomes, single.env = TRUE)";
 						getConn().eval(histplot);
 					}
-					if(heatmapResiduals)
+					if(isHeatmapResiduals)
 					{
 						
 					}
 					//diagnosticPlot for genotype fixed
-					if(diagnosticPlot)
+					if(isDiagnosticPlot)
 					{
 						String diagnostic = "graph.diag(outcomes)";
 						getConn().eval(diagnostic);
