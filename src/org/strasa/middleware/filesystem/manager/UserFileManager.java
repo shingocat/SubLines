@@ -48,33 +48,48 @@ public class UserFileManager {
 	public String uploadFileForAnalysis(String realName,File dataFile){
 		File movedFile= null;
 		File renamedFile = null;
-		File BASE_FOLDER = new File(buildUserPath(SecurityUtil.getDbUser().getId(), 0));
+		File BASE_FOLDER = new File(buildUserPath(SecurityUtil.getDbUser().getId(), 0, realName.replaceAll(".csv", "")));
 		if(!BASE_FOLDER.exists()) BASE_FOLDER.mkdirs();
 		try {
 			FileUtils.copyFileToDirectory(dataFile, new File(BASE_FOLDER.getAbsolutePath() + File.separator ),true);
 			movedFile = new File(BASE_FOLDER.getAbsolutePath() + File.separator + dataFile.getName());
-			renamedFile = new File(BASE_FOLDER.getAbsolutePath() + File.separator + String.valueOf(Calendar.getInstance().getTimeInMillis()+ realName));
+			renamedFile = new File(BASE_FOLDER.getAbsolutePath() + File.separator + 
+					realName.replaceAll(".csv", "") + "_(Dataset).csv");
 			movedFile.renameTo(renamedFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//		dataFile.renameTo(new File(BASE_FOLDER.getAbsolutePath() + dataFile.getName())); 
-		System.out.println("File moved to: " + BASE_FOLDER.getAbsolutePath());
 		return renamedFile.getAbsolutePath();
-
+	}
+	
+	public  String uploadContrastFileForAnalysis(String fileName, File dataFile, String folderPath, String envlabel)
+	{
+		File movedFile = null;
+		File renamedFile = null;
+		File BASE_FOLDER = new File(folderPath);
+		if(!BASE_FOLDER.exists())
+			BASE_FOLDER.mkdirs();
+		try{
+			FileUtils.copyFileToDirectory(dataFile, new File(BASE_FOLDER.getAbsolutePath() + File.separator), true);
+			movedFile = new File(BASE_FOLDER.getAbsolutePath() + File.separator + dataFile.getName());
+			renamedFile = new File(BASE_FOLDER.getAbsolutePath() + File.separator + 
+					fileName.replaceAll(".csv","") + "_" + envlabel + "_(Contrast).csv");
+			movedFile.renameTo(renamedFile);
+		} catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		return renamedFile.getAbsolutePath();
 	}
 	
 	public void moveUploadedFileToOutputFolder(String resultFolderPath, String realName,File dataFile){
-
-		System.out.println("move uploadedFile");
 		File movedFile= null;
 		File renamedFile = null;
 		try {
 			FileUtils.copyFileToDirectory(dataFile, new File(resultFolderPath + File.separator ),true);
 			movedFile = new File(resultFolderPath + File.separator + realName+ ".csv" );
 			String filePath = resultFolderPath + File.separator + realName+ "(dataset).csv" ;
-			renamedFile = new File(filePath.replaceAll(".csv", "(dataset).csv"));
+			renamedFile = new File(filePath.replaceAll(".csv", "_(Dataset).csv"));
 			movedFile.renameTo(renamedFile);
 
 
@@ -84,11 +99,8 @@ public class UserFileManager {
 			System.out.println("renamed to:"+filePath);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//		dataFile.renameTo(new File(BASE_FOLDER.getAbsolutePath() + dataFile.getName())); 
-		System.out.println("File moved to: " + resultFolderPath);
 	}
 	
 //	Create by QIN MAO
@@ -110,16 +122,32 @@ public class UserFileManager {
 	
 	public static String buildUserPath(int userid, int studyid){
 
-		String userBasePath =  userid + "_" + studyid;//Encryptions.encryptStringToNumber(new UserManagerImpl().getUserById(userid).getUsername(),userid); 
+		String userBasePath =  String.valueOf(userid);//Encryptions.encryptStringToNumber(new UserManagerImpl().getUserById(userid).getUsername(),userid); 
 		String studyBasePath;
 		if(studyid == 0){
 			studyBasePath = "tmp";
 		}
 		else{
-			studyBasePath = userid + "_" + studyid;//Encryptions.encryptStringToNumber(new StudyManagerImpl().getStudyById(studyid).getName(), studyid);
+			studyBasePath = String.valueOf(studyid);//Encryptions.encryptStringToNumber(new StudyManagerImpl().getStudyById(studyid).getName(), studyid);
 		}
 
-		return BASE_PATH + File.separator  + userBasePath + File.separator  + studyBasePath + File.separator  ;
+		return BASE_PATH + File.separator  + userBasePath + File.separator  + studyBasePath + File.separator +
+				String.valueOf(Calendar.getInstance().getTimeInMillis()) + File.separator;
+	}
+	
+	public static String buildUserPath(int userid, int studyid, String filename)
+	{
+		String userBasePath = String.valueOf(userid);
+		String studyBasePath = null;
+		if(studyid == 0)
+		{
+			studyBasePath = "tmp";
+		} else
+		{
+			studyBasePath = String.valueOf(studyid);
+		}
+		return BASE_PATH + File.separator + userBasePath + File.separator + studyBasePath + File.separator +
+				filename + File.separator + String.valueOf(Calendar.getInstance().getTimeInMillis()) + File.separator;
 	}
 
 }

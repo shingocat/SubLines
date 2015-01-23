@@ -7,12 +7,5 @@
 				<column hflex="1" label="@load(each)" />
 			</template>
 		</columns>
-		<!-- <rows children="@bind(vm.csvData)">
-			<template name="children" var="data">
-				<row>
-					<label forEach="${data}" value="${each}" />
-				</row>
-			</template>
-		</rows> -->
 	</grid>
 </zk>

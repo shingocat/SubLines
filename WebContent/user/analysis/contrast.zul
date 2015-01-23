@@ -4,28 +4,31 @@
 		viewModel="@id('vm') @init('org.strasa.web.analysis.view.model.Contrast')">
 		<vlayout>
 			<div>
-				<label id="fileNameLB" value="@bind(vm.filename)" />
+				<label id="fileNameLB" value="@bind(vm.filename)" visible="false" />
 				<button id="uploadBtn" label="Upload From (.CSV)" sclass="btn-primary"
-					upload="true, maxsize=-1" disabled="false" onUpload="@command('upload')" />
+					visible="true" upload="true, maxsize=-1" onUpload="@command('upload')" />
 				<button id="resetBtn" sclass="btn-danger" label="Reset"
 					onClick="@command('reset')" visible="false" />
 			</div>
-			<div hflex="1" vflex="1" style="overflow:auto;" id="dataGridDiv">
-				<grid model="@bind(vm.dataList)" id="dataGrid" height="300px"
-					sizedByContent="ture" emptyMessage="No data loaded..."  vflex="1">
-					<columns children="@load(vm.columnList)">
-						<template name="children">
-							<column hflex="1" label="@load(each)" />
-						</template>
-					</columns>
-					<template name="model" var="data">
-						<row>
-							<label forEach="${data}" value="${each}" />
-						</row>
-					</template>
+			<div hflex="1" vflex="1" id="dataGridDiv">
+				<grid id="dataGrid" emptyMessage="No data loaded..." hflex="1" 
+					height="300px">
+<!-- 					<columns id="columns"/> -->
+<!-- 					<rows id="rows" /> -->
+<!-- 					<columns children="@load(vm.columnList)"> -->
+<!-- 						<template name="children"> -->
+<!-- 							<column hflex="1" label="@load(each)" /> -->
+<!-- 						</template> -->
+<!-- 					</columns> -->
+<!-- 					<rows children="@load(vm.dataList)"> -->
+<!-- 						<template name="children" var="data"> -->
+<!-- 							<row> -->
+<!-- 								<label forEach="${data}" value="${each}" /> -->
+<!-- 							</row> -->
+<!-- 						</template> -->
+<!-- 					</rows> -->
 				</grid>
 			</div>
-			<label>end of grid</label>
 		</vlayout>
 	</window>
 </zk>

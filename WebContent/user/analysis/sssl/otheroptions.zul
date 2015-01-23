@@ -63,16 +63,6 @@
 						</hlayout>
 						<separator height="10px" />
 						<div id="contrastByManuallyOnGenotypeDiv" visible="false">
-							<hlayout>
-								<!-- <label value="Factor Name : " /> <textbox id="contrastVariableTB" 
-									readonly="true"></textbox> <separator width="10px" /> -->
-								<label value="No. of Contrast : " />
-								<doublespinner id="numberOfContrastOnGenotypeDS"
-									step="1" value="0" constraint="no negative, min 0"
-									onChange="@command('updateContrastGridManuallyOnGenotype', inputValue=self.value)" 
-									readonly="true" instant="true">
-									</doublespinner>
-							</hlayout>
 						</div>
 						<separator height="20px" />
 						<hlayout>
@@ -87,12 +77,9 @@
 					<groupbox>
 						<caption>On Environment:</caption>
 						<hlayout>
-							<label id="fileNameOfContrastOnEnvLb" value="@load(vm.contrastFileNameOnEnv)"
-								sclass="label-search" />
-							<separator width="10px" />
 							<button id="contrastFromFileOnEnvBtn" label="From File(.csv)"
-								sclass="btn-primary" upload="true, maxsize=-1" disabled="false"
-								onUpload="@command('uploadContrastFromFileOnEnv')" />
+								sclass="btn-primary"  disabled="false"
+								onClick="@command('uploadContrastFromFileOnEnv')" />
 							<separator width="10px" />
 							<button id="contrastByManuallyOnEnvBtn" label="Manually Input"
 								sclass="btn-primary" disabled="false"
@@ -104,15 +91,6 @@
 						</hlayout>
 						<separator height="10px" />
 						<div id="contrastByManuallyOnEnvDiv" visible="false">
-							<hlayout>
-								<!--<label value="Environment: " /> <textbox id="contrastVariableOnEnvTB" 
-									readonly="true"></textbox> <separator width="10px" /> -->
-								<label value="No. of Contrast : " />
-								<doublespinner id="numberOfContrastOnEnvDS" step="1"
-									value="0" constraint="no negative, min 0"
-									onChange="@command('updateContrastGridManuallyOnEnv', inputValue=self.value)"
-									readonly="true" instant="true"/>
-							</hlayout>
 						</div>
 						<separator height="20px" />
 						<hlayout>

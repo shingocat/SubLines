@@ -73,8 +73,6 @@ public class FileUtilities {
 
 		UploadEvent event = (UploadEvent) ctx.getTriggerEvent();
 
-		// System.out.println(event.getMedia().getStringData());
-
 		String name = event.getMedia().getName();
 		File tempFile = null;
 		try {
@@ -83,12 +81,6 @@ public class FileUtilities {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
-		// if (!name.endsWith(".csv")) {
-		// Messagebox.show("Error: File must be a text-based csv format",
-		// "Upload Error", Messagebox.OK, Messagebox.ERROR);
-		// return null;
-		// }
 
 		InputStream in = event.getMedia().isBinary() ? event.getMedia().getStreamData() : new ReaderInputStream(event.getMedia().getReaderData());
 		FileUtilities.uploadFile(tempFile.getAbsolutePath(), in);
@@ -176,12 +168,10 @@ public class FileUtilities {
 
 	public static File createFileFromDatabase(List<String> columns,
 			List<String[]> rows, String filePath) {
-		// TODO Auto-generated method stub
 		List<String[]> grid = rows;
 
 		StringBuffer sb = new StringBuffer();
 
-		System.out.println("creating File...");
 		int ctr = 0;
 		for (String s : columns) {
 			ctr++;
@@ -202,7 +192,6 @@ public class FileUtilities {
 			sb.append("\n");
 		}
 
-		
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(filePath);
@@ -211,9 +200,8 @@ public class FileUtilities {
 				writer.close();
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
-		
 		return new File(filePath);
 	}
 

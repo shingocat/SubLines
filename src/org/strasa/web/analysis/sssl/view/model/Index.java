@@ -25,11 +25,20 @@ import org.zkoss.zul.Tabs;
 public class Index {
 	private Tab resultTab;
 	private SSSLRserveManager ssslRServeManager;
+	private Tabpanel specificationsPanel;
 
 	@AfterCompose
 	public void afterCompose(@ContextParam(ContextType.COMPONENT) Component component,
 			@ContextParam(ContextType.VIEW) Component view){
 		Selectors.wireComponents(component, this, false);
+		specificationsPanel = (Tabpanel) component.getFellow("specificationsPanel");
+		//set the initiated specifications tabpanel
+		if(specificationsPanel.getFirstChild() == null)
+		{
+			Include inc = new Include();
+			inc.setSrc("/user/analysis/sssl/specifications.zul");
+			inc.setParent(specificationsPanel);
+		}
 	}
 
 
@@ -37,8 +46,8 @@ public class Index {
 	@GlobalCommand("launchSSSL")
 	public void launchSSSL(@ContextParam(ContextType.COMPONENT) Component component,
 			@ContextParam(ContextType.VIEW) Component view) {
-		Tabpanel specificationsPanel = (Tabpanel) component.getFellow("specificationsPanel");
-		specificationsPanel.getChildren().get(0).detach();
+		if(specificationsPanel.getFirstChild() != null)
+			specificationsPanel.getFirstChild().detach();
 		
 		Include specificationPage = new Include();
 		specificationPage.setParent(specificationsPanel);

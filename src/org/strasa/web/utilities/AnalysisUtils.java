@@ -162,7 +162,6 @@ public class AnalysisUtils {
 		// TODO Auto-generated method stub
 		ListModelList<String> modelList = new ListModelList<String>();
 		for (String s : stringArray) {
-			System.out.println(s);
 			modelList.add(s);
 		}
 		return modelList;

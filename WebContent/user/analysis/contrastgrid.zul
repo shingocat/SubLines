@@ -1,7 +1,7 @@
 <?page title="new page title" contentType="text/html;charset=UTF-8"?>
 <zk>
 	<div>
-		<grid model="@bind(vm.dataList)" sizedByContent="true" vflex="true"
+		<grid model="@bind(vm.dataList)" sizedByContent="true" vflex="1" style="overflow:auto;"
 			hflex="1" emptyMessage="No data loaded..." height="300px">
 			<columns children="@load(vm.columnList)">
 				<template name="children">

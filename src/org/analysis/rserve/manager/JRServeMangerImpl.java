@@ -1,6 +1,7 @@
 package org.analysis.rserve.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.rosuda.REngine.REXPMismatchException;
@@ -55,6 +56,47 @@ public class JRServeMangerImpl implements IJRserveManager{
 		}
 
 		return envtLevels;
+	}
+	
+	public HashMap<String, List<String>> getLevelsOnOtherLevels(List<String> columnList,
+			List<String[]> dataList, String geno, String env) {
+		HashMap<String, List<String>> toreturn = new HashMap<String, List<String>>();
+		int genoColumn = 0;
+		int envColumn = 0;
+		for(int i = 0; i < columnList.size(); i++)
+		{
+			if(columnList.get(i).equals(geno))
+			{	
+				genoColumn = i;
+				continue;
+			} else if(columnList.get(i).equals(env))
+			{
+				envColumn = i;
+				continue;
+			}
+		}
+		
+		// return a hashmap of env levels as key, geno levels as values;
+		for(int i = 0; i < dataList.size(); i++)
+		{
+			String envLevel = dataList.get(i)[envColumn];
+			if(toreturn.containsKey(envLevel))
+			{
+				ArrayList<String> lstGenoLevel = (ArrayList<String>) toreturn.get(envLevel);
+				if(!lstGenoLevel.contains(dataList.get(i)[genoColumn]))
+				{
+					lstGenoLevel.add(dataList.get(i)[genoColumn]);
+					toreturn.put(envLevel, lstGenoLevel);
+				}
+			} else
+			{
+				ArrayList<String> lstGenoLevel = new ArrayList<String>();
+				lstGenoLevel.add(dataList.get(i)[genoColumn]);
+				toreturn.put(envLevel, lstGenoLevel);
+			}
+		}
+		
+		return toreturn;
 	}
 
 	// The other way to get levels of factor,

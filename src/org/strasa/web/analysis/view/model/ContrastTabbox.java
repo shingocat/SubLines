@@ -1,5 +1,8 @@
 package org.strasa.web.analysis.view.model;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
@@ -20,25 +23,34 @@ public class ContrastTabbox {
 	@AfterCompose
 	public void afterComposer(@ContextParam(ContextType.COMPONENT) final Component component,
 			@ContextParam(ContextType.VIEW) Component view,
-			@ExecutionArgParam("TabNames") String[] tabnames)
+			@ExecutionArgParam("Arguments") HashMap<String, Object> args)
 	{
 		tabbox = (Tabbox) component.getFellow("tabbox");
 		tabs = (Tabs) component.getFellow("tabs");
 		tabpanels = (Tabpanels) component.getFellow("tabpanels");
-		for(String s : tabnames)
+		if(args.containsKey("EnvNames"))
 		{
-			System.out.println("tab name " + s);
-			//setting tab
-			Tab tab = new Tab();
-			tab.setLabel(s);
-			tabs.appendChild(tab);
-			//setting tabpanel
-			Tabpanel tabpanel =new Tabpanel();
-			tabpanel.setHeight("350px");
-			Include inc = new Include();
-			inc.setSrc("/user/analysis/contrast.zul");
-			inc.setParent(tabpanel);
-			tabpanels.appendChild(tabpanel);
+			List<String> tabnames = (List<String>) args.get("EnvNames");
+			System.out.println("Tabnames " + tabnames);
+			for(String s : tabnames)
+			{
+				//setting tab
+				Tab tab = new Tab();
+				tab.setLabel(s);
+				tabs.appendChild(tab);
+				//setting tabpanel
+				Tabpanel tabpanel =new Tabpanel();
+				tabpanel.setHeight("350px");
+				Include inc = new Include();
+				HashMap<String, Object> pasedArgs = new HashMap<String, Object>();
+				pasedArgs.put("EnvName", s);
+				pasedArgs.put("UploadedFileFolderPath", args.get("UploadedFileFolderPath"));
+				pasedArgs.put("GenosOnEnv", ((HashMap<String, List<String>>)args.get("GenosOnEnv")).get(s));
+				inc.setDynamicProperty("Arguments", pasedArgs);
+				inc.setSrc("/user/analysis/contrast.zul");
+				inc.setParent(tabpanel);
+				tabpanels.appendChild(tabpanel);
+			}
 		}
 	}
 }

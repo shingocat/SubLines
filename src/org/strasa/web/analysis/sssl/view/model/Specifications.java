@@ -145,20 +145,16 @@ public class Specifications {
 	private Combobox controlCBB;
 	private Checkbox acrossEnvCB;
 	private Div specifiedContrastOnGenotypeDiv;
-	private Label fileNameOfContrastOnGenotypeLb;
 	private Button contrastFromFileOnGenotypeBtn;
 	private Button contrastByManuallyOnGenotypeBtn;
 	private Button contrastResetOnGenotypeBtn;
 	private Div contrastByManuallyOnGenotypeDiv;
-	private Doublespinner numberOfContrastOnGenotypeDS;
 	private Div contrastGridOnGenotypeDiv;
 	private Div specifiedContrastOnEnvDiv;
-	private Label fileNameOfContrastOnEnvLb;
 	private Button contrastFromFileOnEnvBtn;
 	private Button contrastByManuallyOnEnvBtn;
 	private Button contrastResetOnEnvBtn;
 	private Div contrastByManuallyOnEnvDiv;
-	private Doublespinner numberOfContrastOnEnvDS;
 	private Div contrastGridOnEnvDiv;
 	private Div genotypeByEnvDiv;
 	private Checkbox finlayWilkinsonModelCB;
@@ -192,12 +188,12 @@ public class Specifications {
 	// run button
 	private Button runBtn;
 
-	private RServeManager rServeManager;
-	private SSSLRserveManager ssslRServeManager;
-	private StudyManagerImpl studyManagerImpl;
-	private StudyDataSetManagerImpl studyDataSetManagerImpl;
-	private BrowseStudyManagerImpl browseStudyManagerImpl;
-	private UserFileManager userFileManager;
+	//basic arguments
+	private SSSLRserveManager ssslRServeManager = new SSSLRserveManager();
+	private StudyManagerImpl studyManagerImpl = new StudyManagerImpl();
+	private StudyDataSetManagerImpl studyDataSetManagerImpl = new StudyDataSetManagerImpl();
+	private BrowseStudyManagerImpl browseStudyManagerImpl = new BrowseStudyManagerImpl();
+	private UserFileManager userFileManager = new UserFileManager();
 	private Study selectedStudy;
 	private List<Study> lstStudy;
 	private StudyDataSet selectedStudyDataSet;
@@ -208,40 +204,15 @@ public class Specifications {
 	private List<String> lstTypeOfAnalysisEnv;
 	private String designType;
 	private String analysisEnvType;
-	private SSSLAnalysisModel ssslAnalysisModel;
+	private SSSLAnalysisModel ssslAnalysisModel = new SSSLAnalysisModel();
 	private String resultRServe;
 	// column list from raw data
 	private List<String> columnList = new ArrayList<String>(); 
-	// raw data from selected data
+	// real value from raw data
 	private List<String[]> dataList = new ArrayList<String[]>(); 
-	private List<String> contrastColumnList = new ArrayList<String>();
-	private List<String[]> contrastDataList = new ArrayList<String[]>();
-	// for storing column name of contrast column on genotype
-	private List<String> contrastColumnListOnGenotype = new ArrayList<String>(); 
-	// storing data of contrast file on genotype
-	private List<String[]> contrastDataListOnGenotype = new ArrayList<String[]>(); 
-	// storing column name of contrast file on env;
-	private List<String> contrastColumnListOnEnv = new ArrayList<String>(); 
-	// storing of contrast file one env;
-	private List<String[]> contrastDataListOnEnv = new ArrayList<String[]>(); 
-	
-	private int pageSize = 10;
-	private int activePage = 0;
-	private boolean isDataReUploaded = false;
-	private boolean isContrastDataReUploaded = false;
-	private boolean gridReUploaded = false;
-	private boolean contrastGridReUploaded = false;
-	private boolean isNewDataSet;
-	private boolean isUpdateMode = false;
-	private File tempFile;
+
 	private File uploadedFile;
-	private String fileName;
-	private File tempContrastFile;
-	private File uploadedContrastFile;
-	private File uploadedContrastFileOnGenotype;
-	private File uploadedContrastFileOnEnv;
-	private String contrastFileNameOnGenotype;
-	private String contrastFileNameOnEnv;
+	private String fileName; // for the analysis raw data
 
 	private List<String> lstVarInfo;
 	private List<String> lstVarNames;
@@ -254,20 +225,20 @@ public class Specifications {
 	private ListModelList<String> genotypeLevelsModel;
 
 	private List<String> respvars = new ArrayList<String>();
-	private String[] environmentLevels;
-	private String[] genotypeLevels;
+	private String[] environmentLevels = null;
+	private String[] genotypeLevels = null;
 
-	private String errorMessage;
+	private String errorMessage = null;
 
-	private Double alphalevel;
+	private Double alphalevel = null;
 	private Boolean isAcrossEnv = true;
+	private String uploadedFileFolderPath = null;
 
 	@Init
 	public void init() {
 		setAnalysisEnvType("Multi-Environment");
 		setDesignType("Randomized Complete Block(RCB)");
 		setAlphalevel(0.05);
-//		this.singleEnvOnGraphDiv.setVisible(false);
 	}
 
 	@AfterCompose
@@ -275,14 +246,6 @@ public class Specifications {
 			@ContextParam(ContextType.COMPONENT) Component component,
 			@ContextParam(ContextType.VIEW) Component view) {
 		Selectors.wireComponents(component, this, false);
-
-		ssslAnalysisModel = new SSSLAnalysisModel();
-		studyManagerImpl = new StudyManagerImpl();
-		studyDataSetManagerImpl = new StudyDataSetManagerImpl();
-		userFileManager = new UserFileManager();
-
-		lstStudy = studyManagerImpl.getStudiesByUserID(SecurityUtil.getDbUser()
-				.getId());
 
 		// wire all the component
 		this.component = component;
@@ -370,8 +333,8 @@ public class Specifications {
 				.getFellow("controlCBB");
 		this.specifiedContrastOnGenotypeDiv = (Div) includeOtherOptions
 				.getFellow("specifiedContrastOnGenotypeDiv");
-//		this.fileNameOfContrastOnGenotypeLb = (Label) includeOtherOptions
-//				.getFellow("fileNameOfContrastOnGenotypeLb");
+		//		this.fileNameOfContrastOnGenotypeLb = (Label) includeOtherOptions
+		//				.getFellow("fileNameOfContrastOnGenotypeLb");
 		this.contrastFromFileOnGenotypeBtn = (Button) includeOtherOptions
 				.getFellow("contrastFromFileOnGenotypeBtn");
 		this.contrastByManuallyOnGenotypeBtn = (Button) includeOtherOptions
@@ -380,14 +343,10 @@ public class Specifications {
 				.getFellow("contrastResetOnGenotypeBtn");
 		this.contrastByManuallyOnGenotypeDiv = (Div) includeOtherOptions
 				.getFellow("contrastByManuallyOnGenotypeDiv");
-		this.numberOfContrastOnGenotypeDS = (Doublespinner) includeOtherOptions
-				.getFellow("numberOfContrastOnGenotypeDS");
 		this.contrastGridOnGenotypeDiv = (Div) includeOtherOptions
 				.getFellow("contrastGridOnGenotypeDiv");
 		this.specifiedContrastOnEnvDiv = (Div) includeOtherOptions
 				.getFellow("specifiedContrastOnEnvDiv");
-		this.fileNameOfContrastOnEnvLb = (Label) includeOtherOptions
-				.getFellow("fileNameOfContrastOnEnvLb");
 		this.contrastFromFileOnEnvBtn = (Button) includeOtherOptions
 				.getFellow("contrastFromFileOnEnvBtn");
 		this.contrastByManuallyOnEnvBtn = (Button) includeOtherOptions
@@ -396,8 +355,6 @@ public class Specifications {
 				.getFellow("contrastResetOnEnvBtn");
 		this.contrastByManuallyOnEnvDiv = (Div) includeOtherOptions
 				.getFellow("contrastByManuallyOnEnvDiv");
-		this.numberOfContrastOnEnvDS = (Doublespinner) includeOtherOptions
-				.getFellow("numberOfContrastOnEnvDS");
 		this.contrastGridOnEnvDiv = (Div) includeOtherOptions
 				.getFellow("contrastGridOnEnvDiv");
 		this.genotypeByEnvDiv = (Div) includeOtherOptions
@@ -452,6 +409,12 @@ public class Specifications {
 				.getFellow("ggeBiplotGenotypeViewCB");
 		this.runBtn = (Button) component.getFellow("runBtn");
 
+
+		if (columnList != null && !columnList.isEmpty()) {
+			columnList.clear();
+			dataList.clear();
+		}
+
 	}
 
 	@NotifyChange("*")
@@ -459,12 +422,6 @@ public class Specifications {
 	public void updateDataSetList() {
 		dataSetCombobox.setSelectedItem(null);
 		dataSetCombobox.setVisible(false);
-
-		if (!columnList.isEmpty()) {
-			columnList.clear();
-			dataList.clear();
-			refreshCsv();
-		}
 
 		List<StudyDataSet> dataSet = studyDataSetManagerImpl
 				.getDataSetsByStudyId(selectedStudy.getId());
@@ -485,65 +442,62 @@ public class Specifications {
 	public void displaySelectedDataSet(
 			@ContextParam(ContextType.BIND_CONTEXT) BindContext bindContext,
 			@ContextParam(ContextType.VIEW) Component view) {
+		// clear before status of columnList and dataList
+		if(columnList != null && ! columnList.isEmpty())
+		{
+			columnList.clear();
+			dataList.clear();
+		}
+		reloadCsvGrid();
+
 		selectDataBtn.setVisible(false);
 		studiesCombobox.setVisible(false);
 		resetBtn.setVisible(true);
 		uploadCSVBtn.setVisible(false);
-
-		browseStudyManagerImpl = new BrowseStudyManagerImpl();
-
 		List<HashMap<String, String>> toreturn = browseStudyManagerImpl
 				.getStudyData(selectedStudy.getId(),
 						selectedStudyDataSet.getDatatype(),
 						selectedStudyDataSet.getId());
-		// System.out.println("Size:" + toreturn.size());
 		List<StudyDataColumn> columns = new StudyDataColumnManagerImpl()
-				.getStudyDataColumnByStudyId(selectedStudy.getId(),
-						selectedStudyDataSet.getDatatype(),
-						selectedStudyDataSet.getId());
-
+		.getStudyDataColumnByStudyId(selectedStudy.getId(),
+				selectedStudyDataSet.getDatatype(),
+				selectedStudyDataSet.getId());
 		for (StudyDataColumn d : columns) {
 			columnList.add(d.getColumnheader());
-			// System.out.print(d.getColumnheader() + "\t");
 		}
-		// System.out.println("\n ");
 		for (HashMap<String, String> rec : toreturn) {
 			ArrayList<String> newRow = new ArrayList<String>();
 			for (StudyDataColumn d : columns) {
 				String value = rec.get(d.getColumnheader());
 				newRow.add(value);
-				// System.out.print("on " + d.getColumnheader() + " value is " +
-				// value + "\t");
 			}
-			// System.out.println("\n ");
 			dataList.add(newRow.toArray(new String[newRow.size()]));
 		}
-
-		fileName = selectedStudy.getName() + "_"
-				+ selectedStudyDataSet.getTitle().replaceAll(" ", "");
-		File BASE_FOLDER = new File(UserFileManager.buildUserPath(
-				selectedStudy.getUserid(), selectedStudy.getId()));
+		//set fileName to study.name_dataset.tile
+		fileName = selectedStudy.getName() + "_" + selectedStudyDataSet.getTitle().replaceAll(" ", "");
+		// set BASE_FOLDER to /UPLOADS/UserId_DatasetId/Userid_DatasetId
+		File BASE_FOLDER = new File(UserFileManager.buildUserPath(selectedStudy.getUserid(), selectedStudy.getId(), fileName));
 		if (!BASE_FOLDER.exists())
 			BASE_FOLDER.mkdirs();
-		String createPath = BASE_FOLDER.getAbsolutePath() + File.separator
-				+ fileName + "(dataset).csv";
-
-		System.out.println("created path " + createPath);
-		uploadedFile = FileUtilities.createFileFromDatabase(columnList,
-				dataList, createPath);
-
+		String createFile = BASE_FOLDER.getAbsolutePath() + File.separator + fileName + "(Dataset).csv";
+		// write the columnList and dataList value to the uploadedFile
+		uploadedFile = FileUtilities.createFileFromDatabase(columnList,dataList, createFile);
 		if (uploadedFile == null)
 			return;
-
+		// get uploaded file folder path
+		if(uploadedFileFolderPath != null)
+		{	
+			this.uploadedFileFolderPath = null;
+			this.uploadedFileFolderPath = BASE_FOLDER.getAbsolutePath() + File.separator;
+		} else
+		{
+			this.uploadedFileFolderPath = BASE_FOLDER.getAbsolutePath() + File.separator;
+		}
+		System.out.println("Uploaded File Folder Path : " + uploadedFileFolderPath);
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("filePath", uploadedFile.getAbsolutePath());
-		BindUtils.postGlobalCommand(null, null,
-				"setSSSLAnalysisModelListvariables", args);
-
+		BindUtils.postGlobalCommand(null, null,"setSSSLAnalysisModelListvariables", args);
 		isVariableDataVisible = true;
-		activePage = 0;
-		// dataFileName = fileName;
-		reloadCsvGrid();
 	}
 
 	@NotifyChange("*")
@@ -551,6 +505,10 @@ public class Specifications {
 	public void selectFromDatabase(
 			@ContextParam(ContextType.BIND_CONTEXT) BindContext bindContext,
 			@ContextParam(ContextType.VIEW) Component view) {
+
+		lstStudy = studyManagerImpl.getStudiesByUserID(SecurityUtil.getDbUser()
+				.getId());
+
 		selectDataBtn.setVisible(false);
 		studiesCombobox.setVisible(true);
 		resetBtn.setVisible(true);
@@ -563,113 +521,49 @@ public class Specifications {
 			@ContextParam(ContextType.BIND_CONTEXT) BindContext bindContext,
 			@ContextParam(ContextType.VIEW) Component view) {
 		UploadEvent event = (UploadEvent) bindContext.getTriggerEvent();
-
+		// the from external file name
 		fileName = event.getMedia().getName();
-
 		if (!fileName.endsWith(".csv")) {
 			Messagebox.show("Error: File must be a text-based csv format",
 					"Upload Error", Messagebox.OK, Messagebox.ERROR);
 			return;
 		}
-
-		if (tempFile == null)
-			try {
-				tempFile = File.createTempFile(fileName, ".tmp");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
+		File tempFile = null;
+		try {
+			tempFile = File.createTempFile(fileName, ".tmp");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		InputStream in = event.getMedia().isBinary() ? event.getMedia()
 				.getStreamData() : new ReaderInputStream(event.getMedia()
-				.getReaderData());
+						.getReaderData());
 		FileUtilities.uploadFile(tempFile.getAbsolutePath(), in);
 		if (tempFile == null)
 			return;
 		BindUtils.postNotifyChange(null, null, this, "*");
-
-		// uploadedFile = FileUtilities.getFileFromUpload(bindContext, view);
-		uploadedFile = tempFile;
-		String filePath = userFileManager.uploadFileForAnalysis(fileName,
-				uploadedFile);
-
+		String filePath = userFileManager.uploadFileForAnalysis(fileName, tempFile);
+		uploadedFile = new File(filePath);
+		// set uploadedFileFolderPath
+		if(uploadedFileFolderPath != null)
+		{
+			uploadedFileFolderPath = null;
+			uploadedFileFolderPath = uploadedFile.getParent();
+		} else
+		{
+			uploadedFileFolderPath = uploadedFile.getParent();
+		}
 		isVariableDataVisible = true;
 		dataFileName = fileName;
-
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("filePath", filePath);
-		BindUtils.postGlobalCommand(null, null,
-				"setSSSLAnalysisModelListvariables", args);
-
-		// isVariableDataVisible = true;
-		// dataFileName = fileName;
-		refreshCsv();
-		if (this.isUpdateMode)
-			isNewDataSet = true;
-
+		BindUtils.postGlobalCommand(null, null,"setSSSLAnalysisModelListvariables", args);
+		refreshCsv(uploadedFile);
 		resetBtn.setVisible(true);
 		uploadCSVBtn.setVisible(false);
 		selectDataBtn.setVisible(false);
 	}
 
-	@Command("uploadContrastFromFile")
-	@NotifyChange("*")
-	public void uploadContrastFromFile(
-			@ContextParam(ContextType.BIND_CONTEXT) BindContext bindContext,
-			@ContextParam(ContextType.VIEW) Component view) {
 
-		UploadEvent event = (UploadEvent) bindContext.getTriggerEvent();
-
-		// contrastFileName = event.getMedia().getName();
-		// System.out.println("contrast file name " + contrastFileName);
-		// if (!contrastFileName.endsWith(".csv")) {
-		// Messagebox.show("Error: File must be a text-based csv format",
-		// "Upload Error", Messagebox.OK, Messagebox.ERROR);
-		// return;
-		// }
-		//
-		// if (tempContrastFile == null) {
-		// try {
-		// tempContrastFile = File
-		// .createTempFile(contrastFileName, ".tmp");
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-		// }
-
-		InputStream in = event.getMedia().isBinary() ? event.getMedia()
-				.getStreamData() : new ReaderInputStream(event.getMedia()
-				.getReaderData());
-		FileUtilities.uploadFile(tempContrastFile.getAbsolutePath(), in); // what
-																			// is
-																			// the
-																			// code
-																			// purpose?
-		BindUtils.postNotifyChange(null, null, this, "*");
-
-		uploadedContrastFile = FileUtilities.getFileFromUpload(bindContext,
-				view);
-		// String filePath = userFileManager.uploadFileForAnalysis(
-		// contrastFileName, uploadedContrastFile);
-
-		if (tempContrastFile == null)
-			return;
-
-		Map<String, Object> args = new HashMap<String, Object>();
-		// args.put("contrastFilePath", filePath);
-		BindUtils.postGlobalCommand(null, null,
-				"setSSSLAnalysisModelListvariables", args);
-
-		refreshContrastCSV();
-
-		// fileNameOfContrastLb.setVisible(true);
-		// contrastFromFileBtn.setVisible(false);
-		// contrastByManuallyBtn.setVisible(false);
-		// contrastResetBtn.setVisible(true);
-		// contrastByManuallyDiv.setVisible(false);
-
-	}
-	
 	@NotifyChange("*")
 	@Command("acrossEnvCBCheck")
 	public void acrossEnvCBCheck()
@@ -682,43 +576,56 @@ public class Specifications {
 	public void uploadContrastFromFileOnGenotype(
 			@ContextParam(ContextType.BIND_CONTEXT) BindContext bindContext,
 			@ContextParam(ContextType.VIEW) Component view) {
-		if (genotypeTB.getValue().length() == 0) {
-			Messagebox
-					.show("Error: Please fill up genotype factor on Model Specifications Tab!",
-							"Error", Messagebox.OK, Messagebox.ERROR);
+		//		the fileName is the file for analysis
+		if(fileName == null){
+			Messagebox.show("Please selected or uploaded raw data at frist!", "Error", Messagebox.OK, Messagebox.ERROR);
 			return;
 		}
+		if (genotypeTB.getValue().length() == 0) {
+			Messagebox
+			.show("Error: Please fill up genotype factor on Model Specifications Tab!",
+					"Error", Messagebox.OK, Messagebox.ERROR);
+			return;
+		}
+
 		// basing on whether user choose across env
 		Include inc = new Include();
 		inc.setParent(this.contrastGridOnGenotypeDiv);
+		HashMap<String, Object> args = new HashMap<String, Object>();
+		List<String> lstEnvNames = new ArrayList<String>();
 		if(isAcrossEnv)
-		{
-			inc.setDynamicProperty("TabNames", new String[]{"Across Env"});
+		{	
+			System.out.println("isAcrossEnv checked");
+			lstEnvNames.add("AcrossEnv");
+			args.put("EnvNames", lstEnvNames);
+			String [] genos = ssslRServeManager.getLevels(columnList, dataList, genotypeTB.getValue());
+			HashMap<String, List<String>> hmGenosOnEnv = new HashMap<String, List<String>>();
+			hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genos));
+			args.put("GenosOnEnv", hmGenosOnEnv);
 		} else
 		{
-			if(envTB.getValue() != null || envTB.getValue().length() != 0)
+			System.out.println("isAcrossEnv unchecked");
+			System.out.println("envTB value " + envTB.getValue());
+			if(!envTB.getValue().isEmpty())
 			{
-				inc.setDynamicProperty("TabNames", ssslRServeManager.getLevels(columnList, dataList, envTB.getValue()));
+				System.out.println("envTB setting");
+				args.put("EnvNames", Arrays.asList(environmentLevels));
+				args.put("GenosOnEnv", ssslRServeManager.getLevelsOnOtherLevels(columnList, dataList, genotypeTB.getValue(), envTB.getValue()));
+				
 			} else
 			{
-				inc.setDynamicProperty("TabNames", new String[]{"Across Env"});
+				System.out.println("envTB unsetting");
+				lstEnvNames.add("AcrossEnv");
+				args.put("EnvNames", lstEnvNames);
+				String [] genos = ssslRServeManager.getLevels(columnList, dataList, genotypeTB.getValue());
+				HashMap<String, List<String>> hmGenosOnEnv = new HashMap<String, List<String>>();
+				hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genos));
+				args.put("GenosOnEnv", hmGenosOnEnv);
 			}
-		}
+		}			
+		args.put("UploadedFileFolderPath", uploadedFileFolderPath);
+		inc.setDynamicProperty("Arguments", args);
 		inc.setSrc("/user/analysis/contrasttabbox.zul");
-//		UploadEvent event = (UploadEvent) bindContext.getTriggerEvent();
-//		this.contrastFileNameOnGenotype = event.getMedia().getName();
-//		if (!this.contrastFileNameOnGenotype.endsWith(".csv")) {
-//			Messagebox.show("Error: File must be a text-based csv format",
-//					"Upload Error", Messagebox.OK, Messagebox.ERROR);
-//			return;
-//		}
-//		this.uploadedContrastFileOnGenotype = FileUtilities.getFileFromUpload(
-//				bindContext, view);
-//		ssslAnalysisModel
-//				.setGenotypeContrastFile(this.uploadedContrastFileOnGenotype
-//						.getAbsolutePath());
-//		refreshContrastCSVOnGenotype();
-//		this.fileNameOfContrastOnGenotypeLb.setVisible(true);
 		this.contrastFromFileOnGenotypeBtn.setVisible(false);
 		this.acrossEnvCB.setVisible(false);
 		this.contrastByManuallyOnGenotypeBtn.setVisible(false);
@@ -733,23 +640,13 @@ public class Specifications {
 			@ContextParam(ContextType.VIEW) Component view) {
 		if (envTB.getValue().length() == 0) {
 			Messagebox
-					.show("Error, Please fill up environment factor on Model Specifications Tab",
-							"Error", Messagebox.OK, Messagebox.ERROR);
+			.show("Error, Please fill up environment factor on Model Specifications Tab",
+					"Error", Messagebox.OK, Messagebox.ERROR);
 			return;
 		}
+		//return now, implement later 
 		UploadEvent event = (UploadEvent) bindContext.getTriggerEvent();
-		this.contrastFileNameOnEnv = event.getMedia().getName();
-		if (!this.contrastFileNameOnEnv.endsWith(".csv")) {
-			Messagebox.show("Error: File must be a text-based csv format",
-					"Upload Error", Messagebox.OK, Messagebox.ERROR);
-			return;
-		}
-		this.uploadedContrastFileOnEnv = FileUtilities.getFileFromUpload(
-				bindContext, view);
-		ssslAnalysisModel.setEnvContrastFile(this.uploadedContrastFileOnEnv
-				.getAbsolutePath());
 		refreshContrastCSVOnEnv();
-		this.fileNameOfContrastOnEnvLb.setVisible(true);
 		this.contrastFromFileOnEnvBtn.setVisible(false);
 		this.contrastByManuallyOnEnvBtn.setVisible(false);
 		this.contrastByManuallyOnEnvDiv.setVisible(false);
@@ -877,29 +774,14 @@ public class Specifications {
 		}
 	}
 
-	@GlobalCommand
-	@NotifyChange("*")
-	public void isSpecifiedContrastCBChecked() {
-		// if (specifiedContrastCB.isChecked()) {
-		// System.out.println(contrastFromFileBtn.getUpload());
-		// specifiedContrastDiv.setVisible(false);
-		// specifiedContrastDiv.setVisible(true);
-		// contrastFromFileBtn.setDisabled(false);
-		// contrastByManuallyBtn.setDisabled(false);
-		// } else {
-		// specifiedContrastDiv.setVisible(false);
-		// contrastFromFileBtn.setDisabled(true);
-		// contrastByManuallyBtn.setDisabled(true);
-		// }
-	}
 
 	@Command("isCompareWithControlCBChecked")
 	@NotifyChange("*")
 	public void isCompareWithControlCBChecked() {
-		if (genotypeTB.getValue().length() == 0) {
+		if (genotypeTB.getValue().isEmpty()) {
 			Messagebox
-					.show("Error: Please fill up genotype factor on Model Specifications Tab!",
-							"Error", Messagebox.OK, Messagebox.ERROR);
+			.show("Error: Please fill up genotype factor on Model Specifications Tab!",
+					"Error", Messagebox.OK, Messagebox.ERROR);
 			compareWithControlCB.setChecked(false);
 			return;
 		}
@@ -917,8 +799,8 @@ public class Specifications {
 	public void manuallyInputContrastOnGenotype() {
 		if (genotypeTB.getValue().length() == 0) {
 			Messagebox
-					.show("Error: Please fill up genotype factor on Model Specifications Tab!",
-							"Error", Messagebox.OK, Messagebox.ERROR);
+			.show("Error: Please fill up genotype factor on Model Specifications Tab!",
+					"Error", Messagebox.OK, Messagebox.ERROR);
 			return;
 		}
 
@@ -956,7 +838,7 @@ public class Specifications {
 
 		contrastGridOnGenotypeDiv.appendChild(gridManuallyOnGenotype);
 
-//		fileNameOfContrastOnGenotypeLb.setVisible(false);
+		//		fileNameOfContrastOnGenotypeLb.setVisible(false);
 		contrastFromFileOnGenotypeBtn.setVisible(false);
 		contrastByManuallyOnGenotypeBtn.setVisible(false);
 		contrastResetOnGenotypeBtn.setVisible(true);
@@ -969,8 +851,8 @@ public class Specifications {
 	public void manuallyInputContrastOnEnv() {
 		if (envTB.getValue().length() == 0) {
 			Messagebox
-					.show("Error, Please fill up environment factor on Model Specifications Tab",
-							"Error", Messagebox.OK, Messagebox.ERROR);
+			.show("Error, Please fill up environment factor on Model Specifications Tab",
+					"Error", Messagebox.OK, Messagebox.ERROR);
 			return;
 		}
 		if (!this.contrastGridOnEnvDiv.getChildren().isEmpty()) {
@@ -1007,50 +889,20 @@ public class Specifications {
 
 		contrastGridOnEnvDiv.appendChild(gridManuallyOnEnv);
 
-		fileNameOfContrastOnEnvLb.setVisible(false);
 		contrastFromFileOnEnvBtn.setVisible(false);
 		contrastByManuallyOnEnvBtn.setVisible(false);
 		contrastResetOnEnvBtn.setVisible(true);
 		contrastByManuallyOnEnvDiv.setVisible(true);
 	}
 
-	@NotifyChange("*")
-	@Command("resetContrast")
-	public void resetContrast() {
-
-		System.out.println("contrastGridReUpload " + contrastGridReUploaded);
-		// System.out.println("contrad grid div children is "
-		// + contrastGridDiv.getChildren().isEmpty());
-
-		tempContrastFile = null;
-		contrastDataList.clear();
-		contrastColumnList.clear();
-		contrastGridReUploaded = false;
-
-		// if (!contrastGridDiv.getChildren().isEmpty())
-		// contrastGridDiv.getFirstChild().detach();
-		//
-		// fileNameOfContrastLb.setVisible(false);
-		// contrastFromFileBtn.setVisible(true);
-		// contrastByManuallyBtn.setVisible(true);
-		// contrastByManuallyDiv.setVisible(false);
-		// contrastResetBtn.setVisible(false);
-	}
 
 	@NotifyChange("*")
 	@Command("resetContrastOnGenotype")
 	public void resetContrastOnGenotype() {
-		contrastDataListOnGenotype.clear();
-		contrastColumnListOnGenotype.clear();
-		this.numberOfContrastOnGenotypeDS.setValue(0.0);
-		this.contrastFileNameOnGenotype = "";
-		this.uploadedContrastFileOnGenotype = null;
 		ssslAnalysisModel.setGenotypeContrastFile(null);
-
 		if (!this.contrastGridOnGenotypeDiv.getChildren().isEmpty())
 			this.contrastGridOnGenotypeDiv.getFirstChild().detach();
-
-//		this.fileNameOfContrastOnGenotypeLb.setVisible(false);
+		//		this.fileNameOfContrastOnGenotypeLb.setVisible(false);
 		this.contrastFromFileOnGenotypeBtn.setVisible(true);
 		this.acrossEnvCB.setVisible(true);
 		this.contrastByManuallyOnGenotypeBtn.setVisible(true);
@@ -1061,17 +913,11 @@ public class Specifications {
 	@NotifyChange("*")
 	@Command("resetContrastOnEnv")
 	public void resetContrastOnEnv() {
-		contrastDataListOnEnv.clear();
-		contrastColumnListOnEnv.clear();
-		this.numberOfContrastOnEnvDS.setValue(0.0);
-		this.contrastFileNameOnEnv = "";
-		this.uploadedContrastFileOnEnv = null;
 		ssslAnalysisModel.setGenotypeContrastFile(null);
 
 		if (!this.contrastGridOnEnvDiv.getChildren().isEmpty())
 			this.contrastGridOnEnvDiv.getFirstChild().detach();
 
-		this.fileNameOfContrastOnEnvLb.setVisible(false);
 		this.contrastFromFileOnEnvBtn.setVisible(true);
 		this.contrastByManuallyOnEnvBtn.setVisible(true);
 		this.contrastByManuallyOnEnvDiv.setVisible(false);
@@ -1080,52 +926,17 @@ public class Specifications {
 
 	@NotifyChange("*")
 	@Command("refreshCsv")
-	public void refreshCsv() {
-		activePage = 0;
+	public void refreshCsv(File dataFile) {
 		CSVReader reader;
 		reloadCsvGrid();
-
 		try {
-			reader = new CSVReader(new FileReader(tempFile.getAbsolutePath()));
+			reader = new CSVReader(new FileReader(dataFile.getAbsolutePath()));
 			List<String[]> rawData = reader.readAll();
 			columnList.clear();
 			dataList.clear();
 			columnList = new ArrayList<String>(Arrays.asList(rawData.get(0)));
 			rawData.remove(0);
 			dataList = new ArrayList<String[]>(rawData);
-			System.out.println(Arrays.toString(dataList.get(0)));
-			if (!this.isDataReUploaded)
-				System.out.println("gbUploadData.invalidate()");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@NotifyChange("*")
-	@Command("refreshContrastCSV")
-	public void refreshContrastCSV() {
-		CSVReader reader;
-		try {
-			reader = new CSVReader(new FileReader(
-					tempContrastFile.getAbsolutePath()));
-			List<String[]> rawData = reader.readAll();
-			contrastColumnList.clear();
-			contrastDataList.clear();
-			contrastColumnList = new ArrayList<String>(Arrays.asList(rawData
-					.get(0)));
-			rawData.remove(0);
-			contrastDataList = new ArrayList<String[]>(rawData);
-			System.out.println(Arrays.toString(contrastDataList.get(0)));
-			if (!this.isContrastDataReUploaded)
-				System.out.println("gbUploadData.invalidate() + on contrast");
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -1133,63 +944,30 @@ public class Specifications {
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
-		reloadContrastCSVGrid();
 	}
 
-	@NotifyChange("*")
-	@Command("refreshContrastCSVOnGenotype")
-	public void refreshContrastCSVOnGenotype() {
-		CSVReader reader;
-		try {
-			reader = new CSVReader(new FileReader(
-					this.uploadedContrastFileOnGenotype.getAbsolutePath()));
-			List<String[]> rawData = reader.readAll();
-			contrastColumnListOnGenotype.clear();
-			contrastDataListOnGenotype.clear();
-			contrastColumnListOnGenotype = new ArrayList<String>(
-					Arrays.asList(rawData.get(0)));
-			rawData.remove(0);
-			contrastDataListOnGenotype = new ArrayList<String[]>(rawData);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		reloadContrastCSVGridOnGenotype();
-	}
 
 	@NotifyChange("*")
 	@Command("refreshContrastCSVOnEnv")
 	public void refreshContrastCSVOnEnv() {
-		CSVReader reader;
-		try {
-			reader = new CSVReader(new FileReader(
-					this.uploadedContrastFileOnEnv.getAbsolutePath()));
-			List<String[]> rawData = reader.readAll();
-			contrastColumnListOnEnv.clear();
-			contrastDataListOnEnv.clear();
-			contrastColumnListOnEnv = new ArrayList<String>(
-					Arrays.asList(rawData.get(0)));
-			rawData.remove(0);
-			contrastDataListOnEnv = new ArrayList<String[]>(rawData);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		reloadContrastCSVGridOnEnv();
+		//return it now, implement later
+
 	}
 
 	@GlobalCommand("setSSSLAnalysisModelListvariables")
 	@NotifyChange("*")
 	public void setSSSLAnalysisModelListvariables(
 			@BindingParam("filePath") String filepath) {
-		// ...
+		System.out.println("filepath " + filepath);
 		ssslAnalysisModel.setDataFileName(filepath.replace("\\", "/"));
-		ssslRServeManager = new SSSLRserveManager();
 		lstVarInfo = ssslRServeManager.getVariableInfo(
 				filepath.replace("//", "/"), fileFormat, separator);
+		if(lstVarInfo == null || lstVarInfo.isEmpty())
+		{
+			Messagebox.show("There are problems on getting variables information.", 
+					"Error", Messagebox.OK, Messagebox.ERROR);
+			return;
+		}
 		setLstVarNames(AnalysisUtils.getVarNames(lstVarInfo));
 		numericModel = AnalysisUtils.getNumericAsListModel(lstVarInfo);
 		factorModel = AnalysisUtils.getFactorsAsListModel(lstVarInfo);
@@ -1227,11 +1005,7 @@ public class Specifications {
 	@NotifyChange("*")
 	@Command("updateContrastGridManually")
 	public void updataContrastGridManually() {
-		if (!contrastColumnList.isEmpty())
-			contrastColumnList.clear();
-		if (!contrastDataList.isEmpty())
-			contrastDataList.clear();
-
+		// not implement it now
 	}
 
 	@NotifyChange("*")
@@ -1360,21 +1134,27 @@ public class Specifications {
 						columnList, dataList, envTB.getValue());
 			}
 
-			// if (genotypeLevels.length != 0) {
-			// // do the something of compare to recurrent parent;
-			//
-			// }
-
 			imgButton.setSrc("/images/leftarrow_g.png");
 			return true;
 		} else if (!varTextBox.getValue().isEmpty()) {
 			factorModel.add(varTextBox.getValue());
 			varTextBox.setValue(null);
+			if(varTextBox.getId().equals("genotypeTB"))
+			{
+				genotypeLevels = null;
+				genotypeLevelsModel.clear();
+				compareWithControlCB.setChecked(false);
+				controlCBB.setDisabled(true);
+			}
+			if(varTextBox.getId().equals("envTB"))
+			{
+				environmentLevels = null;
+			}
 		}
 		imgButton.setSrc("/images/rightarrow_g.png");
 		return false;
 	}
-	
+
 	@Command("updateAMMIGraphicOptions")
 	@NotifyChange("*")
 	public void updateAMMIGraphicOptions(@BindingParam("status") boolean isChecked)
@@ -1387,7 +1167,7 @@ public class Specifications {
 			this.ammiGraphicOptionsDiv.setVisible(false);
 		}
 	}
-	
+
 	@Command("updateGGEGraphicOptions")
 	@NotifyChange("*")
 	public void updateGGEGraphicOptions(@BindingParam("status") boolean isChecked)
@@ -1397,7 +1177,7 @@ public class Specifications {
 		else
 			this.ggeGraphicOptionsDiv.setVisible(false);
 	}
-	
+
 	private boolean validateSSSLAanalysisModel() {
 		if (fileName == null) {
 			errorMessage = "No Raw Data Selected!";
@@ -1407,8 +1187,8 @@ public class Specifications {
 		System.out.println("File name is " + fileName.toString());
 		String folderPath = null;
 		if(analysisEnvType.equals("Single Environment"))
-			 folderPath = AnalysisUtils.createOutputFolder(
-				fileName.replaceAll(" ", ""), "ssslAnalysisSEA");
+			folderPath = AnalysisUtils.createOutputFolder(
+					fileName.replaceAll(" ", ""), "ssslAnalysisSEA");
 		else if(analysisEnvType.equals("Multi-Environment"))
 			folderPath = AnalysisUtils.createOutputFolder(
 					fileName.replaceAll(" ", ""), "ssslAnalysisMEA");
@@ -1420,38 +1200,7 @@ public class Specifications {
 		ssslAnalysisModel.setOutFileName(ssslAnalysisModel
 				.getResultFolderPath() + "SSSL_Analysis_Output.txt");
 
-		// Contrast File setting
-		if (this.uploadedContrastFileOnGenotype != null) {
-			if (contrastColumnListOnGenotype.size() != (this.genotypeLevels.length + 1)) {
-				errorMessage = "The uploaded file of genotype contrast coefficients is not same as genotype levels";
-				return false;
-			}
-			// File file = new
-			// File(ssslAnalysisModel.getGenotypeContrastFile());
-			// System.out.println("genotye contrast file is " +
-			// file.getAbsolutePath());
-			File newfile = userFileManager.copyUploadedFileToOutputFolder(
-					ssslAnalysisModel.getResultFolderPath(),
-					"GenotypeContrastCoefficients",
-					this.uploadedContrastFileOnGenotype);
-			ssslAnalysisModel
-					.setGenotypeContrastFile(newfile.getAbsolutePath());
-		}
 
-		if (this.uploadedContrastFileOnEnv != null) {
-			if (contrastColumnListOnEnv.size() != (this.environmentLevels.length + 1)) {
-				errorMessage = "The uploaded file of environment contrast coefficients is not same as environment levels";
-				return false;
-			}
-			// File file = new File(ssslAnalysisModel.getEnvContrastFile());
-			// System.out.println("environment contrast file is " +
-			// file.getAbsolutePath());
-			File newfile = userFileManager.copyUploadedFileToOutputFolder(
-					ssslAnalysisModel.getResultFolderPath(),
-					"EnvironmentContrastCoefficients",
-					this.uploadedContrastFileOnEnv);
-			ssslAnalysisModel.setEnvContrastFile(newfile.getAbsolutePath());
-		}
 
 		if (this.contrastByManuallyOnGenotypeDiv.isVisible()) {
 			Rows rows = this.gridManuallyOnGenotype.getRows();
@@ -1877,29 +1626,11 @@ public class Specifications {
 	}
 
 	public void reloadCsvGrid() {
-		if (gridReUploaded) {
-			gridReUploaded = false;
-			return;
-		}
 		if (!dataGridDiv.getChildren().isEmpty())
 			dataGridDiv.getFirstChild().detach();
 		Include incCSVData = new Include();
 		incCSVData.setSrc("/user/updatestudy/csvdata.zul");
 		incCSVData.setParent(dataGridDiv);
-		gridReUploaded = true;
-	}
-
-	public void reloadContrastCSVGrid() {
-		if (contrastGridReUploaded) {
-			contrastGridReUploaded = false;
-			return;
-		}
-		// if (!contrastGridDiv.getChildren().isEmpty())
-		// contrastGridDiv.getFirstChild().detach();
-		Include incContrastCSVData = new Include();
-		incContrastCSVData.setSrc("/user/analysis/sssl/contrast.zul");
-		// incContrastCSVData.setParent(contrastGridDiv);
-		contrastGridReUploaded = true;
 	}
 
 	public void reloadContrastCSVGridOnGenotype() {
@@ -1907,7 +1638,7 @@ public class Specifications {
 			contrastGridOnGenotypeDiv.getFirstChild().detach();
 		Include incContrastCSVDataOnGenotype = new Include();
 		incContrastCSVDataOnGenotype
-				.setSrc("/user/analysis/sssl/contrastongenotype.zul");
+		.setSrc("/user/analysis/sssl/contrastongenotype.zul");
 		incContrastCSVDataOnGenotype.setParent(contrastGridOnGenotypeDiv);
 	}
 
@@ -1919,43 +1650,6 @@ public class Specifications {
 		incContrastCSVDataOnEnv.setParent(contrastGridOnEnvDiv);
 	}
 
-	public ArrayList<ArrayList<String>> getCsvData() {
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-		if (dataList.isEmpty())
-			return result;
-		for (int i = activePage * pageSize; i < activePage * pageSize
-				+ pageSize
-				&& i < dataList.size(); i++) {
-			ArrayList<String> row = new ArrayList<String>();
-			row.addAll(Arrays.asList(dataList.get(i)));
-			result.add(row);
-			row.add(0, "  ");
-			System.out.println("on row " + i + " data is "
-					+ Arrays.toString(dataList.get(i)) + "ROW: " + row.get(0));
-		}
-		return result;
-	}
-
-	public ArrayList<ArrayList<String>> getContrastCSVData() {
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-		if (contrastDataList.isEmpty())
-			return result;
-		for (int i = 0; i < contrastDataList.size(); i++) {
-			ArrayList<String> row = new ArrayList<String>();
-			row.addAll(Arrays.asList(contrastDataList.get(i)));
-			result.add(row);
-			row.add(0, "  "); // what is this purpose?
-			System.out.println("On contrast row " + i + " , data is "
-					+ Arrays.toString(contrastDataList.get(i)) + " ROW: "
-					+ row.get(0));
-		}
-		return result;
-	}
-
-	public int getTotalSize() {
-		System.out.println("dataList size is " + dataList.size());
-		return dataList.size();
-	}
 
 	public Study getSelectedStudy() {
 		return selectedStudy;
@@ -2066,113 +1760,12 @@ public class Specifications {
 		this.columnList = columnList;
 	}
 
-	public List<String> getContrastColumnList() {
-		return contrastColumnList;
-	}
-
-	public void setContrastColumnList(List<String> contrastColumnList) {
-		this.contrastColumnList = contrastColumnList;
-	}
-
 	public List<String[]> getDataList() {
-		System.out.println("DaALIST GEt");
-		reloadCsvGrid();
-		if (true)
-			return dataList;
-		ArrayList<String[]> pageData = new ArrayList<String[]>();
-		for (int i = activePage * pageSize; i < activePage * pageSize
-				+ pageSize; i++) {
-			pageData.add(dataList.get(i));
-			System.out.println(Arrays.toString(dataList.get(i)));
-		}
-
-		return pageData;
+		return dataList;
 	}
 
 	public void setDataList(List<String[]> dataList) {
 		this.dataList = dataList;
-	}
-
-	public List<List> getContrastDataList() {
-		// public List<String[]> getContrastDataList() {
-		System.out.println("Contrast Data Get");
-		// reloadContrastCSVGrid();
-		// if (true)
-		// return contrastDataList;
-		/*
-		 * ArrayList<String[]> pageData = new ArrayList<String[]>(); for (int i
-		 * = activePage * pageSize; i < activePage * pageSize + pageSize; i++) {
-		 * pageData.add(dataList.get(i));
-		 * System.out.println(Arrays.toString(dataList.get(i))); }
-		 * 
-		 * return pageData;
-		 */
-		ArrayList<List> outer = new ArrayList<List>();
-		for (int i = 0; i < contrastDataList.size(); i++) {
-			String[] temp = contrastDataList.get(i);
-			// System.out.println("Row " + i + " on contrast data list : " +
-			// temp);
-			ArrayList<String> inner = new ArrayList<String>();
-			for (int j = 0; j < temp.length; j++) {
-				// System.out.println(temp[j]);
-				inner.add(temp[j]);
-			}
-			outer.add(inner);
-		}
-		// System.out.println("Outer size " + outer.size());
-		// return contrastDataList;
-		return outer;
-	}
-
-	public void setContrastDataList(List<String[]> contrastDataList) {
-		this.contrastDataList = contrastDataList;
-	}
-
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	@NotifyChange("*")
-	public void setPageSize(int pageSize) {
-		System.out.println("pagesize " + pageSize);
-		this.pageSize = pageSize;
-	}
-
-	@NotifyChange("*")
-	public int getActivePage() {
-
-		return activePage;
-	}
-
-	@NotifyChange("*")
-	public void setActivePage(int activePage) {
-		System.out.println("activePage" + activePage);
-		reloadCsvGrid();
-		this.activePage = activePage;
-	}
-
-	public boolean isDataReUploaded() {
-		return isDataReUploaded;
-	}
-
-	public void setDataReUploaded(boolean isDataReUploaded) {
-		this.isDataReUploaded = isDataReUploaded;
-	}
-
-	public boolean isGridReUploaded() {
-		return gridReUploaded;
-	}
-
-	public void setGridReUploaded(boolean gridReUploaded) {
-		this.gridReUploaded = gridReUploaded;
-	}
-
-	public File getTempFile() {
-		return tempFile;
-	}
-
-	public void setTempFile(File tempFile) {
-		this.tempFile = tempFile;
 	}
 
 	public File getUploadedFile() {
@@ -2191,22 +1784,6 @@ public class Specifications {
 		this.fileName = fileName;
 	}
 
-	public String getContrastFileNameOnGenotype() {
-		return contrastFileNameOnGenotype;
-	}
-
-	public void setContrastFileNameOnGenotype(String contrastFileNameOnGenotype) {
-		this.contrastFileNameOnGenotype = contrastFileNameOnGenotype;
-	}
-
-	public String getContrastFileNameOnEnv() {
-		return contrastFileNameOnEnv;
-	}
-
-	public void setContrastFileNameOnEnv(String contrastFileNameOnEnv) {
-		this.contrastFileNameOnEnv = contrastFileNameOnEnv;
-	}
-
 	public String getDesignType() {
 		return designType;
 	}
@@ -2221,40 +1798,6 @@ public class Specifications {
 
 	public void setAnalysisEnvType(String analysisEnvType) {
 		this.analysisEnvType = analysisEnvType;
-	}
-
-	public List<String> getContrastColumnListOnGenotype() {
-		return contrastColumnListOnGenotype;
-	}
-
-	public void setContrastColumnListOnGenotype(
-			List<String> contrastColumnListOnGenotype) {
-		this.contrastColumnListOnGenotype = contrastColumnListOnGenotype;
-	}
-
-	public List<String[]> getContrastDataListOnGenotype() {
-		return contrastDataListOnGenotype;
-	}
-
-	public void setContrastDataListOnGenotype(
-			List<String[]> contrastDataListOnGenotype) {
-		this.contrastDataListOnGenotype = contrastDataListOnGenotype;
-	}
-
-	public List<String> getContrastColumnListOnEnv() {
-		return contrastColumnListOnEnv;
-	}
-
-	public void setContrastColumnListOnEnv(List<String> contrastColumnListOnEnv) {
-		this.contrastColumnListOnEnv = contrastColumnListOnEnv;
-	}
-
-	public List<String[]> getContrastDataListOnEnv() {
-		return contrastDataListOnEnv;
-	}
-
-	public void setContrastDataListOnEnv(List<String[]> contrastDataListOnEnv) {
-		this.contrastDataListOnEnv = contrastDataListOnEnv;
 	}
 
 	public Double getAlphalevel() {
