@@ -1,11 +1,18 @@
 package org.strasa.web.utilities;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.input.ReaderInputStream;
 import org.strasa.middleware.filesystem.manager.UserFileManager;
@@ -204,5 +211,75 @@ public class FileUtilities {
 		}
 		return new File(filePath);
 	}
-
+	
+	public static boolean buildZip(String sourcePath, String destPath, String fileName)
+	{
+		boolean flag = false;
+		File sourceFile = new File(sourcePath);
+		FileInputStream fis = null;
+		BufferedInputStream bis = null;
+		FileOutputStream fos = null;
+		ZipOutputStream zos = null;
+		if(fileName.endsWith(".zip"))
+			fileName = fileName.replaceAll(".zip", "");
+		if(!sourceFile.exists())
+		{
+			System.out.println("The source path " + sourcePath + " does not exist!");
+		} else
+		{
+			try{
+				File zipFile = new File(destPath + File.separator + fileName + ".zip");
+				if(zipFile.exists())
+				{
+					System.out.println("The destination path " + destPath + 
+							" have this " + fileName + ".zip");
+				} else
+				{
+					File[] sourceFiles = sourceFile.listFiles();
+					if(sourceFiles == null || sourceFiles.length == 0)
+					{
+						System.out.println("The source path " + sourcePath + 
+								" does not have any files.");
+					} else
+					{
+						fos = new FileOutputStream(zipFile);
+						zos = new ZipOutputStream(new BufferedOutputStream(fos));
+						byte[] bufs = new byte[1024 * 10];
+						for(File file : sourceFiles)
+						{
+							// creat zip's entry and put it into zip package
+							ZipEntry zipEntry = new ZipEntry(file.getName());
+							zos.putNextEntry(zipEntry);
+							fis = new FileInputStream(file);
+							bis = new BufferedInputStream(fis, 1024*10);
+							int read = 0;
+							while((read=bis.read(bufs, 0, 1024*10)) != -1)
+							{
+								zos.write(bufs,0,read);
+							}
+						}
+						flag = true;
+					}
+				}
+			} catch(FileNotFoundException e)
+			{
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally
+			{
+				try{
+					if(bis != null)
+						bis.close();
+					if(zos != null)
+						zos.close();
+				} catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		return flag;
+	}
 }

@@ -64,14 +64,17 @@ public class ResultViewer {
 	private static String RESULT_ANALYSIS_PATH = FILE_SEPARATOR
 			+ "resultanalysis" + FILE_SEPARATOR + SecurityUtil.getUserName()
 			+ FILE_SEPARATOR + "Single-Site" + FILE_SEPARATOR;
+	private String outputFolderPath;
 
 	@AfterCompose
-	public void init(
+	public void afterCompose(
 			@ContextParam(ContextType.COMPONENT) final Component component,
 			@ContextParam(ContextType.VIEW) Component view,
 			@ExecutionArgParam("OutputFolderPath") String outputFolderPath) {
 		StringBuilder sb = new StringBuilder();
-
+		if(outputFolderPath == null)
+			return;
+		this.outputFolderPath = outputFolderPath;
 		// outputTextViewer
 		File outputFolder = new File(outputFolderPath);
 		if (outputFolder.isDirectory()) {
@@ -259,14 +262,65 @@ public class ResultViewer {
 	@Command("save")
 	public void save()
 	{
-		Messagebox.show("Not implement now");
-		return;
-		//Filedownload fd = new Filedownload();
+		if(outputFolderPath == null)
+		{
+			showMessage("The output folder is null!");
+			return;
+		}
+		File outputFolder = new File(outputFolderPath);
+		if(outputFolder.exists()){
+			if(outputFolder.isDirectory())
+			{
+				//checking whether there is an zip file 
+				File [] files = outputFolder.listFiles();
+				boolean isZipExist = false;
+				File zipFile = null;
+				for(File file : files)
+				{
+					if(file.getName().endsWith(".zip"))
+					{ 
+						isZipExist = true;
+						zipFile = file;
+						break;
+					}
+				}
+				if(isZipExist)
+				{
+					try {
+						Filedownload.save(zipFile, ".zip");
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				} else
+				{
+					FileUtilities.buildZip(outputFolderPath, outputFolderPath, "Outcomes");
+					zipFile = new File(outputFolderPath + File.separator + "Outcomes.zip");
+					try {
+						Filedownload.save(zipFile, ".zip");
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+			} else
+			{
+				showMessage("The output folder is not a folder!");
+				return;
+			}
+		}else
+		{
+			showMessage("Could not find the output folder!");
+			return;
+		}
 	}
 
 	private void detach(Tabpanel tabanel, Tab tab) {
 		// TODO Auto-generated method stub
 		tabanel.detach();
 		tab.detach();
+	}
+
+	private void showMessage(String message)
+	{
+		Messagebox.show(message, "Warning", Messagebox.OK, Messagebox.INFORMATION);
 	}
 }
