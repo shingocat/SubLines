@@ -13,28 +13,33 @@ import org.zkoss.zul.Image;
 
 public class ImageViewer {
 	
-	String imageName;
 	Image image;
+	String name;
+	String filePath;
+	String height;
+	String width;
+	
 	@AfterCompose
 	public void afterComposer(@ContextParam(ContextType.COMPONENT) final Component component,
 			@ContextParam(ContextType.VIEW) Component view,
-			@ExecutionArgParam("filepath") String filepath,
-			@ExecutionArgParam("height") String height,
-			@ExecutionArgParam("width") String width,
-			@ExecutionArgParam("name") String name
+			@ExecutionArgParam("FilePath") String filePath,
+			@ExecutionArgParam("Height") String height,
+			@ExecutionArgParam("Width") String width,
+			@ExecutionArgParam("Name") String name
 			)
 	{
-		if(filepath == null)
+		if(filePath == null)
 			return;
-		System.out.println("filepath : " + filepath);
-		System.out.println("height : " + height);
-		System.out.println("width : " + width);
-		System.out.println("name : " + name);
 		//wire image component;
 		image = (Image) component.getFellow("image");
+		this.filePath = filePath;
+		this.height = height;
+		this.width = width;
+		this.name = name;
+		
 		AImage content = null;
 		try {
-			content = new AImage(Executions.getCurrent().getDesktop().getWebApp().getResource(filepath));
+			content = new AImage(Executions.getCurrent().getDesktop().getWebApp().getResource(filePath));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,15 +49,39 @@ public class ImageViewer {
 		image.setWidth(width);
 		image.setVisible(true);
 		
-		this.setImageName(name);
+		this.setName(name);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getHeight() {
+		return height;
+	}
+
+	public void setHeight(String height) {
+		this.height = height;
+	}
+
+	public String getWidth() {
+		return width;
+	}
+
+	public void setWidth(String width) {
+		this.width = width;
 	}
 	
-	public String getImageName()
-	{
-		return imageName;
-	}
-	public void setImageName(String imageName)
-	{
-		this.imageName = imageName;
-	}
 }

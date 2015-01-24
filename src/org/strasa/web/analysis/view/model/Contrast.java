@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.input.ReaderInputStream;
 import org.strasa.middleware.filesystem.manager.UserFileManager;
@@ -53,9 +54,10 @@ public class Contrast {
 	String filename = null;
 	File file = null;
 	File tempFile = null;
-	String envname = null;
+	String factor = null;
+	String levelName = null;
 	String uploadedFileFolderPath = null;
-	List<String> genosOnEnv = null;
+	List<String> levels = null;
 	UserFileManager userFileManager = null;
 	
 	@SuppressWarnings("unchecked")
@@ -66,19 +68,19 @@ public class Contrast {
 			)
 	{
 		Selectors.wireComponents(component, this, false);
-		if(args.containsKey("EnvName"))
-			envname = (String) args.get("EnvName");
+		if(args.containsKey("LevelName"))
+			levelName = (String) args.get("LevelName");
 		if(args.containsKey("UploadedFileFolderPath"))
 			uploadedFileFolderPath = (String) args.get("UploadedFileFolderPath");
-		if(args.containsKey("GenosOnEnv"))
-			genosOnEnv = (List<String>) args.get("GenosOnEnv");
+		if(args.containsKey("Levels"))
+			levels = (List<String>) args.get("Levels");
+		if(args.containsKey("Factor"))
+			factor = (String) args.get("Factor");
 		fileNameLB = (Label) component.getFellow("fileNameLB");
 		uploadBtn = (Button) component.getFellow("uploadBtn");
 		resetBtn = (Button) component.getFellow("resetBtn");
 		dataGridDiv = (Div) component.getFellow("dataGridDiv");
 		dataGrid = (Grid) component.getFellow("dataGrid");
-//		rows = (Rows) component.getFellow("rows");
-//		columns = (Columns) component.getFellow("columns");
 	}
 
 	@NotifyChange("*")
@@ -90,39 +92,31 @@ public class Contrast {
 		String name = event.getMedia().getName();
 		if(!name.endsWith(".csv"))
 		{
-			Messagebox.show("Error: File must be a text-based csv format", "Upload Error", Messagebox.OK, Messagebox.ERROR);
+			showMessage("File must be a text-based csv format!");
 			return;
 		}
 		// read all the content of upload to a new temp file
-//		tempFile = FileUtilities.getFileFromUpload(bind, view);
-		if(tempFile == null)
-		{
-			try{
-				tempFile = File.createTempFile(name, ".tmp");
-			} catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		InputStream in = event.getMedia().isBinary() ? event.getMedia().getStreamData() : 
-			new ReaderInputStream(event.getMedia().getReaderData());
-		FileUtilities.uploadFile(tempFile.getAbsolutePath(), in);
+		tempFile = FileUtilities.getFileFromUpload(bind, view);
 		if(tempFile == null)
 			return;
-//		refreshDataGridDiv();
 		if(!refreshCSVData())
 			return;
 		buildGrid();
 		BindUtils.postNotifyChange(null, null, this, "*");
-//		refreshDataGridDiv();
 
-//		userFileManager = new UserFileManager();
-//		String filepath = userFileManager.uploadContrastFileForAnalysis(name, tempFile, uploadedFileFolderPath, envname);
-//		file = new File(filepath);
+		userFileManager = new UserFileManager();
+		String filepath = userFileManager.uploadContrastFileForAnalysis(name, tempFile, 
+				uploadedFileFolderPath, levelName + "_" + factor);
+		file = new File(filepath);
 		setFilename(name);
 		fileNameLB.setVisible(true);
 		uploadBtn.setVisible(false);
 		resetBtn.setVisible(true);
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("Name", levelName);
+		args.put("FilePath", filepath);
+		args.put("Factor", factor);
+		BindUtils.postGlobalCommand(null, null, "getUploadedContrastFiles", args);
 	}
 
 	@NotifyChange("*")
@@ -141,8 +135,12 @@ public class Contrast {
 		this.fileNameLB.setVisible(false);
 		this.uploadBtn.setVisible(true);
 		this.resetBtn.setVisible(false);
-//		if(!dataGridDiv.getChildren().isEmpty())
-//			dataGridDiv.getFirstChild().detach();
+		file.delete();
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("Name", levelName);
+		args.put("FilePath", null);
+		args.put("Factor", factor);
+		BindUtils.postGlobalCommand(null, null, "getUploadedContrastFiles", args);
 	}
 
 	@NotifyChange("*")
@@ -158,8 +156,7 @@ public class Contrast {
 			columnList = new ArrayList<String>(Arrays.asList(rawData.get(0)));
 			if(!validateColumnList())
 			{
-				Messagebox.show("The upload contrast genotype name do not match the raw data!",
-						"Error", Messagebox.OK, Messagebox.ERROR);
+				showMessage("The header of uploaded contrast file do not match " + factor + " levels!");
 				return false;
 			}
 			rawData.remove(0);
@@ -207,21 +204,12 @@ public class Contrast {
 		dataGrid.appendChild(rows);
 		dataGrid.setSizedByContent(true);
 	}
-	//hard coding for grid displaing contrast
-	public void refreshDataGridDiv()
-	{
-		if(!dataGridDiv.getChildren().isEmpty())
-			dataGridDiv.getFirstChild().detach();
-		Include inc = new Include();
-		inc.setSrc("/user/analysis/contrastgrid.zul");
-		dataGridDiv.appendChild(inc);
-	}
 	
 	public boolean validateColumnList()
 	{
-		if(columnList.size() != genosOnEnv.size() + 1)
+		if(columnList.size() != levels.size() + 1)
 			return false;
-		for(String s : genosOnEnv)
+		for(String s : levels)
 		{
 			if(!columnList.contains(s))
 				return false;
@@ -256,5 +244,10 @@ public class Contrast {
 	public List<String> getColumnList()
 	{
 		return this.columnList;
+	}
+	
+	public void showMessage(String message)
+	{
+		Messagebox.show(message, "Warnings", Messagebox.OK, Messagebox.INFORMATION);
 	}
 }

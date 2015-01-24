@@ -28,10 +28,9 @@ public class ContrastTabbox {
 		tabbox = (Tabbox) component.getFellow("tabbox");
 		tabs = (Tabs) component.getFellow("tabs");
 		tabpanels = (Tabpanels) component.getFellow("tabpanels");
-		if(args.containsKey("EnvNames"))
+		if(args.containsKey("LevelNames"))
 		{
-			List<String> tabnames = (List<String>) args.get("EnvNames");
-			System.out.println("Tabnames " + tabnames);
+			List<String> tabnames = (List<String>) args.get("LevelNames");
 			for(String s : tabnames)
 			{
 				//setting tab
@@ -43,11 +42,15 @@ public class ContrastTabbox {
 				tabpanel.setHeight("350px");
 				Include inc = new Include();
 				HashMap<String, Object> pasedArgs = new HashMap<String, Object>();
-				pasedArgs.put("EnvName", s);
+				pasedArgs.put("LevelName", s);
 				pasedArgs.put("UploadedFileFolderPath", args.get("UploadedFileFolderPath"));
-				pasedArgs.put("GenosOnEnv", ((HashMap<String, List<String>>)args.get("GenosOnEnv")).get(s));
+				pasedArgs.put("Levels", ((HashMap<String, List<String>>)args.get("Levels")).get(s));
+				pasedArgs.put("Factor", args.get("Factor"));
 				inc.setDynamicProperty("Arguments", pasedArgs);
-				inc.setSrc("/user/analysis/contrast.zul");
+				if(args.get("Type") ==  "File")
+					inc.setSrc("/user/analysis/contrast.zul");
+				else
+					inc.setSrc("/user/analysis/contrastmanually.zul");
 				inc.setParent(tabpanel);
 				tabpanels.appendChild(tabpanel);
 			}

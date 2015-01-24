@@ -20,6 +20,7 @@ import org.strasa.web.analysis.view.model.SingleSiteAnalysisModel;
 import org.strasa.web.utilities.FileUtilities;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
@@ -32,8 +33,11 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Div;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Groupbox;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Include;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Separator;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
@@ -53,6 +57,8 @@ public class ResultViewer {
 			.getProperty("file.separator");
 	private static final String IMAGE_THUMBNAIL_HEIGHT = "150px";
 	private static final String IMAGE_THUMBNAIL_WIDTH = "150px";
+	private static final String TXT_THUMBNAIL_HEIGHT = "150px";
+	private static final String TXT_THUMBNAIL_WIDTH = "150px";
 	private static final String IMAGE_HEIGHT = "480px";
 	private static final String IMAGE_WIDTH = "480px";
 	private static String RESULT_ANALYSIS_PATH = FILE_SEPARATOR
@@ -63,9 +69,8 @@ public class ResultViewer {
 	public void init(
 			@ContextParam(ContextType.COMPONENT) final Component component,
 			@ContextParam(ContextType.VIEW) Component view,
-			@ExecutionArgParam("outputFolderPath") String outputFolderPath) {
+			@ExecutionArgParam("OutputFolderPath") String outputFolderPath) {
 		StringBuilder sb = new StringBuilder();
-		System.out.println("Result Analysis OutputFolder: " + outputFolderPath);
 
 		// outputTextViewer
 		File outputFolder = new File(outputFolderPath);
@@ -73,55 +78,42 @@ public class ResultViewer {
 			// System.out.println("folder: " + outputFolderPath);
 			String[] files = outputFolder.list();
 			for (String file : files) {
-				System.out.println("Display file name: " + file);
+				final String path = (outputFolder + File.separator + file).replace(StringConstants.BSLASH, StringConstants.FSLASH);
+				final String name = new File(path).getName();
+				String [] tempPath = path.split(StringConstants.FSLASH);
+				String temp = path.substring(path.indexOf("resultanalysis"));
+				final String relativePath = StringConstants.FSLASH + StringConstants.FSLASH + 
+						temp.toString().replace(StringConstants.BSLASH, StringConstants.FSLASH);
 				if (file.endsWith(".txt")) {
-					System.out.println("Display txt file: " + file);
-					Tabpanel txtResultPanel = (Tabpanel) component
-							.getFellow("txtResultTab");
-					File fileToCreate = new File(outputFolderPath + file);
-					byte[] buffer = new byte[(int) fileToCreate.length()];
-					FileInputStream fs;
-					try {
-						fs = new FileInputStream(fileToCreate);
-						fs.read(buffer);
-						fs.close();
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					Div div = (Div) component.getFellow("txtResultDiv");
+					final Groupbox gb = new Groupbox();
+					gb.setTitle(file.replaceAll(".csv", "").replaceAll(".txt", ""));
+					gb.setHeight(TXT_THUMBNAIL_HEIGHT);
+					gb.setWidth(TXT_THUMBNAIL_WIDTH);
+					gb.setClosable(false);
+					gb.addEventListener(Events.ON_CLICK, 
+							new EventListener<Event>(){
+						@Override
+						public void onEvent(Event event)
+								throws Exception {
+							viewTxtContent(name.replaceAll(".txt", ""), relativePath, component);
+						}
+					});
+					Div inc = new Div();
+					inc.setHflex("1");
+					inc.setVflex("1");
+					Image icon = new Image();
+					icon.setSrc("/images/TXT128.png");
+					icon.setParent(inc);
+					inc.setParent(gb);
 
-					ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-					AMedia fileContent = new AMedia("report", "text",
-							"text/plain", is);
-					Include studyInformationPage = new Include();
-					studyInformationPage.setParent(txtResultPanel);
-					studyInformationPage.setDynamicProperty("txtFile",
-							fileContent);
-					studyInformationPage.setSrc("/user/analysis/txtviewer.zul");
+					div.appendChild(gb);
+					Separator sep = new Separator();
+					sep.setHeight("30px");
+					div.appendChild(sep);
 					sb.append("txt");
-				}
-				if (file.endsWith(".png")) {
-					System.out.println("Display image:" + file);
+				} else if (file.endsWith(".png")) {
 					Div div = (Div) component.getFellow("graphResultDiv");
-					// final String path =
-					// RESULT_ANALYSIS_PATH+outputFolder.getName()+"/"+file;
-					final String path = (outputFolderPath + file).replace(
-							StringConstants.BSLASH, StringConstants.FSLASH);
-					String [] tempPath = path.split(StringConstants.FSLASH);
-					String temp = path.substring(path.indexOf("resultanalysis"));
-
-//					for(int  s : tempPath)
-//					{
-//						if(s.equalsIgnoreCase("resultanalysis")){
-//							temp = path
-//						}
-//					}
-					final String imageRelativePath = StringConstants.FSLASH + StringConstants.FSLASH + 
-							temp.toString().replace(StringConstants.BSLASH, StringConstants.FSLASH);
-//					System.out.println("Image relative path is " + imageRelativePath);
 					final Groupbox newGroupBox = new Groupbox();
 					// newGroupBox.setStyle("overflow: auto");
 					newGroupBox.setTitle(file.replaceAll(".csv", ""));
@@ -131,142 +123,73 @@ public class ResultViewer {
 
 					newGroupBox.addEventListener(Events.ON_CLICK,
 							new EventListener<Event>() {
-								@Override
-								public void onEvent(Event event)
-										throws Exception {
-									// zoomImage(path.replaceAll("\\\\", "//"),
-									// component);
-									zoomImage(imageRelativePath, component);
-								}
-							});
+						@Override
+						public void onEvent(Event event)
+								throws Exception {
+							zoomImage(name.replaceAll(".png", ""), relativePath, component);
+						}
+					});
 
 					Include studyInformationPage = new Include();
-					studyInformationPage.setDynamicProperty("height",
+					studyInformationPage.setDynamicProperty("Height",
 							IMAGE_THUMBNAIL_HEIGHT);
-					studyInformationPage.setDynamicProperty("width",
+					studyInformationPage.setDynamicProperty("Width",
 							IMAGE_THUMBNAIL_WIDTH);
-					studyInformationPage.setDynamicProperty("filepath", imageRelativePath);
+					studyInformationPage.setDynamicProperty("FilePath", relativePath);
 					studyInformationPage.setSrc("/user/analysis/imgviewer.zul");
 					studyInformationPage.setParent(newGroupBox);
-//					System.out.println("imgPath " + path);
 
 					div.appendChild(newGroupBox);
 					Separator sep = new Separator();
 					sep.setHeight("30px");
 					div.appendChild(sep);
 					sb.append(".png");
-				}
-				if (file.endsWith(".csv") && !file.contains("(dataset)")) {
-					System.out.println("display csv:" + outputFolderPath
-							+ file);
-					Tabpanel tabPanel = (Tabpanel) component
-							.getFellow("csvResultTab");
+				} else if (file.endsWith(".csv") && !file.contains("(Dataset)")) {
+					Div div = (Div) component.getFellow("csvResultDiv");
+					final Groupbox gb = new Groupbox();
+					gb.setTitle(file.replaceAll(".csv", "").replaceAll(".txt", ""));
+					gb.setHeight(TXT_THUMBNAIL_HEIGHT);
+					gb.setWidth(TXT_THUMBNAIL_WIDTH);
+					gb.setClosable(false);
+					gb.addEventListener(Events.ON_CLICK, 
+							new EventListener<Event>(){
+						@Override
+						public void onEvent(Event event)
+								throws Exception {
+							viewCsvContent(name.replaceAll(".csv", ""),relativePath, component);
+						}
+					});
+					Div inc = new Div();
+					inc.setHflex("1");
+					inc.setVflex("1");
+					Image icon = new Image();
+					icon.setSrc("/images/CSV128.png");
+					icon.setParent(inc);
+					inc.setParent(gb);
 
-					Groupbox newGroupBox = new Groupbox();
-					// newGroupBox.setStyle("overflow: auto");
-					newGroupBox.setTitle(file.replaceAll(".csv", ""));
-					newGroupBox.setMold("3d");
-					newGroupBox.setHeight("500px");
-					String path = outputFolderPath + file;
-					File fileToCreate = new File(path);
+					div.appendChild(gb);
+					Separator sep = new Separator();
+					sep.setHeight("30px");
+					div.appendChild(sep);
+					sb.append("csv");
 
-					byte[] buffer = new byte[(int) fileToCreate.length()];
-					FileInputStream fs;
-					try {
-						fs = new FileInputStream(fileToCreate);
-						fs.read(buffer);
-						fs.close();
-						tempFile = File.createTempFile("csvdata", ".tmp");
-						ByteArrayInputStream is = new ByteArrayInputStream(
-								buffer);
-						fileContent = new AMedia("report", "text",
-								"text/plain", is);
-						InputStream in = fileContent.isBinary() ? fileContent
-								.getStreamData() : new ReaderInputStream(
-								fileContent.getReaderData());
-						FileUtilities
-								.uploadFile(tempFile.getAbsolutePath(), in);
-
-						CSVReader reader = new CSVReader(new FileReader(
-								tempFile.getAbsolutePath()));
-						Include studyInformationPage = new Include();
-						studyInformationPage.setDynamicProperty("csvReader",
-								reader);
-						studyInformationPage.setDynamicProperty("name",
-								file.replaceAll(".csv", ""));
-						studyInformationPage
-								.setSrc("/user/analysis/csvviewer.zul");
-
-						studyInformationPage.setParent(newGroupBox);
-						tabPanel.appendChild(newGroupBox);
-
-						Separator sep = new Separator();
-						sep.setHeight("20px");
-						tabPanel.appendChild(sep);
-						sb.append("csv");
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					// treeTabs.appendChild(newTab);
-				}
-				if (file.endsWith("(dataset).csv")) {
-					System.out.println("display dataset:" + outputFolderPath
-							+ file);
+				} else if (file.endsWith("(Dataset).csv")) {
 					Tabpanel tabPanel = (Tabpanel) component
 							.getFellow("dataSetTab");
-
 					Groupbox newGroupBox = new Groupbox();
 					newGroupBox.setTitle(file.replaceAll(".csv", ""));
 					newGroupBox.setMold("3d");
 					newGroupBox.setHeight("500px");
-					String path = outputFolderPath + file;
-					File fileToCreate = new File(path);
+					Include inc = new Include();
+					inc.setDynamicProperty("FilePath",relativePath);
+					inc.setDynamicProperty("Name",name.replaceAll(".csv", ""));
+					inc.setSrc("/user/analysis/csvviewer.zul");
+					inc.setParent(newGroupBox);
+					tabPanel.appendChild(newGroupBox);
+					Separator sep = new Separator();
+					sep.setHeight("20px");
+					tabPanel.appendChild(sep);
 
-					byte[] buffer = new byte[(int) fileToCreate.length()];
-					FileInputStream fs;
-					try {
-						fs = new FileInputStream(fileToCreate);
-						fs.read(buffer);
-						fs.close();
-						tempFile = File.createTempFile("csvdata", ".tmp");
-						ByteArrayInputStream is = new ByteArrayInputStream(
-								buffer);
-						fileContent = new AMedia("report", "text",
-								"text/plain", is);
-						InputStream in = fileContent.isBinary() ? fileContent
-								.getStreamData() : new ReaderInputStream(
-								fileContent.getReaderData());
-						FileUtilities
-								.uploadFile(tempFile.getAbsolutePath(), in);
-
-						CSVReader reader = new CSVReader(new FileReader(
-								tempFile.getAbsolutePath()));
-						Include studyInformationPage = new Include();
-						studyInformationPage.setDynamicProperty("csvReader",
-								reader);
-						studyInformationPage.setDynamicProperty("name",
-								file.replaceAll(".csv", ""));
-						studyInformationPage
-								.setSrc("/user/analysis/csvviewer.zul");
-
-						studyInformationPage.setParent(newGroupBox);
-						tabPanel.appendChild(newGroupBox);
-
-						Separator sep = new Separator();
-						sep.setHeight("20px");
-						tabPanel.appendChild(sep);
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					// treeTabs.appendChild(newTab);
 				}
 			}
 		}
@@ -294,21 +217,51 @@ public class ResultViewer {
 
 	}
 
-	protected void zoomImage(String dynamicProperty, Component component) {
-		// TODO Auto-generated method stub
+	protected void zoomImage(String name, String filePath, Component component) {
 		Div div = (Div) component.getFellow("zoomDiv");
 		if (div.getChildren().size() > 0)
 			div.getChildren().get(0).detach();
-		Include studyInformationPage = new Include();
-		
-		studyInformationPage.setDynamicProperty("height",
-				FileComposer.IMAGE_HEIGHT);
-		studyInformationPage.setDynamicProperty("width",
-				FileComposer.IMAGE_WIDTH);
-		studyInformationPage.setDynamicProperty("filepath", dynamicProperty);
-		studyInformationPage.setSrc("/user/analysis/imgviewer.zul");
-		studyInformationPage.setParent(div);
-		div.appendChild(studyInformationPage);
+		Include inc = new Include();
+		inc.setDynamicProperty("Height",FileComposer.IMAGE_HEIGHT);
+		inc.setDynamicProperty("Width",FileComposer.IMAGE_WIDTH);
+		inc.setDynamicProperty("Name", name);
+		inc.setDynamicProperty("FilePath", filePath);
+		inc.setSrc("/user/analysis/imgviewer.zul");
+		inc.setParent(div);
+		div.appendChild(inc);
+	}
+
+	protected void viewTxtContent(String name, String filePath, Component component)
+	{
+		Div div = (Div) component.getFellow("viewTxtContentDiv");
+		if(!div.getChildren().isEmpty())
+			div.getChildren().get(0).detach();
+		Include inc = new Include();
+		inc.setDynamicProperty("Name", name);
+		inc.setDynamicProperty("FilePath", filePath);
+		inc.setSrc("/user/analysis/txtviewer.zul");
+		inc.setParent(div);
+	}
+
+	protected void viewCsvContent(String name, String filePath,  Component component)
+	{
+		Div div = (Div) component.getFellow("viewCsvContentDiv");
+		if(!div.getChildren().isEmpty())
+			div.getChildren().get(0).detach();
+		Include inc = new Include();
+		inc.setDynamicProperty("FilePath", filePath);
+		inc.setDynamicProperty("Name", name);
+		inc.setSrc("/user/analysis/csvviewer.zul");
+		inc.setParent(div);
+	}
+
+	@NotifyChange("*")
+	@Command("save")
+	public void save()
+	{
+		Messagebox.show("Not implement now");
+		return;
+		//Filedownload fd = new Filedownload();
 	}
 
 	private void detach(Tabpanel tabanel, Tab tab) {

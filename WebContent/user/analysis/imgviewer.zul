@@ -2,10 +2,10 @@
 <zk>
 	<window id="imageViewerHtml" apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('org.strasa.web.analysis.result.view.model.ImageViewer')"
-		height="98%" border="none" hflex="1" vflex="1" position="center">
+		hflex="1" vflex="1" position="center" border="none">
 		<vlayout>
-				<label id="imageName" value="@bind(vm.imageName)" />
-			<div>
+				<label id="name" value="@bind(vm.name)" />
+			<div height="480px" style="overflow:auto;">
 				<image id="image"/>
 			</div>
 		</vlayout>

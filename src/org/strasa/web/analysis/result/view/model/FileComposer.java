@@ -232,13 +232,11 @@ public class FileComposer extends SelectorComposer<Component> {
 
 								String dType = filenamePath;
 								dType = dType.substring(dType.length() - 3, dType.length());
-								System.out.println("dtype " + dType);
 								
 								HashMap<String, String> dataArgs = new HashMap<String, String>();
 								dataArgs.put("name", clickedNodeValue.getData().getFilename());
 
 								if (clickedNodeValue.getData().getFilename().contains(".png")) {
-									System.out.println(filenamePath);
 									addImageViewer(clickedNodeValue.getData().getFilename(), FILE_SEPARATOR + filenamePath);
 								} else if (clickedNodeValue.getData().getFilename().contains(".pdf")) {
 									byte[] buffer = new byte[(int) fileToCreate.length()];
@@ -256,37 +254,9 @@ public class FileComposer extends SelectorComposer<Component> {
 									// w.doOverlapped();
 									addPdfViewer(clickedNodeValue.getData().getFilename(), fileContent);
 								} else if (clickedNodeValue.getData().getFilename().contains(".txt")) {
-									byte[] buffer = new byte[(int) fileToCreate.length()];
-									FileInputStream fs = new FileInputStream(fileToCreate);
-									fs.read(buffer);
-									fs.close();
-									ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-									fileContent = new AMedia("report", "text","text/plain", is);
-									HashMap<String, AMedia> dataArgsTxt = new HashMap<String, AMedia>();
-									addTxtViewer(clickedNodeValue.getData().getFilename(), fileContent);
+									addTxtViewer(clickedNodeValue.getData().getFilename(), filenamePath);
 								} else if (clickedNodeValue.getData().getFilename().contains(".csv")) {
-									byte[] buffer = new byte[(int) fileToCreate.length()];
-									FileInputStream fs = new FileInputStream(fileToCreate);
-									fs.read(buffer);
-									fs.close();
-									ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-									fileContent = new AMedia("report", "text","text/plain", is);
-									tempFile = File.createTempFile("csvdata",".tmp");
-									InputStream in = fileContent.isBinary() ? fileContent.getStreamData()
-											: new ReaderInputStream(fileContent.getReaderData());
-									FileUtilities.uploadFile(tempFile.getAbsolutePath(), in);
-
-									CSVReader reader = new CSVReader(new FileReader(tempFile.getAbsolutePath()));
-									// HashMap<String, CSVReader>
-									// dataArgsCsvReader = new HashMap<String,
-									// CSVReader>();
-									// dataArgsCsvReader.put("csvReader",
-									// reader);
-									addCsvViewer(clickedNodeValue.getData().getFilename(), reader);
-									// Executions.createComponents("analysis/csvviewer.zul",
-									// w, dataArgsCsvReader);
-									// w.doOverlapped();
-
+									addCsvViewer(clickedNodeValue.getData().getFilename(), filenamePath);
 								}else {
 									/*
 									 * HashMap<String, String> dataArgsTxt2 =
@@ -351,16 +321,15 @@ public class FileComposer extends SelectorComposer<Component> {
 
 		if (viewPanel.getChildren().size() > 0)
 			viewPanel.getChildren().get(0).detach();
-		Include studyInformationPage = new Include();
+		Include inc = new Include();
 		filenamePath = FILE_SEPARATOR + filenamePath.replaceAll("\\\\", "//");
-		System.out.println("add image on FileCompser : " + filenamePath);
-		studyInformationPage.setDynamicProperty("filepath",filenamePath);
-		studyInformationPage.setDynamicProperty("height", IMAGE_HEIGHT);
-		studyInformationPage.setDynamicProperty("width", IMAGE_WIDTH);
-		studyInformationPage.setSrc("/user/analysis/imgviewer.zul");
-		studyInformationPage.setParent(viewPanel);
-		System.out.println("imgPath " + filenamePath);
-		viewPanel.appendChild(studyInformationPage);
+		inc.setDynamicProperty("FilePath",filenamePath);
+		inc.setDynamicProperty("Height", IMAGE_HEIGHT);
+		inc.setDynamicProperty("Width", IMAGE_WIDTH);
+		inc.setDynamicProperty("Name", name);
+		inc.setSrc("/user/analysis/imgviewer.zul");
+		inc.setParent(viewPanel);
+		viewPanel.appendChild(inc);
 	}
 
 	protected void addPdfViewer(String name, AMedia fileContent) {
@@ -375,46 +344,40 @@ public class FileComposer extends SelectorComposer<Component> {
 	}
 
 	@NotifyChange("*")
-	public void addTxtViewer(String name, AMedia fileContent) {
+	public void addTxtViewer(String name, String filePath) {
 		// outputTextViewer
 		if (viewPanel.getChildren().size() > 0)
 			viewPanel.getChildren().get(0).detach();
-
-		Include studyInformationPage = new Include();
-		studyInformationPage.setDynamicProperty("txtFile", fileContent);
-		studyInformationPage.setSrc("/user/analysis/txtviewer.zul");
-		studyInformationPage.setParent(viewPanel);
-		viewPanel.appendChild(studyInformationPage);
-		// outputGrphViewer
+		Include inc = new Include();
+		inc.setDynamicProperty("Name", name);
+		inc.setDynamicProperty("FilePath", filePath);
+		inc.setSrc("/user/analysis/txtviewer.zul");
+		inc.setParent(viewPanel);
+		viewPanel.appendChild(inc);
 	}
 
-	private void addCsvViewer(String name, CSVReader reader) {
-		// TODO Auto-generated method stub
+	private void addCsvViewer(String name, String filePath) {
 		if (viewPanel.getChildren().size() > 0)
 			viewPanel.getChildren().get(0).detach();
-
-		Include studyInformationPage = new Include();
-		studyInformationPage.setDynamicProperty("csvReader", reader);
-		studyInformationPage.setDynamicProperty("name",
-				name.replaceAll(".csv", ""));
-		studyInformationPage.setSrc("/user/analysis/csvviewer.zul");
-
-		studyInformationPage.setParent(viewPanel);
-		viewPanel.appendChild(studyInformationPage);
+		Include inc = new Include();
+		inc.setDynamicProperty("Name", name.replaceAll(".csv", ""));
+		inc.setDynamicProperty("FilePath", filePath);
+		inc.setSrc("/user/analysis/csvviewer.zul");
+		inc.setParent(viewPanel);
+		viewPanel.appendChild(inc);
 	}
 
 	@NotifyChange("*")
 	public void addResultViewer(String name, String filenamePath) {
 		String getoutputFolderPath = AnalysisUtils
 				.getoutputFolderPath(filenamePath);
-		System.out.println(getoutputFolderPath);
 		Tabpanel tabPanel = new Tabpanel();
 		Tab newTab = new Tab();
 		newTab.setLabel(name);
 		newTab.setClosable(true);
 
 		Include studyInformationPage = new Include();
-		studyInformationPage.setDynamicProperty("outputFolderPath",
+		studyInformationPage.setDynamicProperty("OutputFolderPath",
 				getoutputFolderPath);
 		studyInformationPage.setSrc("/user/analysis/resultviewer.zul");
 		studyInformationPage.setParent(tabPanel);

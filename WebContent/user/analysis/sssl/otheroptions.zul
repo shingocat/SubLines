@@ -41,14 +41,8 @@
 					<groupbox>
 						<caption>On Genotype:</caption>
 						<hlayout>
-<!-- 							<label id="fileNameOfContrastOnGenotypeLb" value="@load(vm.contrastFileNameOnGenotype)" -->
-<!-- 								sclass="label-search" /> -->
 							<checkbox id="acrossEnvCB" label="Across Env" onCheck="@command('acrossEnvCBCheck')" checked="true"/>
 							<separator width="20px" />
-<!-- 							<button id="contrastFromFileOnGenotypeBtn" label="From File(.csv)" -->
-<!-- 								sclass="btn-primary" upload="true, maxsize=-1" disabled="false" -->
-<!-- 								onUpload="@command('uploadContrastFromFileOnGenotype')" /> -->
-
 							<button id="contrastFromFileOnGenotypeBtn" label="From File(.csv)"
 									sclass="btn-primary"  disabled="false"
 									onClick="@command('uploadContrastFromFileOnGenotype')" />
@@ -62,9 +56,6 @@
 								visible="false" />
 						</hlayout>
 						<separator height="10px" />
-						<div id="contrastByManuallyOnGenotypeDiv" visible="false">
-						</div>
-						<separator height="20px" />
 						<hlayout>
 							<div id="contrastGridOnGenotypeDiv" hflex="1" style="overflow:auto;">
 								<!-- <include id="includeContrast" src="/user/analysis/sssl/contrast.zul" 
@@ -90,13 +81,8 @@
 								visible="false" />
 						</hlayout>
 						<separator height="10px" />
-						<div id="contrastByManuallyOnEnvDiv" visible="false">
-						</div>
-						<separator height="20px" />
 						<hlayout>
 							<div id="contrastGridOnEnvDiv" width="98%" height="98%">
-								<!-- <include id="includeContrast" src="/user/analysis/sssl/contrast.zul" 
-									/> -->
 							</div>
 						</hlayout>
 					</groupbox>

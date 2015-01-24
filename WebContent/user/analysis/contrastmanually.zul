@@ -1,0 +1,22 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window apply="org.zkoss.bind.BindComposer" hflex="1" vflex="1"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.view.model.ContrastManually')">
+		<vlayout>
+			<hlayout>
+				<label>
+					No. of Contrast :
+				</label>
+				<doublespinner id="contrastDS" step="1" value="0"
+					constraint="no negative, min 0" readonly="true" instant="true"
+					onChange="@command('update', inputValue=self.value)">
+				</doublespinner>
+				<button id="saveBtn" label="Save" disabled="true" sclass="btn-primary"
+					onClick="@command('save')" />
+			</hlayout>
+			<div id="gridDiv">
+				<grid id="grid" style="overflow:auto;" height="300px" emptyMessage="No Data Inputed..."/>
+			</div>
+		</vlayout>
+	</window>
+</zk>

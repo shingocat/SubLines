@@ -79,7 +79,7 @@ public class Index {
 		//initialize view after view construction.
 		Include studyInformationPage = new Include();
 		studyInformationPage.setParent(newPanel);
-		studyInformationPage.setDynamicProperty("outputFolderPath", ssslModel.getResultFolderPath().replaceAll("\\\\", "/"));
+		studyInformationPage.setDynamicProperty("OutputFolderPath", ssslModel.getResultFolderPath().replaceAll("\\\\", "/"));
 		studyInformationPage.setSrc("/user/analysis/resultviewer.zul");
 
 		tabPanels.appendChild(newPanel);

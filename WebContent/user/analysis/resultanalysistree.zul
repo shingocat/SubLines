@@ -1,24 +1,29 @@
 <?page title="new page title" contentType="text/html;charset=UTF-8"?>
 <zk>
-	<window
-		apply="org.strasa.web.analysis.result.view.model.FileComposer">
+	<window apply="org.strasa.web.analysis.result.view.model.FileComposer">
 		<style>
 			.h-inline-block { display: inline-block; _display: inline; }
 		</style>
-		<tabbox id="tabBox" sclass="page-content" hflex="1" vflex="1">
+		<tabbox id="tabBox" sclass="page-content">
 			<tabs id="treeTabs">
 				<tab label="Analysis Results" image="/images/find.png" />
 			</tabs>
 			<tabpanels id="treeTabPanels">
 				<tabpanel id="treePanel">
-					<hlayout>
-						<tree id="tree" width="400px" height="600px" style="overflow: auto" >
-							<treecols>
-								<treecol />
-							</treecols>
-						</tree>
-						<div id="viewPanel"  style="overflow: auto" hflex="1" vflex="1"/>
-					</hlayout>
+					<columnlayout>
+						<columnchildren width="30%">
+							<div width="350px" style="overflow: auto;" height="550px">
+								<tree id="tree" style="overflow: auto;" width="450px">
+									<treecols>
+										<treecol />
+									</treecols>
+								</tree>
+							</div>
+						</columnchildren>
+						<columnchildren width="70%" >
+							<div id="viewPanel" height="550px"/>
+						</columnchildren>
+					</columnlayout>
 				</tabpanel>
 			</tabpanels>
 		</tabbox>

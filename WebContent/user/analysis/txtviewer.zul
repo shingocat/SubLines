@@ -1,8 +1,11 @@
 <?page title="new page title" contentType="text/html;charset=UTF-8"?>
 <zk>
-	<window border="none" sizable="true" maximizable="true" vflex="1" >
-		<iframe hflex="1"  vflex="1" id="printIFrame" name="printIFrame"
-			content="${arg.txtFile}">
-		</iframe>
+	<window id="txtViewer" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.result.view.model.TxtViewer')"
+		hflex="1" vflex="1" position="center" border="none">
+		<vlayout>
+			<iframe hflex="1"  vflex="1" height="480px" id="printIFrame" name="printIFrame">
+			</iframe>
+		</vlayout>
 	</window>
 </zk>

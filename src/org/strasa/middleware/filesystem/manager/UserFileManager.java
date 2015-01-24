@@ -62,7 +62,7 @@ public class UserFileManager {
 		return renamedFile.getAbsolutePath();
 	}
 	
-	public  String uploadContrastFileForAnalysis(String fileName, File dataFile, String folderPath, String envlabel)
+	public  String uploadContrastFileForAnalysis(String fileName, File dataFile, String folderPath, String label)
 	{
 		File movedFile = null;
 		File renamedFile = null;
@@ -73,7 +73,7 @@ public class UserFileManager {
 			FileUtils.copyFileToDirectory(dataFile, new File(BASE_FOLDER.getAbsolutePath() + File.separator), true);
 			movedFile = new File(BASE_FOLDER.getAbsolutePath() + File.separator + dataFile.getName());
 			renamedFile = new File(BASE_FOLDER.getAbsolutePath() + File.separator + 
-					fileName.replaceAll(".csv","") + "_" + envlabel + "_(Contrast).csv");
+					fileName.replaceAll(".csv","") + "_" + label + "_(Contrast).csv");
 			movedFile.renameTo(renamedFile);
 		} catch(IOException e)
 		{

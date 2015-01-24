@@ -1,6 +1,7 @@
 package org.strasa.web.analysis.view.model;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class SSSLAnalysisModel {
@@ -26,13 +27,15 @@ public class SSSLAnalysisModel {
 	private String[] columnFactorLevels;
 
 	// for other options part
-	private double significantAlpha = 0.05; // setting by default right now.
+	private double significantAlpha = 0.05;
 	private boolean isDescriptiveStat;
 	private boolean isVarComponent;
 	private boolean isCompareWithRecurrent;
 	private String recurrentParent;
-	private String genotypeContrastFile;
-	private String envContrastFile;
+	private boolean isSpecifiedGenoContrast;
+	private HashMap<String, String> genotypeContrastFile;
+	private boolean isSpecifiedEnvContrast;
+	private HashMap<String, String> envContrastFile;
 	private boolean isFinlayWikinson;
 	private boolean isShukla;
 	private boolean isAMMI;
@@ -175,19 +178,19 @@ public class SSSLAnalysisModel {
 		this.recurrentParent = recurrentParent;
 	}
 
-	public String getGenotypeContrastFile() {
+	public HashMap<String, String> getGenotypeContrastFile() {
 		return genotypeContrastFile;
 	}
 
-	public void setGenotypeContrastFile(String genotypeContrastFile) {
+	public void setGenotypeContrastFile(HashMap<String, String> genotypeContrastFile) {
 		this.genotypeContrastFile = genotypeContrastFile;
 	}
 
-	public String getEnvContrastFile() {
+	public HashMap<String, String> getEnvContrastFile() {
 		return envContrastFile;
 	}
 
-	public void setEnvContrastFile(String envContrastFile) {
+	public void setEnvContrastFile(HashMap<String, String> envContrastFile) {
 		this.envContrastFile = envContrastFile;
 	}
 
@@ -406,6 +409,22 @@ public class SSSLAnalysisModel {
 	public void setSignificantAlpha(double significantAlpha) {
 		this.significantAlpha = significantAlpha;
 	}
+	public boolean isSpecifiedGenoContrast() {
+		return isSpecifiedGenoContrast;
+	}
+
+	public void setSpecifiedGenoContrast(boolean isSpecifiedGenoContrast) {
+		this.isSpecifiedGenoContrast = isSpecifiedGenoContrast;
+	}
+
+	public boolean isSpecifiedEnvContrast() {
+		return isSpecifiedEnvContrast;
+	}
+
+	public void setSpecifiedEnvContrast(boolean isSpecifiedEnvContrast) {
+		this.isSpecifiedEnvContrast = isSpecifiedEnvContrast;
+	}
+
 
 	@Override
 	public String toString() {
