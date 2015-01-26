@@ -14,8 +14,8 @@
 				<button id="saveBtn" label="Save" disabled="true" sclass="btn-primary"
 					onClick="@command('save')" />
 			</hlayout>
-			<div id="gridDiv">
-				<grid id="grid" style="overflow:auto;" height="300px" emptyMessage="No Data Inputed..."/>
+			<div id="gridDiv" height="300px" style="overflow:auto;" width="100%">
+				<grid id="grid"  height="300px" emptyMessage="No Data Inputed..." style="overflow:auto;" />
 			</div>
 		</vlayout>
 	</window>

@@ -235,6 +235,7 @@ public class ContrastManually {
 		column.setLabel("Label");
 		column.setHflex("1");
 		columns.appendChild(column);
+		columns.setSizable(true);
 		for(String s : levels)
 		{
 			Column col = new Column();
@@ -247,6 +248,11 @@ public class ContrastManually {
 		
 		grid.appendChild(columns);
 		grid.appendChild(rows);
+	}
+	
+	public List<String> getColumnList()
+	{
+		return levels;
 	}
 	
 	public void showMessage(String message)

@@ -44,7 +44,6 @@
 						<caption>On Genotype:</caption>
 						<hlayout>
 							<div id="acrossEnvCBDiv" visible="false" width="100px">
-<!-- 								<checkbox id="acrossEnvCB" label="Across Env" onCheck="@command('acrossEnvCBCheck')" checked="true"/> -->
 								<checkbox id="acrossEnvCB" label="Across Env" checked="true" />
 								<separator width="20px" />
 							</div>
@@ -62,7 +61,7 @@
 						</hlayout>
 						<separator height="10px" />
 						<hlayout>
-							<div id="contrastGridOnGenotypeDiv" hflex="1" style="overflow:auto;">
+							<div id="contrastGridOnGenotypeDiv" width="100%" height="100%">
 								<!-- <include id="includeContrast" src="/user/analysis/sssl/contrast.zul" 
 									/> -->
 							</div>
@@ -87,7 +86,7 @@
 						</hlayout>
 						<separator height="10px" />
 						<hlayout>
-							<div id="contrastGridOnEnvDiv" width="98%" height="98%">
+							<div id="contrastGridOnEnvDiv" width="100%" height="100%">
 							</div>
 						</hlayout>
 					</groupbox>

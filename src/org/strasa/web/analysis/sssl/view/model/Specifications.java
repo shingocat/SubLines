@@ -730,8 +730,6 @@ public class Specifications {
 			this.singleEnvOnGraphDiv.setVisible(true);
 			this.acrossEnvOnGraphDiv.setVisible(false);
 			this.multiplicativeModelOnGraphDiv.setVisible(false);
-			System.out.println("acrossEnvCB is checked " + acrossEnvCB.isChecked());
-			
 			if(!this.acrossEnvCBDiv.isVisible())
 				this.acrossEnvCBDiv.setVisible(true);
 			if(!acrossEnvCB.isChecked())

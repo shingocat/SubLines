@@ -1,7 +1,7 @@
 <zk>
 	<grid model="@bind(vm.dataList)" sizedByContent="true" vflex="true" hflex="1" 
 		emptyMessage="No data loaded..." height="400px">
-		<columns children="@load(vm.columnList)">
+		<columns children="@load(vm.columnList)" sizable="true">
 			<template name="children">
 				<column hflex="1" label="@load(each)" />
 			</template>
