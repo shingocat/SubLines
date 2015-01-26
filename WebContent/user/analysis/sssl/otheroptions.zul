@@ -26,8 +26,10 @@
 						</combobox>
 					</hlayout>
 					<hlayout>
+						<div id="alphaLevelDBDiv" visible="false">
 							<label>Alpha Level</label>
 							<doublebox id="alphaLevelDB" constraint="no empty,no negative, no zero" value="@bind(vm.alphalevel)" />
+						</div>
 					</hlayout>
 				</div>
 			</vlayout>
@@ -41,8 +43,11 @@
 					<groupbox>
 						<caption>On Genotype:</caption>
 						<hlayout>
-							<checkbox id="acrossEnvCB" label="Across Env" onCheck="@command('acrossEnvCBCheck')" checked="true"/>
-							<separator width="20px" />
+							<div id="acrossEnvCBDiv" visible="false" width="100px">
+<!-- 								<checkbox id="acrossEnvCB" label="Across Env" onCheck="@command('acrossEnvCBCheck')" checked="true"/> -->
+								<checkbox id="acrossEnvCB" label="Across Env" checked="true" />
+								<separator width="20px" />
+							</div>
 							<button id="contrastFromFileOnGenotypeBtn" label="From File(.csv)"
 									sclass="btn-primary"  disabled="false"
 									onClick="@command('uploadContrastFromFileOnGenotype')" />

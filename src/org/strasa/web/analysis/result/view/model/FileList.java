@@ -114,6 +114,9 @@ public class FileList {
 				icons="pdf.png";
 			}else if(name.contains("csv")){
 				icons="csv.png";
+			} else if(name.contains("zip"))
+			{
+				icons="ZIP16.png";
 			}
 			String[] n=name.split("/");
 			FileModelTreeNode x = new FileModelTreeNode(new FileModel(n[n.length-1], icons));

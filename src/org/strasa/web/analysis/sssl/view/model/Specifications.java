@@ -141,9 +141,11 @@ public class Specifications {
 	private Checkbox descriptiveStatCB;
 	private Checkbox varComponentCB;
 	private Doublebox alphaLevelDB;
+	private Div alphaLevelDBDiv;
 	private Checkbox compareWithControlCB;
 	private Combobox controlCBB;
 	private Checkbox acrossEnvCB;
+	private Div acrossEnvCBDiv;
 	private Div specifiedContrastOnGenotypeDiv;
 	private Button contrastFromFileOnGenotypeBtn;
 	private Button contrastByManuallyOnGenotypeBtn;
@@ -229,7 +231,7 @@ public class Specifications {
 	private String errorMessage = null;
 
 	private Double alphalevel = null;
-	private Boolean isAcrossEnv = true;
+//	private Boolean isAcrossEnv = true;
 	private String uploadedFileFolderPath = null;
 	private HashMap<String, String> genoContrastFiles = new HashMap<String, String>();
 	private HashMap<String, String> envContrastFiles = new HashMap<String, String>();
@@ -328,15 +330,15 @@ public class Specifications {
 				.getFellow("varComponentCB");
 		this.alphaLevelDB = (Doublebox) this.includeOtherOptions
 				.getFellow("alphaLevelDB");
+		this.alphaLevelDBDiv = (Div) this.includeOtherOptions.getFellow("alphaLevelDBDiv");
 		this.acrossEnvCB = (Checkbox) this.includeOtherOptions.getFellow("acrossEnvCB");
+		this.acrossEnvCBDiv = (Div) this.includeOtherOptions.getFellow("acrossEnvCBDiv");
 		this.compareWithControlCB = (Checkbox) this.includeOtherOptions
 				.getFellow("compareWithControlCB");
 		this.controlCBB = (Combobox) this.includeOtherOptions
 				.getFellow("controlCBB");
 		this.specifiedContrastOnGenotypeDiv = (Div) includeOtherOptions
 				.getFellow("specifiedContrastOnGenotypeDiv");
-		//		this.fileNameOfContrastOnGenotypeLb = (Label) includeOtherOptions
-		//				.getFellow("fileNameOfContrastOnGenotypeLb");
 		this.contrastFromFileOnGenotypeBtn = (Button) includeOtherOptions
 				.getFellow("contrastFromFileOnGenotypeBtn");
 		this.contrastByManuallyOnGenotypeBtn = (Button) includeOtherOptions
@@ -420,10 +422,8 @@ public class Specifications {
 	public void updateDataSetList() {
 		dataSetCombobox.setSelectedItem(null);
 		dataSetCombobox.setVisible(false);
-
 		List<StudyDataSet> dataSet = studyDataSetManagerImpl
 				.getDataSetsByStudyId(selectedStudy.getId());
-
 		if (!dataSet.isEmpty()) {
 			dataSetCombobox.setVisible(true);
 			setLstStudyDataSet(dataSet);
@@ -431,7 +431,6 @@ public class Specifications {
 		} else {
 			showMessage("Please choose a different study");
 		}
-
 	}
 
 	@NotifyChange("*")
@@ -446,7 +445,6 @@ public class Specifications {
 			dataList.clear();
 		}
 		reloadCsvGrid();
-
 		selectDataBtn.setVisible(false);
 		studiesCombobox.setVisible(false);
 		resetBtn.setVisible(true);
@@ -557,13 +555,13 @@ public class Specifications {
 				selectDataBtn.setVisible(false);
 	}
 
-
-	@NotifyChange("*")
-	@Command("acrossEnvCBCheck")
-	public void acrossEnvCBCheck()
-	{
-		isAcrossEnv  = this.acrossEnvCB.isChecked();
-	}
+//
+//	@NotifyChange("*")
+//	@Command("acrossEnvCBCheck")
+//	public void acrossEnvCBCheck()
+//	{
+//		isAcrossEnv  = this.acrossEnvCB.isChecked();
+//	}
 
 	@NotifyChange("*")
 	@Command("uploadContrastFromFileOnGenotype")
@@ -588,13 +586,12 @@ public class Specifications {
 		HashMap<String, Object> args = new HashMap<String, Object>();
 		args.put("Factor", "Genotype");
 		List<String> lstLevelNames = new ArrayList<String>();
-		if(isAcrossEnv)
+		if(acrossEnvCB.isChecked())
 		{	
 			lstLevelNames.add("AcrossEnv");
 			args.put("LevelNames", lstLevelNames);
-			String [] genos = ssslRServeManager.getLevels(columnList, dataList, genotypeTB.getValue());
 			HashMap<String, List<String>> hmGenosOnEnv = new HashMap<String, List<String>>();
-			hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genos));
+			hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genotypeLevels));
 			args.put("Levels", hmGenosOnEnv);
 		} else
 		{
@@ -607,9 +604,8 @@ public class Specifications {
 			{
 				lstLevelNames.add("AcrossEnv");
 				args.put("EnvNames", lstLevelNames);
-				String [] genos = ssslRServeManager.getLevels(columnList, dataList, genotypeTB.getValue());
 				HashMap<String, List<String>> hmGenosOnEnv = new HashMap<String, List<String>>();
-				hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genos));
+				hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genotypeLevels));
 				args.put("Levels", hmGenosOnEnv);
 			}
 		}
@@ -617,8 +613,8 @@ public class Specifications {
 		args.put("UploadedFileFolderPath", uploadedFileFolderPath);
 		inc.setDynamicProperty("Arguments", args);
 		inc.setSrc("/user/analysis/contrasttabbox.zul");
+		this.acrossEnvCBDiv.setVisible(false);
 		this.contrastFromFileOnGenotypeBtn.setVisible(false);
-		this.acrossEnvCB.setVisible(false);
 		this.contrastByManuallyOnGenotypeBtn.setVisible(false);
 		this.contrastResetOnGenotypeBtn.setVisible(true);
 		this.isSpecifyGenoContrast = true;
@@ -647,9 +643,8 @@ public class Specifications {
 		List<String> lstLevelNames = new ArrayList<String>();
 		lstLevelNames.add("Environment");
 		args.put("LevelNames", lstLevelNames);
-		String [] envs = ssslRServeManager.getLevels(columnList, dataList, envTB.getValue());
 		HashMap<String, List<String>> hmGenosOnEnv = new HashMap<String, List<String>>();
-		hmGenosOnEnv.put("Environment", Arrays.asList(envs));
+		hmGenosOnEnv.put("Environment", Arrays.asList(environmentLevels));
 		args.put("Levels", hmGenosOnEnv);
 		args.put("Type", "File");
 		args.put("UploadedFileFolderPath", uploadedFileFolderPath);
@@ -658,13 +653,13 @@ public class Specifications {
 		this.contrastFromFileOnEnvBtn.setVisible(false);
 		this.contrastByManuallyOnEnvBtn.setVisible(false);
 		this.contrastResetOnEnvBtn.setVisible(true);
+		this.isSpecifyEnvContrsat = true;
 	}
 
 	@NotifyChange("*")
 	@Command("updateVariableList")
 	public void updateVariableList(
 			@BindingParam("selectedIndex") Integer selectedIndex) {
-		System.out.println("Experiment design is " + this.designType);
 		if (designType.equals(lstTypeOfDesign.get(0))) {
 			blockRow.setVisible(true);
 			replicateRow.setVisible(false);
@@ -708,64 +703,43 @@ public class Specifications {
 			columnRow.setVisible(true);
 			this.ssslAnalysisModel.setDesign(6);
 		}
-		// String temp = lstTypeOfDesign.get(selectedIndex);
-		// if (temp.equals(lstTypeOfDesign.get(0))) {
-		// blockRow.setVisible(true);
-		// replicateRow.setVisible(false);
-		// rowRow.setVisible(false);
-		// columnRow.setVisible(false);
-		// } else if (temp.equals(lstTypeOfDesign.get(1))) {
-		// blockRow.setVisible(true);
-		// replicateRow.setVisible(false);
-		// rowRow.setVisible(false);
-		// columnRow.setVisible(false);
-		// } else if (temp.equals(lstTypeOfDesign.get(2))) {
-		// blockRow.setVisible(false);
-		// replicateRow.setVisible(false);
-		// rowRow.setVisible(true);
-		// columnRow.setVisible(true);
-		// } else if (temp.equals(lstTypeOfDesign.get(3))) {
-		// blockRow.setVisible(true);
-		// replicateRow.setVisible(true);
-		// rowRow.setVisible(false);
-		// columnRow.setVisible(false);
-		// } else if (temp.equals(lstTypeOfDesign.get(4))) {
-		// blockRow.setVisible(true);
-		// replicateRow.setVisible(false);
-		// rowRow.setVisible(true);
-		// columnRow.setVisible(true);
-		// } else if (temp.equals(lstTypeOfDesign.get(5))) {
-		// blockRow.setVisible(true);
-		// replicateRow.setVisible(true);
-		// rowRow.setVisible(false);
-		// columnRow.setVisible(false);
-		// } else if (temp.equals(lstTypeOfDesign.get(6))) {
-		// blockRow.setVisible(false);
-		// replicateRow.setVisible(true);
-		// rowRow.setVisible(true);
-		// columnRow.setVisible(true);
-		// }
 	}
 
 	@NotifyChange("*")
 	@Command("updateEnvVariableList")
 	public void updateEnvVariableList(
 			@BindingParam("selectedIndex") Integer selectedIndex) {
-		System.out.println("Experiment analysis environment type is "
-				+ analysisEnvType);
 		this.ssslAnalysisModel.setAnalysisEnvType(analysisEnvType);
-		if (analysisEnvType.equals(lstTypeOfAnalysisEnv.get(0))) {
+		if (analysisEnvType.equals("Multi-Environment")) {
 			this.specifiedContrastOnEnvDiv.setVisible(true);
 			this.genotypeByEnvDiv.setVisible(true);
 			this.singleEnvOnGraphDiv.setVisible(false);
 			this.acrossEnvOnGraphDiv.setVisible(true);
 			this.multiplicativeModelOnGraphDiv.setVisible(true);
-		} else if (analysisEnvType.equals(lstTypeOfAnalysisEnv.get(1))) {
+			if(!acrossEnvCB.isChecked())
+			{
+				this.acrossEnvCB.setChecked(true);
+			}
+			if(acrossEnvCBDiv.isVisible())
+				this.acrossEnvCBDiv.setVisible(false);
+			if(this.alphaLevelDBDiv.isVisible())
+				this.alphaLevelDBDiv.setVisible(false);
+		} else if (analysisEnvType.equals("Single Environment")) {
 			this.specifiedContrastOnEnvDiv.setVisible(false);
 			this.genotypeByEnvDiv.setVisible(false);
 			this.singleEnvOnGraphDiv.setVisible(true);
 			this.acrossEnvOnGraphDiv.setVisible(false);
 			this.multiplicativeModelOnGraphDiv.setVisible(false);
+			System.out.println("acrossEnvCB is checked " + acrossEnvCB.isChecked());
+			
+			if(!this.acrossEnvCBDiv.isVisible())
+				this.acrossEnvCBDiv.setVisible(true);
+			if(!acrossEnvCB.isChecked())
+			{
+				this.acrossEnvCB.setChecked(true);
+			}
+			if(!this.alphaLevelDBDiv.isVisible())
+				this.alphaLevelDBDiv.setVisible(true);
 		}
 	}
 
@@ -779,7 +753,7 @@ public class Specifications {
 			showMessage(errorMessage);
 		}
 	}
-
+	// this function is used to get upload contrast files from contrast.zul or contrastmanually.zul
 	@NotifyChange("*")
 	@GlobalCommand("getUploadedContrastFiles")
 	public void getUploadedContrastFiles(@ContextParam(ContextType.COMPONENT) Component component,
@@ -858,13 +832,12 @@ public class Specifications {
 		inc.setParent(this.contrastGridOnGenotypeDiv);
 		HashMap<String, Object> args = new HashMap<String, Object>();
 		List<String> lstLevelNames = new ArrayList<String>();
-		if(isAcrossEnv)
+		if(acrossEnvCB.isChecked())
 		{	
 			lstLevelNames.add("AcrossEnv");
 			args.put("LevelNames", lstLevelNames);
-			String [] genos = ssslRServeManager.getLevels(columnList, dataList, genotypeTB.getValue());
 			HashMap<String, List<String>> hmGenosOnEnv = new HashMap<String, List<String>>();
-			hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genos));
+			hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genotypeLevels));
 			args.put("Levels", hmGenosOnEnv);
 		} else
 		{
@@ -877,9 +850,8 @@ public class Specifications {
 			{
 				lstLevelNames.add("AcrossEnv");
 				args.put("LevelNames", lstLevelNames);
-				String [] genos = ssslRServeManager.getLevels(columnList, dataList, genotypeTB.getValue());
 				HashMap<String, List<String>> hmGenosOnEnv = new HashMap<String, List<String>>();
-				hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genos));
+				hmGenosOnEnv.put("AcrossEnv", Arrays.asList(genotypeLevels));
 				args.put("Levels", hmGenosOnEnv);
 			}
 		}
@@ -888,11 +860,11 @@ public class Specifications {
 		args.put("UploadedFileFolderPath", uploadedFileFolderPath);
 		inc.setDynamicProperty("Arguments", args);
 		inc.setSrc("/user/analysis/contrasttabbox.zul");
-
+		acrossEnvCBDiv.setVisible(false);
 		contrastFromFileOnGenotypeBtn.setVisible(false);
 		contrastByManuallyOnGenotypeBtn.setVisible(false);
 		contrastResetOnGenotypeBtn.setVisible(true);
-		acrossEnvCB.setVisible(false);
+		this.isSpecifyGenoContrast=true;
 	}
 
 	@NotifyChange("*")
@@ -928,34 +900,45 @@ public class Specifications {
 		contrastFromFileOnEnvBtn.setVisible(false);
 		contrastByManuallyOnEnvBtn.setVisible(false);
 		contrastResetOnEnvBtn.setVisible(true);
+		this.isSpecifyEnvContrsat = true;
 	}
 
 
 	@NotifyChange("*")
 	@Command("resetContrastOnGenotype")
 	public void resetContrastOnGenotype() {
+		genoContrastFiles.clear();
 		ssslAnalysisModel.setGenotypeContrastFile(null);
 		if (!this.contrastGridOnGenotypeDiv.getChildren().isEmpty())
 			this.contrastGridOnGenotypeDiv.getFirstChild().detach();
-		//		this.fileNameOfContrastOnGenotypeLb.setVisible(false);
 		this.contrastFromFileOnGenotypeBtn.setVisible(true);
-		this.acrossEnvCB.setVisible(true);
 		this.contrastByManuallyOnGenotypeBtn.setVisible(true);
 		this.contrastResetOnGenotypeBtn.setVisible(false);
 		this.isSpecifyGenoContrast = false;
+		if(!acrossEnvCB.isChecked())
+		{
+			this.acrossEnvCB.setChecked(true);
+		}
+		if(analysisEnvType == "Single Environment")
+		{
+			this.acrossEnvCBDiv.setVisible(true);
+		}else
+		{
+			this.acrossEnvCBDiv.setVisible(false);
+		}
 	}
 
 	@NotifyChange("*")
 	@Command("resetContrastOnEnv")
 	public void resetContrastOnEnv() {
+		envContrastFiles.clear();
 		ssslAnalysisModel.setGenotypeContrastFile(null);
-
 		if (!this.contrastGridOnEnvDiv.getChildren().isEmpty())
 			this.contrastGridOnEnvDiv.getFirstChild().detach();
-
 		this.contrastFromFileOnEnvBtn.setVisible(true);
 		this.contrastByManuallyOnEnvBtn.setVisible(true);
 		this.contrastResetOnEnvBtn.setVisible(false);
+		this.isSpecifyEnvContrsat = false;
 	}
 
 	@NotifyChange("*")
@@ -980,14 +963,6 @@ public class Specifications {
 		}
 	}
 
-
-	@NotifyChange("*")
-	@Command("refreshContrastCSVOnEnv")
-	public void refreshContrastCSVOnEnv() {
-		//return it now, implement later
-
-	}
-
 	@GlobalCommand("setSSSLAnalysisModelListvariables")
 	@NotifyChange("*")
 	public void setSSSLAnalysisModelListvariables(
@@ -1010,68 +985,6 @@ public class Specifications {
 		this.responseLB.setModel(responseModel);
 	}
 
-	@NotifyChange("*")
-	@Command("updateContrastGridManually")
-	public void updataContrastGridManually() {
-		// not implement it now
-	}
-
-	@NotifyChange("*")
-	@Command("updateContrastGridManuallyOnGenotype")
-	public void updateContrastGridManuallyOnGenotype(
-			@BindingParam("inputValue") Integer value) {
-		int numRows = rowsManuallyOnGenotype.getChildren().size();
-		if (value > numRows) {
-			Row row = new Row();
-			Textbox label = new Textbox();
-			label.setHflex("1");
-			label.setValue("C" + value);
-			label.setVisible(true);
-			label.setConstraint("no empty");
-			label.setParent(row);
-
-			for (int i = 0; i < this.genotypeLevels.length; i++) {
-				Doublebox intbox = new Doublebox();
-				intbox.setHflex("1");
-				intbox.setVisible(true);
-				intbox.setConstraint("no empty");
-				intbox.setParent(row);
-			}
-
-			row.setParent(rowsManuallyOnGenotype);
-		} else if (value < numRows && numRows > 0) {
-			rowsManuallyOnGenotype.removeChild(rowsManuallyOnGenotype
-					.getLastChild());
-		}
-	}
-
-	@NotifyChange("*")
-	@Command("updateContrastGridManuallyOnEnv")
-	public void updateContrastGridManuallyOnEnv(
-			@BindingParam("inputValue") Integer value) {
-		int numRows = rowsManuallyOnEnv.getChildren().size();
-		if (value > numRows) {
-			Row row = new Row();
-			Textbox label = new Textbox();
-			label.setHflex("1");
-			label.setValue("C" + value);
-			label.setVisible(true);
-			label.setConstraint("no empty");
-			label.setParent(row);
-
-			for (int i = 0; i < this.environmentLevels.length; i++) {
-				Doublebox input = new Doublebox();
-				input.setHflex("1");
-				input.setConstraint("no empty");
-				input.setVisible(true);
-				input.setParent(row);
-			}
-
-			row.setParent(rowsManuallyOnEnv);
-		} else if (value < numRows && numRows > 0) {
-			rowsManuallyOnEnv.removeChild(rowsManuallyOnEnv.getLastChild());
-		}
-	}
 
 	@NotifyChange("*")
 	@Command("addResponse")
@@ -1190,8 +1103,9 @@ public class Specifications {
 			errorMessage = "No Raw Data Selected!";
 			return false;
 		}
-
 		if (!validateSpecifyGenotypeContrast())
+			return false;
+		if(!validateSpecifyEnvContrast())
 			return false;
 
 		String folderPath = null;
@@ -1208,195 +1122,10 @@ public class Specifications {
 
 		ssslAnalysisModel.setOutFileName(ssslAnalysisModel
 				.getResultFolderPath() + "SSSL_Analysis_Output.txt");
-
-
-
-//		if (this.contrastByManuallyOnGenotypeDiv.isVisible()) {
-//			Rows rows = this.gridManuallyOnGenotype.getRows();
-//			List<String[]> genotypeContrast = new ArrayList<String[]>();
-//			String[] header = new String[1 + genotypeLevels.length];
-//			for (int i = 0; i < header.length; i++) {
-//				if (i == 0)
-//					header[i] = "Label";
-//				else
-//					header[i] = genotypeLevels[i - 1];
-//			}
-//			genotypeContrast.add(header);
-//			if (!rows.getChildren().isEmpty()) {
-//				for (int i = 0; i < rows.getChildren().size(); i++) {
-//					Row row = (Row) rows.getChildren().get(i);
-//					String[] values = new String[row.getChildren().size()];
-//					for (int j = 0; j < row.getChildren().size(); j++) {
-//						if (j == 0) {
-//							Textbox input = (Textbox) row.getChildren().get(j);
-//							try {
-//								if (input.isValid()) {
-//									values[j] = input.getValue();
-//								} else {
-//									errorMessage = "Error, please input contrast value on Row "
-//											+ (i + 1)
-//											+ ", Column "
-//											+ (j + 1)
-//											+ ", for genotype!";
-//									return false;
-//								}
-//							} catch (WrongValueException e) {
-//								e.printStackTrace();
-//							}
-//						} else {
-//							Doublebox input = (Doublebox) row.getChildren()
-//									.get(j);
-//							try {
-//								if (input.isValid()) {
-//									values[j] = String
-//											.valueOf(input.getValue());
-//								} else {
-//									errorMessage = "Error, please input contrast value on Row "
-//											+ (i + 1)
-//											+ ", Column "
-//											+ (j + 1)
-//											+ ", for genotype!";
-//									return false;
-//								}
-//							} catch (WrongValueException e) {
-//								e.printStackTrace();
-//							}
-//						}
-//						// System.out
-//						// .println("Value on " + j + " is " + values[j]);
-//					}
-//					double sum = 0;
-//					for (int k = 1; k < values.length; k++) {
-//						sum = sum + Double.valueOf(values[k]);
-//					}
-//					if (sum != 0) {
-//						errorMessage = "Error, please check contrast coefficients on "
-//								+ (i + 1)
-//								+ " rows on Genotype! It should be equal to zero!";
-//						return false;
-//					}
-//					// System.out.println("sum of value on " + i + ", row is "
-//					// + sum);
-//					genotypeContrast.add(values);
-//				}
-//
-//			} else {
-//				errorMessage = "Error, there are no any contrast coefficients on genotype!";
-//				return false;
-//			}
-//
-//			for (String[] temp : genotypeContrast) {
-//				System.out.println("Genotype Contrast:");
-//				for (int i = 0; i < temp.length; i++) {
-//					System.out.print(temp[i] + "\t");
-//				}
-//				System.out.println();
-//			}
-//
-//			String file = ssslAnalysisModel.getResultFolderPath()
-//					+ StringConstants.SYSTEM_FILE_SEPARATOR
-//					+ "GenotypeContrastCoefficients.csv";
-//			FileUtilities.saveDataToFile(genotypeContrast,
-//					"GenotypeContrastCoefficients.csv",
-//					ssslAnalysisModel.getResultFolderPath());
-//			//			ssslAnalysisModel.setGenotypeContrastFile(file);
-//		}
-//
-//		if (this.contrastByManuallyOnEnvDiv.isVisible()) {
-//			Rows rows = this.gridManuallyOnEnv.getRows();
-//			List<String[]> envContrast = new ArrayList<String[]>();
-//			String[] header = new String[1 + environmentLevels.length];
-//			for (int i = 0; i < header.length; i++) {
-//				if (i == 0)
-//					header[i] = "Label";
-//				else
-//					header[i] = environmentLevels[i - 1];
-//			}
-//			envContrast.add(header);
-//			if (!rows.getChildren().isEmpty()) {
-//				for (int i = 0; i < rows.getChildren().size(); i++) {
-//					Row row = (Row) rows.getChildren().get(i);
-//					String[] values = new String[row.getChildren().size()];
-//					for (int j = 0; j < row.getChildren().size(); j++) {
-//						if (j == 0) {
-//							Textbox input = (Textbox) row.getChildren().get(j);
-//							try {
-//								if (input.isValid()) {
-//									values[j] = input.getValue();
-//								} else {
-//									errorMessage = "Error, please input contrast value on Row "
-//											+ (i + 1)
-//											+ ", Column "
-//											+ (j + 1)
-//											+ ", for Environment!";
-//									return false;
-//								}
-//							} catch (WrongValueException e) {
-//								e.printStackTrace();
-//							}
-//						} else {
-//							Doublebox input = (Doublebox) row.getChildren()
-//									.get(j);
-//							try {
-//								if (input.isValid()) {
-//									values[j] = String
-//											.valueOf(input.getValue());
-//								} else {
-//									errorMessage = "Error, please input contrast value on Row "
-//											+ (i + 1)
-//											+ ", Column "
-//											+ (j + 1)
-//											+ ", for Environment!";
-//									return false;
-//								}
-//							} catch (WrongValueException e) {
-//								e.printStackTrace();
-//							}
-//						}
-//						// System.out
-//						// .println("Value on " + j + " is " + values[j]);
-//					}
-//					double sum = 0;
-//					for (int k = 1; k < values.length; k++) {
-//						sum = sum + Double.valueOf(values[k]);
-//					}
-//					if (sum != 0) {
-//						errorMessage = "Error, please check contrast coefficients on "
-//								+ (i + 1)
-//								+ " rows on Environment! It should be equal to zero!";
-//						return false;
-//					}
-//					// System.out.println("sum of value on " + i + ", row is "
-//					// + sum);
-//					envContrast.add(values);
-//				}
-//
-//			} else {
-//				errorMessage = "Error, there are no any contrast coefficients on environment!";
-//				return false;
-//			}
-//
-//			for (String[] temp : envContrast) {
-//				System.out.println("Environment Contrast:");
-//				for (int i = 0; i < temp.length; i++) {
-//					System.out.print(temp[i] + "\t");
-//				}
-//				System.out.println();
-//			}
-//
-//			String file = ssslAnalysisModel.getResultFolderPath()
-//					+ StringConstants.SYSTEM_FILE_SEPARATOR
-//					+ "EnvironmentContrastCoefficients.csv";
-//			FileUtilities.saveDataToFile(envContrast,
-//					"EnvironmentContrastCoefficients.csv",
-//					ssslAnalysisModel.getResultFolderPath());
-//			//			ssslAnalysisModel.setEnvContrastFile(file);
-//		}
-
+		
 		// set Vars
 		if (!this.lstTypeOfEnvCBB.getValue().isEmpty()) {
-			ssslAnalysisModel.setAnalysisEnvType(this.lstTypeOfEnvCBB
-					.getValue());
+			ssslAnalysisModel.setAnalysisEnvType(analysisEnvType);
 		} else {
 			errorMessage = "Analysis Environment Type cannot be empty!";
 			return false;
@@ -1410,9 +1139,7 @@ public class Specifications {
 		}
 		if (!this.genotypeTB.getValue().isEmpty()) {
 			ssslAnalysisModel.setGenotypeFactor(this.genotypeTB.getValue());
-			ssslAnalysisModel.setGenotypeFactorLevels(ssslRServeManager
-					.getLevels(columnList, dataList,
-							ssslAnalysisModel.getGenotypeFactor()));
+			ssslAnalysisModel.setGenotypeFactorLevels(genotypeLevels);
 		} else {
 			errorMessage = "Genotype cannot be empty!";
 			return false;
@@ -1420,8 +1147,12 @@ public class Specifications {
 
 		if (!this.envTB.getValue().isEmpty()) {
 			ssslAnalysisModel.setEnvFactor(envTB.getValue());
-			ssslAnalysisModel.setEnvFactorLevels(ssslRServeManager.getLevels(
-					columnList, dataList, ssslAnalysisModel.getEnvFactor()));
+			ssslAnalysisModel.setEnvFactorLevels(environmentLevels);
+			if(analysisEnvType == "Multi-Environment" && environmentLevels.length <= 1)
+			{
+				errorMessage = "It could not conduct multi-environment analysis on only one level of environment factor!";
+				return false;
+			}
 		} else if (this.lstTypeOfEnvCBB.getValue().equals("Multi-Environment")) {
 			errorMessage = "Environment cannot be empty!";
 			return false;
@@ -1494,6 +1225,39 @@ public class Specifications {
 			return false;
 		}
 		// Here for define the contrast file for genotype and environment
+		if(isSpecifyGenoContrast)
+		{
+			ssslAnalysisModel.setSpecifiedGenoContrast(true);
+			if(acrossEnvCB.isChecked())
+			{
+				ssslAnalysisModel.setAcrossEnv(true);
+			} else
+			{
+				ssslAnalysisModel.setAcrossEnv(false);
+			}
+			ssslAnalysisModel.setGenotypeContrastFile(genoContrastFiles);
+			for(String s : genoContrastFiles.values())
+			{
+				userFileManager.moveContrastFileToOutputFolder(folderPath, s);
+			}
+		} else
+		{
+			ssslAnalysisModel.setSpecifiedGenoContrast(false);
+			ssslAnalysisModel.setGenotypeContrastFile(null);
+		}
+		if(isSpecifyEnvContrsat)
+		{
+			ssslAnalysisModel.setSpecifiedEnvContrast(true);
+			ssslAnalysisModel.setEnvContrastFile(envContrastFiles);
+			for(String s : envContrastFiles.values())
+			{
+				userFileManager.moveContrastFileToOutputFolder(folderPath, s);
+			}
+		} else
+		{
+			ssslAnalysisModel.setSpecifiedEnvContrast(false);
+			ssslAnalysisModel.setEnvContrastFile(null);
+		}
 
 		if (this.genotypeByEnvDiv.isVisible()
 				&& this.finlayWilkinsonModelCB.isChecked()) {
@@ -1606,6 +1370,22 @@ public class Specifications {
 		}
 		return true;
 	}
+	
+	private boolean validateSpecifyEnvContrast()
+	{
+		if(isSpecifyEnvContrsat)
+		{
+			if(analysisEnvType == "Multi-Environment")
+			{
+				if(envTB.getValue().isEmpty())
+				{
+					errorMessage = "The environement factor could not be null!";
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 	private boolean validateSpecifyGenotypeContrast()
 	{
@@ -1670,24 +1450,6 @@ public class Specifications {
 		incCSVData.setSrc("/user/updatestudy/csvdata.zul");
 		incCSVData.setParent(dataGridDiv);
 	}
-
-	public void reloadContrastCSVGridOnGenotype() {
-		if (!contrastGridOnGenotypeDiv.getChildren().isEmpty())
-			contrastGridOnGenotypeDiv.getFirstChild().detach();
-		Include incContrastCSVDataOnGenotype = new Include();
-		incContrastCSVDataOnGenotype
-		.setSrc("/user/analysis/sssl/contrastongenotype.zul");
-		incContrastCSVDataOnGenotype.setParent(contrastGridOnGenotypeDiv);
-	}
-
-	public void reloadContrastCSVGridOnEnv() {
-		if (!contrastGridOnEnvDiv.getChildren().isEmpty())
-			contrastGridOnEnvDiv.getFirstChild().detach();
-		Include incContrastCSVDataOnEnv = new Include();
-		incContrastCSVDataOnEnv.setSrc("/user/analysis/sssl/contrastonenv.zul");
-		incContrastCSVDataOnEnv.setParent(contrastGridOnEnvDiv);
-	}
-
 
 	public Study getSelectedStudy() {
 		return selectedStudy;
@@ -1845,7 +1607,7 @@ public class Specifications {
 	public void setAlphalevel(Double alphalevel) {
 		this.alphalevel = alphalevel;
 	}
-
+	
 	private void showMessage(String message)
 	{
 		Messagebox.show(message, "Warnings", Messagebox.OK, Messagebox.INFORMATION);

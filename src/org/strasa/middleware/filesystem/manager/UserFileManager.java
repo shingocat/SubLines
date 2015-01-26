@@ -91,14 +91,19 @@ public class UserFileManager {
 			String filePath = resultFolderPath + File.separator + realName+ "(dataset).csv" ;
 			renamedFile = new File(filePath.replaceAll(".csv", "_(Dataset).csv"));
 			movedFile.renameTo(renamedFile);
-
-
-			System.out.println("resultFolderPath to:"+resultFolderPath);
-			System.out.println("realname:"+realName);
-			System.out.println("movedFile to:"+movedFile);
-			System.out.println("renamed to:"+filePath);
 			
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void moveContrastFileToOutputFolder(String resultFolderPath, String dataFile)
+	{
+		try {
+			File file = new File(dataFile);
+			FileUtils.copyFileToDirectory(file, new File(resultFolderPath + File.separator), true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -32,6 +32,7 @@ public class SSSLAnalysisModel {
 	private boolean isVarComponent;
 	private boolean isCompareWithRecurrent;
 	private String recurrentParent;
+	private boolean isAcrossEnv;
 	private boolean isSpecifiedGenoContrast;
 	private HashMap<String, String> genotypeContrastFile;
 	private boolean isSpecifiedEnvContrast;
@@ -424,12 +425,19 @@ public class SSSLAnalysisModel {
 	public void setSpecifiedEnvContrast(boolean isSpecifiedEnvContrast) {
 		this.isSpecifiedEnvContrast = isSpecifiedEnvContrast;
 	}
+	
+	public boolean isAcrossEnv() {
+		return isAcrossEnv;
+	}
 
+	public void setAcrossEnv(boolean isAcrossEnv) {
+		this.isAcrossEnv = isAcrossEnv;
+	}
 
 	@Override
 	public String toString() {
-		return "SSSLAnalysisModel [\ndataFileName=" + dataFileName
-				+ ", \nresultFolderPath=" + resultFolderPath + ", \noutFileName="
+		return "SSSLAnalysisModel [dataFileName=" + dataFileName
+				+ ",\nresultFolderPath=" + resultFolderPath + ", \noutFileName="
 				+ outFileName + ", \ndesign=" + design + ", \nanalysisEnvType="
 				+ analysisEnvType + ", \nresponseVars="
 				+ Arrays.toString(responseVars) + ", \ngenotypeFactor="
@@ -444,15 +452,18 @@ public class SSSLAnalysisModel {
 				+ rowFactor + ", \nrowFactorLevels="
 				+ Arrays.toString(rowFactorLevels) + ", \ncolumnFactor="
 				+ columnFactor + ", \ncolumnFactorLevels="
-				+ Arrays.toString(columnFactorLevels) + ", \nisDescriptiveStat="
-				+ isDescriptiveStat + ", \nisVarComponent=" + isVarComponent
+				+ Arrays.toString(columnFactorLevels) + ", \nsignificantAlpha="
+				+ significantAlpha + ", \nisDescriptiveStat=" + isDescriptiveStat
+				+ ", \nisVarComponent=" + isVarComponent
 				+ ", \nisCompareWithRecurrent=" + isCompareWithRecurrent
-				+ ", \nrecurrentParent=" + recurrentParent
-				+ ", \ngenotypeContrastFile=" + genotypeContrastFile
-				+ ", \nenvContrastFile=" + envContrastFile
-				+ ", \nisFinlayWikinson=" + isFinlayWikinson + ", \nisShukla="
-				+ isShukla + ", \nisAMMI=" + isAMMI + ", \nisGGE=" + isGGE
-				+ ", \nisBoxplotOnSingleEnv=" + isBoxplotOnSingleEnv
+				+ ", \nrecurrentParent=" + recurrentParent + ", \nisAcrossEnv="
+				+ isAcrossEnv + ", \nisSpecifiedGenoContrast="
+				+ isSpecifiedGenoContrast + ", \ngenotypeContrastFile="
+				+ genotypeContrastFile + ", \nisSpecifiedEnvContrast="
+				+ isSpecifiedEnvContrast + ", \nenvContrastFile="
+				+ envContrastFile + ", \nisFinlayWikinson=" + isFinlayWikinson
+				+ ", \nisShukla=" + isShukla + ", \nisAMMI=" + isAMMI + ", \nisGGE="
+				+ isGGE + ", \nisBoxplotOnSingleEnv=" + isBoxplotOnSingleEnv
 				+ ", \nisHistogramOnSingleEnv=" + isHistogramOnSingleEnv
 				+ ", \nisDiagnosticPlotOnSingleEnv="
 				+ isDiagnosticPlotOnSingleEnv + ", \nisBoxplotOnAcrossEnv="
@@ -466,7 +477,8 @@ public class SSSLAnalysisModel {
 				+ ", \nisAMMIBiplotPC2VsPC3=" + isAMMIBiplotPC2VsPC3
 				+ ", \nisGGEBiplotSymmetricView=" + isGGEBiplotSymmetricView
 				+ ", \nisGGEBiplotEnvironmentView=" + isGGEBiplotEnvironmentView
-				+ ", \nisGGEBiplotGenotypeView=" + isGGEBiplotGenotypeView + "]";
+				+ ", \nisGGEBiplotGenotypeView=" + isGGEBiplotGenotypeView
+				+ "]";
 	}
-
+	
 }

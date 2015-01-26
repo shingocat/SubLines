@@ -13,20 +13,6 @@
 			<div hflex="1" vflex="1" id="dataGridDiv">
 				<grid id="dataGrid" emptyMessage="No data loaded..." hflex="1" 
 					height="300px">
-<!-- 					<columns id="columns"/> -->
-<!-- 					<rows id="rows" /> -->
-<!-- 					<columns children="@load(vm.columnList)"> -->
-<!-- 						<template name="children"> -->
-<!-- 							<column hflex="1" label="@load(each)" /> -->
-<!-- 						</template> -->
-<!-- 					</columns> -->
-<!-- 					<rows children="@load(vm.dataList)"> -->
-<!-- 						<template name="children" var="data"> -->
-<!-- 							<row> -->
-<!-- 								<label forEach="${data}" value="${each}" /> -->
-<!-- 							</row> -->
-<!-- 						</template> -->
-<!-- 					</rows> -->
 				</grid>
 			</div>
 		</vlayout>

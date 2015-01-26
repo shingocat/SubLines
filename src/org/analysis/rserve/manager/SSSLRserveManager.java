@@ -63,6 +63,7 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 		String recurrent = model.getRecurrentParent();
 		boolean isCompareWithRecurrent = model.isCompareWithRecurrent();
 		// specifying contrast
+		boolean isAcrossEnv = model.isAcrossEnv();
 		boolean isSpecifiedGenoContrast = model.isSpecifiedGenoContrast();
 		HashMap<String, String> genoContrastFiles = model.getGenotypeContrastFile();
 		String respvarVector = getInputTransform().createRVector(respvars);
@@ -241,15 +242,14 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 				//this if for contrast analysis
 				if(isCompareWithRecurrent)
 				{
-					String doContrast = "outcomes.contrast <- try(doContrast(outcomes, contrastOpt = \"RecurrentParent\","
+					String doContrast = "outcomes.contrast.recurrent <- try(doContrast(outcomes, contrastOpt = \"RecurrentParent\","
 							+ "recurrentParent = \"" + recurrent + "\",alpha = as.numeric(\"" + alpha + "\")),silent=TRUE);";
 					getConn().eval(doContrast);
-					run = getConn().eval("class(outcomes.contrast)").asString();
+					run = getConn().eval("class(outcomes.contrast.recurrent)").asString();
 					if(run != null && run.equalsIgnoreCase("try-error"))
 					{
-						getConn().eval("capture.output(print(outcomes,2),file=\"" + outFileName + "\", append=TRUE);");
 						StringBuilder error = new StringBuilder();
-						error.append("msg <- trimStrings(strsplit(outcomes.contrast,\":\")[[1]]);");
+						error.append("msg <- trimStrings(strsplit(outcomes.contrast.recurrent,\":\")[[1]]);");
 						error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
 						error.append("msg <- gsub(\"\\\"\",\"\",msg);");
 						error.append("capture.output(cat(\"****\nERROR in do.SEA() function:\n\",msg,"
@@ -259,12 +259,94 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 						toreturn.put("Message", "Do contrast Failure!");
 					} else
 					{
-						getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast),file=\"" + contrastFile + "\", append=TRUE);");
+						getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.recurrent),file=\"" + contrastFile + "\", append=TRUE);");
 					}
 				}
 				if(isSpecifiedGenoContrast)
 				{
-					
+					if(isAcrossEnv)
+					{
+						String getGenoContrastList = "genoContrastList <- try(getContrastListFromFiles(\"" + genoContrastFiles.get("AcrossEnv")
+								+ "\"),silent=TRUE);";
+						getConn().eval(getGenoContrastList);
+						run = getConn().eval("class(genoContrastList)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(genoContrastList,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in getContrastListFromFiles function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message", "Read Genotype Contrast Failure!");
+						} else
+						{
+							String doContrast = "outcomes.contrast.custom <- try(doContrast(outcomes, contrastOpt = \"Custom\","
+									+ "genoContrast= genoContrastList, acrossEnv=TRUE),silent=TRUE);";
+							getConn().eval(doContrast);
+							run = getConn().eval("class(outcomes.contrast.custom)").asString();
+							if(run != null && run.equalsIgnoreCase("try-error"))
+							{
+								StringBuilder error = new StringBuilder();
+								error.append("msg <- trimStrings(strsplit(outcomes.contrast.custom,\":\")[[1]]);");
+								error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+								error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+								error.append("capture.output(cat(\"****\nERROR in doContrast() function:\n\",msg,"
+										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+								getConn().eval(error.toString());
+								toreturn.put("Success", "TRUE");
+								toreturn.put("Message", "Do contrast Failure!");
+							} else
+							{
+								getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.custom),file=\"" + contrastFile + "\", append=TRUE);");
+							}
+						}
+					} else
+					{
+						String [] temp = new String[environmentLevels.length];
+						for(int i = 0; i < environmentLevels.length; i++)
+							temp[i] = genoContrastFiles.get(environmentLevels[i]);
+						String genoContrasts = getInputTransform().createRVector(temp);
+						String getGenoContrastList = "genoContrastList <- try(getContrastListFromFiles(" + genoContrasts
+								+ "),silent=TRUE);";
+						getConn().eval(getGenoContrastList);
+						run = getConn().eval("class(genoContrastList)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(genoContrastList,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in getContrastListFromFiles function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message", "Read Genotype Contrast Failure!");
+						} else
+						{
+							String doContrast = "outcomes.contrast.custom <- try(doContrast(outcomes, contrastOpt = \"Custom\","
+									+ "genoContrast= genoContrastList,acrossEnv=FALSE),silent=TRUE);";
+							getConn().eval(doContrast);
+							run = getConn().eval("class(outcomes.contrast.custom)").asString();
+							if(run != null && run.equalsIgnoreCase("try-error"))
+							{
+								StringBuilder error = new StringBuilder();
+								error.append("msg <- trimStrings(strsplit(outcomes.contrast.custom,\":\")[[1]]);");
+								error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+								error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+								error.append("capture.output(cat(\"****\nERROR in doContrast() function:\n\",msg,"
+										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+								getConn().eval(error.toString());
+								toreturn.put("Success", "TRUE");
+								toreturn.put("Message", "Do contrast Failure!");
+							} else
+							{
+								getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.custom),file=\"" + contrastFile + "\", append=TRUE);");
+							}
+						}
+					}
 				} 
 					
 				getConn().eval("capture.output(print(outcomes,2),file=\"" + outFileName + "\", append=TRUE);");
@@ -377,18 +459,19 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 		boolean isDiagnosticPlotOnSingleEnv = model.isDiagnosticPlotOnSingleEnv();
 		boolean isDiagnosticPlotOnAcrossEnv = model.isDiagnosticPlotOnAcrossEnv();
 		String alpha = String.valueOf(model.getSignificantAlpha());
-		String[] recurrent = new String[] { model.getRecurrentParent() };
-		boolean isCcompareWithRecurrent = model.isCompareWithRecurrent();
+		String[] recurrentParent = new String[] { model.getRecurrentParent() };
+		boolean isCompareWithRecurrent = model.isCompareWithRecurrent();
 		boolean isSpecifiedGenoContrast = model.isSpecifiedGenoContrast();;
 		boolean isSpecifiedEnvContrast = model.isSpecifiedEnvContrast();
 		HashMap<String, String> genoContrastFiles = model.getGenotypeContrastFile();
 		HashMap<String, String> envContrastFiles = model.getEnvContrastFile();
 		String respvarVector = getInputTransform().createRVector(respvars);
-		String controlLevelsVector = getInputTransform().createRVector(recurrent);
+		String recurrent = getInputTransform().createRVector(recurrentParent);
 
 		String designUsed = new String();
 		String design = new String();
 		String designString = null;
+		
 
 		switch (designIndex) {
 		case 0: {
@@ -538,7 +621,133 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 						toreturn.put("Message", "Do Multi Environment Analysis Error!");
 						return toreturn;
 					}
-					getConn().eval("capture.output(print(outcomes),file=\"" + outFileName + "\", append=TRUE);");
+					getConn().eval("capture.output(print(outcomes,2),file=\"" + outFileName + "\", append=TRUE);");
+					
+					if(isCompareWithRecurrent)
+					{
+						String doContrast = "outcomes.contrast.recurrent <- try(doContrast(outcomes, contrastOpt = \"RecurrentParent\","
+								+ "recurrentParent = " + recurrent + "),silent=TRUE);";
+						getConn().eval(doContrast);
+						run = getConn().eval("class(outcomes.contrast.recurrent)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(outcomes.contrast.recurrent,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in doContrast() function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message", "Do contrast Failure!");
+						} else
+						{
+							getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.recurrent),file=\"" + contrastFile + "\", append=TRUE);");
+						}
+					}
+					
+					if(isSpecifiedGenoContrast && isSpecifiedEnvContrast)
+					{	
+						String getGenoContrastList = "genoContrastList <- try(getContrastListFromFiles(\"" + genoContrastFiles.get("AcrossEnv")
+								+ "\"),silent=TRUE);";
+						getConn().eval(getGenoContrastList);
+						run = getConn().eval("class(genoContrastList)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(genoContrastList,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in getContrastListFromFiles function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message", "Read Genotype Contrast Failure!");
+						} else
+						{
+							String getEnvContrastList = "envContrastList <- try(getContrastListFromFiles(\"" + envContrastFiles.get("Environment") 
+									+ "\"), silent=TRUE);";
+							getConn().eval(getEnvContrastList);
+							run = getConn().eval("class(envContrastList)").asString();
+							if(run != null && run.equalsIgnoreCase("try-error"))
+							{
+								StringBuilder error = new StringBuilder();
+								error.append("msg <- trimStrings(strsplit(envContrastList,\":\")[[1]]);");
+								error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+								error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+								error.append("capture.output(cat(\"****\nERROR in getContrastListFromFiles function:\n\",msg,"
+										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+								getConn().eval(error.toString());
+								toreturn.put("Success", "TRUE");
+								toreturn.put("Message", "Read Env Contrast Failure!");
+							} else
+							{
+								String doContrast = "outcomes.contrast.custom <- try(doContrast(outcomes, contrastOpt = \"Custom\","
+										+ "genoContrast= genoContrastList, envContrast=envContrastList),silent=TRUE);";
+								getConn().eval(doContrast);
+								run = getConn().eval("class(outcomes.contrast.custom)").asString();
+								if(run != null && run.equalsIgnoreCase("try-error"))
+								{
+									StringBuilder error = new StringBuilder();
+									error.append("msg <- trimStrings(strsplit(outcomes.contrast.custom,\":\")[[1]]);");
+									error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+									error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+									error.append("capture.output(cat(\"****\nERROR in doContrast() function:\n\",msg,"
+											+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+									getConn().eval(error.toString());
+									toreturn.put("Success", "TRUE");
+									toreturn.put("Message", "Do contrast Failure!");
+								} else
+								{
+									getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.custom),file=\"" + contrastFile + "\", append=TRUE);");
+								}
+							}
+						}
+						
+					} else if(isSpecifiedGenoContrast && !isSpecifiedEnvContrast)
+					{
+						String getGenoContrastList = "genoContrastList <- try(getContrastListFromFiles(\"" + genoContrastFiles.get("AcrossEnv")
+								+ "\"),silent=TRUE);";
+						getConn().eval(getGenoContrastList);
+						run = getConn().eval("class(genoContrastList)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(genoContrastList,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in getContrastListFromFiles function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message", "Read Genotype Contrast Failure!");
+						} else
+						{
+							String doContrast = "outcomes.contrast.custom <- try(doContrast(outcomes, contrastOpt = \"Custom\","
+									+ "genoContrast= genoContrastList),silent=TRUE);";
+							getConn().eval(doContrast);
+							run = getConn().eval("class(outcomes.contrast.custom)").asString();
+							if(run != null && run.equalsIgnoreCase("try-error"))
+							{
+								StringBuilder error = new StringBuilder();
+								error.append("msg <- trimStrings(strsplit(outcomes.contrast.custom,\":\")[[1]]);");
+								error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+								error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+								error.append("capture.output(cat(\"****\nERROR in doContrast() function:\n\",msg,"
+										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+								getConn().eval(error.toString());
+								toreturn.put("Success", "TRUE");
+								toreturn.put("Message", "Do contrast Failure!");
+							} else
+							{
+								getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.custom),file=\"" + contrastFile + "\", append=TRUE);");
+							}
+						}
+					} else if(!isSpecifiedGenoContrast && isSpecifiedEnvContrast)
+					{
+						// do not implement it now
+						String getEnvContrastList = null;
+					}
 
 				} //end stmt of read.pheno.data error 
 			}// end stmt of read.csv error

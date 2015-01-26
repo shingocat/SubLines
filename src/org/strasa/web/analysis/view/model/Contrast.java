@@ -154,6 +154,10 @@ public class Contrast {
 			columnList.clear();
 			dataList.clear();
 			columnList = new ArrayList<String>(Arrays.asList(rawData.get(0)));
+			if(columnList.get(columnList.size() - 1).isEmpty() || 
+					columnList.get(columnList.size() - 1).length() == 0)
+				columnList.remove(columnList.size() - 1);
+				
 			if(!validateColumnList())
 			{
 				showMessage("The header of uploaded contrast file do not match " + factor + " levels!");
