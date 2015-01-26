@@ -37,10 +37,14 @@
 						</columnlayout>
 					</tabpanel>
 					<tabpanel id="csvResultTab" >
-						<hlayout>
-							<div id="csvResultDiv" height="500px" />
-							<div id="viewCsvContentDiv" height="500px" />
-						</hlayout>
+						<columnlayout>
+							<columnchildren width="20%">
+								<div id="csvResultDiv" style="overflow:auto" height="500px" />
+							</columnchildren>
+							<columnchildren width="80%">
+								<div id="viewCsvContentDiv" style="overflow:auto" height="500px" />
+							</columnchildren>
+						</columnlayout>
 					</tabpanel>
 					<tabpanel id="dataSetTab" />
 				</tabpanels>

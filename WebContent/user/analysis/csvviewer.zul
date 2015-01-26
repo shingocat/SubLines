@@ -6,6 +6,7 @@
 			<button label="Export to CSV" visible="true"
 				sclass="btn-success" image="/images/export16.png"
 				onClick="@command('exportRowData', columns=vm.columnList, rows=vm.dataList)" />
+			<label value="@bind(vm.name)" />
 		</div> 
 		<div id="datagrid" />
 	</window>

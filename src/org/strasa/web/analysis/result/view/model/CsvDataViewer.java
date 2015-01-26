@@ -80,6 +80,9 @@ public class CsvDataViewer {
 			columnList.clear();
 			dataList.clear();
 			columnList = new ArrayList<String>(Arrays.asList(rawData.get(0)));
+			if(columnList.get(columnList.size() - 1).isEmpty() || 
+					columnList.get(columnList.size() - 1).length() == 0)
+				columnList.remove(columnList.size() - 1);
 			rawData.remove(0);
 			dataList = new ArrayList<String[]>(rawData);
 			BindUtils.postNotifyChange(null, null, this, "*");
@@ -107,4 +110,13 @@ public class CsvDataViewer {
 	public void setColumnList(List<String> columnList) {
 		this.columnList = columnList;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 }
