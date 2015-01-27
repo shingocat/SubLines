@@ -19,7 +19,9 @@ import org.zkoss.zk.ui.Sessions;
 public class SSSLRserveManager extends JRServeMangerImpl {
 	
 	String logFile = "Log.txt";
-	String contrastFile = "Contrast.txt";
+	String contrastFile = "ContrastAnalysis.txt";
+	String stabilityFile = "StabilityAnalysis.txt";
+	String multiplicativeFile = "MultiplicativeAnalysis.txt";
 
 	public SSSLRserveManager() {
 		super();
@@ -467,6 +469,18 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 		HashMap<String, String> envContrastFiles = model.getEnvContrastFile();
 		String respvarVector = getInputTransform().createRVector(respvars);
 		String recurrent = getInputTransform().createRVector(recurrentParent);
+		boolean isFinlayWikinson = model.isFinlayWikinson();
+		boolean isShukla = model.isShukla();
+		boolean isAMMI = model.isAMMI();
+		boolean isGGE = model.isGGE();
+		boolean isAMMI1Biplot = model.isAMMI1Biplot();
+		boolean isAdaptationMap = model.isAdaptationMap();
+		boolean isAMMIBiplotPC1VsPC2 = model.isAMMIBiplotPC1VsPC2();
+		boolean isAMMIBiplotPC1VsPC3 = model.isAMMIBiplotPC1VsPC3();
+		boolean isAMMIBiplotPC2VsPC3 = model.isAMMIBiplotPC2VsPC3();
+		boolean isGGEBiplotSymmetricView = model.isGGEBiplotSymmetricView();
+		boolean isGGEBiplotGenotypeView= model.isGGEBiplotGenotypeView();
+		boolean isGGEBiplotEnvironmentView = model.isGGEBiplotEnvironmentView();
 
 		String designUsed = new String();
 		String design = new String();
@@ -639,7 +653,7 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
 							getConn().eval(error.toString());
 							toreturn.put("Success", "TRUE");
-							toreturn.put("Message", "Do contrast Failure!");
+							toreturn.put("Message",  toreturn.get("Message") + "Do contrast Failure!");
 						} else
 						{
 							getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.recurrent),file=\"" + contrastFile + "\", append=TRUE);");
@@ -662,7 +676,7 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
 							getConn().eval(error.toString());
 							toreturn.put("Success", "TRUE");
-							toreturn.put("Message", "Read Genotype Contrast Failure!");
+							toreturn.put("Message",  toreturn.get("Message") + "Read Genotype Contrast Failure!");
 						} else
 						{
 							String getEnvContrastList = "envContrastList <- try(getContrastListFromFiles(\"" + envContrastFiles.get("Environment") 
@@ -679,7 +693,7 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
 								getConn().eval(error.toString());
 								toreturn.put("Success", "TRUE");
-								toreturn.put("Message", "Read Env Contrast Failure!");
+								toreturn.put("Message",  toreturn.get("Message") + "Read Env Contrast Failure!");
 							} else
 							{
 								String doContrast = "outcomes.contrast.custom <- try(doContrast(outcomes, contrastOpt = \"Custom\","
@@ -696,7 +710,7 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 											+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
 									getConn().eval(error.toString());
 									toreturn.put("Success", "TRUE");
-									toreturn.put("Message", "Do contrast Failure!");
+									toreturn.put("Message",  toreturn.get("Message") + "Do contrast Failure!");
 								} else
 								{
 									getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.custom),file=\"" + contrastFile + "\", append=TRUE);");
@@ -720,7 +734,7 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
 							getConn().eval(error.toString());
 							toreturn.put("Success", "TRUE");
-							toreturn.put("Message", "Read Genotype Contrast Failure!");
+							toreturn.put("Message",  toreturn.get("Message") + "Read Genotype Contrast Failure!");
 						} else
 						{
 							String doContrast = "outcomes.contrast.custom <- try(doContrast(outcomes, contrastOpt = \"Custom\","
@@ -737,18 +751,218 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
 								getConn().eval(error.toString());
 								toreturn.put("Success", "TRUE");
-								toreturn.put("Message", "Do contrast Failure!");
+								toreturn.put("Message",  toreturn.get("Message") + "Do contrast Failure!");
 							} else
 							{
 								getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.custom),file=\"" + contrastFile + "\", append=TRUE);");
 							}
 						}
-					} else if(!isSpecifiedGenoContrast && isSpecifiedEnvContrast)
-					{
-						// do not implement it now
-						String getEnvContrastList = null;
 					}
-
+					//optional output if selected and if the number of environment
+					// levels is at least 5: Stability analysis using regression
+					if(isFinlayWikinson)
+					{
+						if(environmentLevels.length > 4)
+						{
+							StringBuilder sb = new StringBuilder();
+							sb.append("outcomes.stability.finlay <- try(stability.analysis(outcomes, method=\"regression\"), silent=TRUE);");
+							getConn().eval(sb.toString());
+							run = getConn().eval("class(outcomes.stability.finlay)").asString();
+							if(run != null && run.equalsIgnoreCase("try-error"))
+							{
+								StringBuilder error = new StringBuilder();
+								error.append("msg <- trimStrings(strsplit(outcomes.stability.finlay,\":\")[[1]]);");
+								error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+								error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+								error.append("capture.output(cat(\"****\nERROR in stability.analysis() function:\n\",msg,"
+										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+								getConn().eval(error.toString());
+								toreturn.put("Success", "TRUE");
+								toreturn.put("Message",  toreturn.get("Message") + "Stability analysis Failure!");
+							} else
+							{
+								getConn().eval("capture.output(print.StabilityOutcomes(outcomes.stability.finlay),file=\"" + stabilityFile + "\", append=TRUE);");
+							}
+						} else
+						{
+							StringBuilder sb = new StringBuilder();
+							sb.append("capture.output(cat(\"\nSTABILITY ANALYSIS USING FINLAY-WILKINSON's MODEL:\n\"), file=\""
+									+ logFile +"\", append = TRUE);");
+							sb.append("capture.output(cat(\"\n***This is not done. The environment factor should have at least five levels.***\n\"),"
+									+ " file=\"" + logFile +"\", append = TRUE);");
+							getConn().eval(sb.toString());
+						}
+					}
+					//optional output if selected and if the number of environment 
+					//levels is at least 5: stability analysis using shukla
+					if(isShukla)
+					{
+						if(environmentLevels.length > 4)
+						{
+							StringBuilder sb = new StringBuilder();
+							sb.append("outcomes.stability.shukla <- try(stability.analysis(outcomes, method=\"shukla\"), silent=TRUE);");
+							getConn().eval(sb.toString());
+							run = getConn().eval("class(outcomes.stability.shukla)").asString();
+							if(run != null && run.equalsIgnoreCase("try-error"))
+							{
+								StringBuilder error = new StringBuilder();
+								error.append("msg <- trimStrings(strsplit(outcomes.stability.shukla,\":\")[[1]]);");
+								error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+								error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+								error.append("capture.output(cat(\"****\nERROR in stability.analysis() function:\n\",msg,"
+										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+								getConn().eval(error.toString());
+								toreturn.put("Success", "TRUE");
+								toreturn.put("Message",   toreturn.get("Message") + "Stability analysis Failure!");
+							} else
+							{
+								getConn().eval("capture.output(print.StabilityOutcomes(outcomes.stability.shukla),file=\"" + stabilityFile + "\", append=TRUE);");
+							}
+						} else
+						{
+							StringBuilder sb = new StringBuilder();
+							sb.append("capture.output(cat(\"\nSTABILITY ANALYSIS USING SHUKLA'S MODEL:\n\"), file=\""
+									+ logFile +"\", append = TRUE);");
+							sb.append("capture.output(cat(\"\n***This is not done. The environment factor should have at least five levels.***\n\"),"
+									+ " file=\"" + logFile +"\", append = TRUE);");
+							getConn().eval(sb.toString());
+						}
+					}
+					
+					if(isAMMI)
+					{
+						if(environmentLevels.length > 2)
+						{
+							StringBuilder sb = new StringBuilder();
+							sb.append("outcomes.ammi <- try(ammi.analysis(outcomes,number = FALSE,");
+							sb.append(isAMMIBiplotPC1VsPC2 ? "TRUE," : "FALSE,");
+							sb.append(isAMMIBiplotPC1VsPC3 ? "TRUE," : "FALSE,");
+							sb.append(isAMMIBiplotPC2VsPC3 ? "TRUE," : "FALSE,");
+							sb.append(isAMMI1Biplot ? "TRUE," : "FALSE,");
+							sb.append(isAdaptationMap ? "TRUE" : "FALSE");
+							sb.append("), silent=TRUE);");
+							getConn().eval(sb.toString());
+							run = getConn().eval("class(outcomes.ammi)").asString();
+							if(run != null && run.equalsIgnoreCase("try-error"))
+							{
+								StringBuilder error = new StringBuilder();
+								error.append("msg <- trimStrings(strsplit(outcomes.ammi,\":\")[[1]]);");
+								error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+								error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+								error.append("capture.output(cat(\"****\nERROR in ammi.analysis() function:\n\",msg,"
+										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+								getConn().eval(error.toString());
+								toreturn.put("Success", "TRUE");
+								toreturn.put("Message",  toreturn.get("Message") + "Multiplicative analysis AMMI Failure!");
+							} else
+							{
+								getConn().eval("capture.output(print.MultiplicativeOutcomes(outcomes.ammi),file=\"" + multiplicativeFile + "\", append=TRUE);");
+							}
+						} else
+						{
+							StringBuilder sb = new StringBuilder();
+							sb.append("capture.output(cat(\"\nAMMI ANALYSIS:\n\"), file=\""
+									+ logFile +"\", append = TRUE);");
+							sb.append("capture.output(cat(\"\n***This is not done. The environment factor should have at least three levels.***\n\"),"
+									+ " file=\"" + logFile +"\", append = TRUE);");
+							getConn().eval(sb.toString());
+						}
+					}
+					
+					if(isGGE)
+					{
+						if(environmentLevels.length > 2)
+						{
+							StringBuilder sb = new StringBuilder();
+							sb.append("outcomes.gge <- try(gge.analysis(outcomes,number = FALSE, f=0.5,");
+							sb.append(isGGEBiplotSymmetricView ? "TRUE," : "FALSE,");
+							sb.append(isGGEBiplotEnvironmentView ? "TRUE," : "FALSE,");
+							sb.append(isGGEBiplotGenotypeView ? "TRUE" : "FALSE");
+							sb.append("), silent=TRUE);");
+							getConn().eval(sb.toString());
+							run = getConn().eval("class(outcomes.gge)").asString();
+							if(run != null && run.equalsIgnoreCase("try-error"))
+							{
+								StringBuilder error = new StringBuilder();
+								error.append("msg <- trimStrings(strsplit(outcomes.gge,\":\")[[1]]);");
+								error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+								error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+								error.append("capture.output(cat(\"****\nERROR in gge.analysis() function:\n\",msg,"
+										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+								getConn().eval(error.toString());
+								toreturn.put("Success", "TRUE");
+								toreturn.put("Message",  toreturn.get("Message") + "Multiplicative analysis GGE Failure!");
+							} else
+							{
+								getConn().eval("capture.output(print.MultiplicativeOutcomes(outcomes.gge),file=\"" + multiplicativeFile + "\", append=TRUE);");
+							}
+						} else
+						{
+							StringBuilder sb = new StringBuilder();
+							sb.append("capture.output(cat(\"\nGGE ANALYSIS:\n\"), file=\""
+									+ logFile +"\", append = TRUE);");
+							sb.append("capture.output(cat(\"\n***This is not done. The environment factor should have at least three levels.***\n\"),"
+									+ " file=\"" + logFile +"\", append = TRUE);");
+							getConn().eval(sb.toString());
+						}
+					}
+					
+					if(isDiagnosticPlotOnAcrossEnv)
+					{
+						String diagplot = "diagplot <- try(graph.diag(outcomes), silent=TRUE);";
+						getConn().eval(diagplot);
+						run = getConn().eval("class(diagplot)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(diagplot,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in graph.diag function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message", toreturn.get("Message") + " Fail to graph diagplot!");
+						}
+					}
+					
+					if(isHistogramOnAcrossEnv)
+					{
+						String histplot = "histplot <- try(graph.hist(outcomes), silent=TRUE);";
+						getConn().eval(histplot);
+						run = getConn().eval("class(histplot)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(histplot,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in graph.hist function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message", toreturn.get("Message") + " Fail to graph histplot!");
+						}
+					}
+					
+					if(isBoxplotOnAcrossEnv)
+					{
+						String boxplot = "boxplot <- try(graph.boxplot(outcomes), silent=TRUE);";
+						getConn().eval(boxplot);
+						run = getConn().eval("class(boxplot)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(boxplot,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in graph.boxplot function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message", toreturn.get("Message") + " Fail to graph boxplot!");
+						}
+					}
 				} //end stmt of read.pheno.data error 
 			}// end stmt of read.csv error
 		} catch (RserveException e) {
@@ -767,7 +981,8 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 			getConn().close();
 		}
 		toreturn.put("Success", "TRUE");
-		toreturn.put("Message", "Do Multi-Environment Analysis on SSSL successfully!");
+		toreturn.put("Message",  toreturn.get("Message") +
+				"Do Multi-Environment Analysis on SSSL successfully!");
 		return toreturn;
 	}
 
