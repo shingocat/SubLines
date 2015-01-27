@@ -4,12 +4,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 import org.strasa.middleware.util.StringConstants;
+import org.strasa.web.analysis.view.model.AnalysisModel;
 import org.strasa.web.analysis.view.model.SSSLAnalysisModel;
 import org.strasa.web.analysis.view.model.SingleSiteAnalysisModel;
 import org.strasa.web.utilities.InputTransform;
@@ -27,12 +29,14 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 		super();
 	}
 
-	public HashMap<String, String> doAnalysis(SSSLAnalysisModel model) {
-		System.out.println("SSSL MODEL INFO : " + model.toString());
-		if (model.getAnalysisEnvType().equals("Multi-Environment"))
-			return this.doMEA(model);
+	@Override
+	public HashMap<String, String> doAnalysis(AnalysisModel model) {
+		SSSLAnalysisModel ssslModel = (SSSLAnalysisModel)model; 
+		System.out.println("SSSL MODEL INFO : " + ssslModel.toString());
+		if (ssslModel.getAnalysisEnvType().equals("Multi-Environment"))
+			return this.doMEA(ssslModel);
 		else
-			return this.doSEA(model);
+			return this.doSEA(ssslModel);
 	}
 
 	// single environment analysis for my redesign PBTools, JAN 19, 2015
@@ -427,7 +431,12 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 			getConn().close();
 		}
 		toreturn.put("Success", "TURE");
-		toreturn.put("Message", "Successful Do Single Environment Analysis!");
+		String messages = null;
+		if(toreturn.get("Message") != null)
+			messages = toreturn.get("Message") + "Successful Do Single Environment Analysis!";
+		else
+			messages = "Successful Do Single Environment Analysis!";
+		toreturn.put("Message", messages);
 		return toreturn;
 
 	}
@@ -981,8 +990,12 @@ public class SSSLRserveManager extends JRServeMangerImpl {
 			getConn().close();
 		}
 		toreturn.put("Success", "TRUE");
-		toreturn.put("Message",  toreturn.get("Message") +
-				"Do Multi-Environment Analysis on SSSL successfully!");
+		String messages = null;
+		if(toreturn.get("Message") == null) 
+			messages = "Do Multi-Environment Analysis on SSSL successfully!";
+		else 
+			messages = toreturn.get("Message") + "Do Multi-Environment Analysis on SSSL successfully!";
+		toreturn.put("Message",  messages);
 		return toreturn;
 	}
 

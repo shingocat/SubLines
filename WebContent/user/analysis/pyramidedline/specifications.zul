@@ -22,19 +22,21 @@
 												<hlayout>
 													<combobox id="studiesCombobox" visible="false"
 														model="@load(vm.lstStudy)" readonly="true"
-														selectedItem="@bind(vm.selectedStudy)" onChange="@command('updateDataSetList')">
+														selectedItem="@bind(vm.selectedStudy)" 
+														onChange="@command('updateDataSetList')">
 														<template name="model">
 															<comboitem value="@load(each)" label="@load(each.name)" />
 														</template>
 													</combobox>
 													<combobox id="dataSetCombobox" visible="false"
 														model="@load(vm.lstStudyDataSet)" readonly="true"
-														selectedItem="@bind(vm.selectedStudyDataSet)" onChange="@command('displaySelectedDataSet')">
+														selectedItem="@bind(vm.selectedStudyDataSet)" 
+														onChange="@command('displaySelectedDataSet')">
 														<template name="model">
 															<comboitem value="@load(each)" label="@load(each.title)" />
 														</template>
 													</combobox>
-													<label id="lblMsgUpload" visible="@load(vm.fromExternalFile)"
+													<label id="lblMsgUpload" visible="@load(vm.isExternalFile)"
 														value="@load(vm.dataFileName)" sclass="label-search" />
 													<button sclass="btn-danger" id="selectDataBtn"
 														label="From a Study" image="/images/find.png"
@@ -82,22 +84,19 @@
 										<separator width="10px" />
 										<label value="Number of Genes: " />
 										<separator width="5px" />
-										<combobox readonly="true" id="lstNumberOfGenesCBB"
-											constraint="no empty"
-											onChange="@command('updateNumberOfGenesOpt',selectedValue=self.value)">
-											<attribute name="onCreate">
-												self.setSelectedIndex(0);
-											</attribute>
-											<comboitem value="2" label="Bi-Genes" />
-											<comboitem value="3" label="Tri-Genes" />
-											<comboitem value="4" label="Quadra-Genes" />
+										<combobox model="@load(vm.lstGeneNumber)" readonly="true" id="lstGeneNumberCBB"
+											constraint="no empty" selectedItem="@bind(vm.geneNumber)"
+											onChange="@command('updateGeneNumber',selectedValue=self.value)">
+											<template name="model">
+												<comboitem value="@load(each)" label="@load(each)" />
+											</template>
 										</combobox>
 										<separator width="20px" />
 										<label value="Analysis Type: " />
 										<separator width="5px" />
-										<combobox model="@load(vm.lstAnalysisType)" readonly="true"
-											id="lstAnalysisTypeCBB" selectedItem="@bind(vm.analysisType)"
-											onChange="@command('updateAnalysisTypeOptions',selectedIndex = self.selectedIndex)">
+										<combobox model="@load(vm.lstAnalysisEnvType)" readonly="true"
+											id="lstAnalysisEnvTypeCBB" selectedItem="@bind(vm.analysisEnvType)"
+											onChange="@command('updateAnalysisEnvType',selectedIndex = self.selectedIndex)">
 											<template name="model">
 												<comboitem value="@load(each)" label="@load(each)" />
 											</template>
@@ -139,7 +138,6 @@
 			<div height="10%">
 				<button id="runBtn" label="Run"
 					onClick="@command('validatePyramidedLineAnalysisInputs')" sclass="btn-danger" />
-
 				<label value="@bind(vm.resultRServe)" multiline="true" />
 			</div>
 			<space height="20px"></space>

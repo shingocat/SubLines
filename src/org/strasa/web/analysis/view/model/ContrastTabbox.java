@@ -46,11 +46,17 @@ public class ContrastTabbox {
 				pasedArgs.put("UploadedFileFolderPath", args.get("UploadedFileFolderPath"));
 				pasedArgs.put("Levels", ((HashMap<String, List<String>>)args.get("Levels")).get(s));
 				pasedArgs.put("Factor", args.get("Factor"));
+				pasedArgs.put("Type", args.get("Type"));
+				pasedArgs.put("DefaultContrastFile", args.get("DefaultContrastFile"));
 				inc.setDynamicProperty("Arguments", pasedArgs);
 				if(args.get("Type") ==  "File")
 					inc.setSrc("/user/analysis/contrast.zul");
-				else
+				else if(args.get("Type") == "Manual")
 					inc.setSrc("/user/analysis/contrastmanually.zul");
+				else if(args.get("Type") == "Bi-Genes" || args.get("Type") == "Tri-Genes"
+						|| args.get("Type") == "Quadra-Genes")
+					inc.setSrc("/user/analysis/contrastdefault.zul");
+
 				inc.setParent(tabpanel);
 				tabpanels.appendChild(tabpanel);
 			}

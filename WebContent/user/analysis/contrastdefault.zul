@@ -1,0 +1,8 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window apply="org.zkoss.bind.BindComposer" hflex="1" vflex="1"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.view.model.ContrastDefault')">
+		<div id="dataGridDiv" hflex="1" vflex="1" height="300px">
+		</div>
+	</window>
+</zk>

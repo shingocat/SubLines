@@ -93,18 +93,6 @@
 								<hlayout>
 									<textbox id="envTB" width="150px" readonly="true"
 										tabindex="7" />
-									<space spacing="20px" />
-									<checkbox id="envIsRandomCB" label="isRandom"
-										onClick="@command('isEnvFactorRandomChecked', isChecked=self.checked)"
-										checked="false" tooltiptext="If it is checked, the environment factor would be considered as random factor in linear model."/>
-									<!-- <popup id="isEnvFactorRandom" width="200px">
-										<html tooltiptext="If it is checked, the environment factor would be considered as random factor in linear model.">
-										<![CDATA[ If it is checked, the environment factor would be considered as random factor in linear model. <br /> ]]>
-										</html>
-									</popup> -->
-									<!-- <space spacing="20px" /> <checkbox id="envRandomCB" label="Random" 
-										onClick="@command('updateEnvOptions', selected=self.checked, label=self.label)" 
-										/> -->
 								</hlayout>
 							</cell>
 						</row>

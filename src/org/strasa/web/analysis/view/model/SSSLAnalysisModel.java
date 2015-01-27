@@ -4,10 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class SSSLAnalysisModel {
-	private String dataFileName;
-	private String resultFolderPath;
-	private String outFileName;
+public class SSSLAnalysisModel extends AnalysisModel{
 
 	// for model selection part
 	private int design;
@@ -58,30 +55,6 @@ public class SSSLAnalysisModel {
 	private boolean isGGEBiplotSymmetricView;
 	private boolean isGGEBiplotEnvironmentView;
 	private boolean isGGEBiplotGenotypeView;
-
-	public String getDataFileName() {
-		return dataFileName;
-	}
-
-	public void setDataFileName(String dataFileName) {
-		this.dataFileName = dataFileName;
-	}
-
-	public String getResultFolderPath() {
-		return resultFolderPath;
-	}
-
-	public void setResultFolderPath(String resultFolderPath) {
-		this.resultFolderPath = resultFolderPath;
-	}
-
-	public String getOutFileName() {
-		return outFileName;
-	}
-
-	public void setOutFileName(String outFileName) {
-		this.outFileName = outFileName;
-	}
 
 	public int getDesign() {
 		return design;
@@ -436,9 +409,9 @@ public class SSSLAnalysisModel {
 
 	@Override
 	public String toString() {
-		return "SSSLAnalysisModel [dataFileName=" + dataFileName
-				+ ",\nresultFolderPath=" + resultFolderPath + ", \noutFileName="
-				+ outFileName + ", \ndesign=" + design + ", \nanalysisEnvType="
+		return "SSSLAnalysisModel [dataFileName=" + super.getDataFileName() 
+				+ ",\nresultFolderPath=" + super.getResultFolderPath() + ", \noutFileName="
+				+ super.getOutFileName() + ", \ndesign=" + design + ", \nanalysisEnvType="
 				+ analysisEnvType + ", \nresponseVars="
 				+ Arrays.toString(responseVars) + ", \ngenotypeFactor="
 				+ genotypeFactor + ", \ngenotypeFactorLevels="

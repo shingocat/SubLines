@@ -12,7 +12,7 @@
 			</tabs>
 			<tabpanels id="tabPanels">
 				<tabpanel id="specificationsPanel">
-					<include id="includeSpecifications" src="/user/analysis/pyramidedline/specifications.zul" />
+<!-- 					<include id="includeSpecifications" src="/user/analysis/pyramidedline/specifications.zul" /> -->
 				</tabpanel>
 			</tabpanels>
 		</tabbox>

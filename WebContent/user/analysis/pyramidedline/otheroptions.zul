@@ -8,61 +8,59 @@
 					checked="true" />
 				<checkbox label="Variance Components" id="varComponentCB"
 					checked="true" />
-				<hlayout>
-					<label>
-						Alpha Level
-					</label>
-					<doublebox id="alphaLevelDB" constraint="no empty,no negative, no zero"
-						value="@bind(vm.alphalevel)"></doublebox>
-				</hlayout>
 			</vbox>
 		</groupbox>
 		<groupbox width="100%" open="true" closable="false">
 			<caption label="Specified Contrast"></caption>
 			<vlayout style="margin: 10px 10px 10px 20px">
-				<div id="specifiedContrastOnGenotypeDiv" visible="true">
+				<div id="specifiedContrastOnGenoDiv" visible="true">
 					<groupbox>
 						<caption>On Genotype:</caption>
 						<hlayout>
-							<label id="fileNameOfContrastOnGenotypeLb" value="@load(vm.contrastFileNameOnGenotype)"
-								sclass="label-search" />
-							<separator width="10px" />
+							<div id="acrossEnvCBDiv" visible="false" width="100px">
+								<checkbox id="acrossEnvCB" label="Across Env" checked="true" />
+								<separator width="20px" />
+							</div>
 							<button id="defaultGenesContrastBtn" label="Default"
 								sclass="btn-primary" disabled="false"
-								onClick="@command('defaultContrastOnGenotype')" />
+								onClick="@command('defaultContrastOnGeno')" />
 							<separator width="10px" />
-							<button id="contrastFromFileOnGenotypeBtn" label="From File(.csv)"
-								sclass="btn-primary" upload="true, maxsize=-1" disabled="false"
-								onUpload="@command('uploadContrastFromFileOnGenotype')" />
-							<separator width="10px" />
-							<button id="contrastByManuallyOnGenotypeBtn" label="Manually Input"
+							<button id="contrastFromFileOnGenoBtn" label="From File(.csv)"
 								sclass="btn-primary" disabled="false"
-								onClick="@command('manuallyInputContrastOnGenotype')" />
+								onClick="@command('uploadContrastFromFileOnGeno')" />
 							<separator width="10px" />
-							<!-- <button id="defaultTwoGenesContrastBtn" label="Default Bi-Genes" 
-								sclass="btn-primary" disabled="false" onClick="@command('defaultTwoGenesContrastOnGenotype')" 
-								/> <button id="defaultThreeGenesContrastBtn" label="Default Tri-Genes" sclass="btn-primary" 
-								disabled="false" onClick="@command('defaultThreeGenesContrastOnGenotype')" 
-								/> <separator width="10px" /> <button id="defaultFourGenesContrastBtn" label="Default 
-								Quadra-Genes" sclass="btn-primary" disabled="false" onClick="@command('defaultFourGenesContrastOnGenotype')" 
-								/> <separator width="10px" /> -->
-							<button id="contrastResetOnGenotypeBtn" label="Reset Contrast"
+							<button id="contrastByManuallyOnGenoBtn" label="Manually Input"
+								sclass="btn-primary" disabled="false"
+								onClick="@command('manuallyInputContrastOnGeno')" />
+							<separator width="10px" />
+							<button id="contrastResetOnGenoBtn" label="Reset Contrast"
 								sclass="btn-danger" visible="false"
-								onClick="@command('resetContrastOnGenotype')"></button>
+								onClick="@command('resetContrastOnGeno')"></button>
 						</hlayout>
-						<separator height="10px"></separator>
-						<div id="contrastByManuallyOnGenotypeDiv" visible="false">
-							<hlayout>
-								<label value="No. of Contrast: "></label>
-								<doublespinner id="numberOfContrastOnGenotypeDS"
-									step="1" value="0" constraint="no negative, min 0" readonly="true"
-									instant="true"
-									onChange="@command('updateContrastGridManuallyOnGenotype',inputValue=self.value)" />
-							</hlayout>
-						</div>
-						<separator height="20px"></separator>
 						<hlayout>
-							<div id="contrastGridOnGenotypeDiv" width="98%" height="98%">
+							<div id="contrastGridOnGenoDiv" width="98%" height="98%">
+							</div>
+						</hlayout>
+					</groupbox>
+				</div>
+				<div id="specifiedContrastOnEnvDiv" visible="true">
+					<groupbox>
+						<caption>On Environment:</caption>
+						<hlayout>
+							<button id="contrastFromFileOnEnvBtn" label="From File(.csv)"
+								sclass="btn-primary" disabled="false"
+								onClick="@command('uploadContrastFromFileOnEnv')" />
+							<separator width="10px" />
+							<button id="contrastByManuallyOnEnvBtn" label="Manually Input"
+								sclass="btn-primary" disabled="false"
+								onClick="@command('manuallyInputContrastOnEnv')" />
+							<separator width="10px" />
+							<button id="contrastResetOnEnvBtn" label="Reset Contrast"
+								sclass="btn-danger" visible="false"
+								onClick="@command('resetContrastOnEnv')"></button>
+						</hlayout>
+						<hlayout>
+							<div id="contrastGridOnEnvDiv" width="98%" height="98%">
 							</div>
 						</hlayout>
 					</groupbox>

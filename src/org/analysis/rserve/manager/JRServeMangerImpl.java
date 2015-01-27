@@ -1,12 +1,15 @@
 package org.analysis.rserve.manager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+import org.strasa.web.analysis.view.model.AnalysisModel;
 import org.strasa.web.analysis.view.model.PyramidedLineAnalysisModel;
 import org.strasa.web.analysis.view.model.SSSLAnalysisModel;
 import org.strasa.web.utilities.InputTransform;
@@ -26,12 +29,6 @@ public class JRServeMangerImpl implements IJRserveManager{
 		}
 	}
 	
-	
-	@Override
-	public void doAnalysis(PyramidedLineAnalysisModel model) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	public String[] getLevels(List<String> columnList, List<String[]> dataList,
 			String environment) {
@@ -171,6 +168,38 @@ public class JRServeMangerImpl implements IJRserveManager{
 	public void setInputTransform(InputTransform inputTransform) {
 		this.inputTransform = inputTransform;
 	}
+
+
+	@Override
+	public HashMap<String, String> doAnalysis(AnalysisModel model) {
+		// TODO Auto-generated method stub
+		return null;
+	}	
 	
-	
+	public String getDefaultContrast(Integer geneNumber, String outFilePath)
+	{
+		String fileName = null;
+		if(geneNumber == 2)
+			fileName = outFilePath + File.separator + "Default_Bi_Genes_Contrast.csv";
+		else if(geneNumber == 3)
+			fileName = outFilePath + File.separator + "Default_Tri_Genes_Contrast.csv";
+		else if(geneNumber == 4)
+			fileName = outFilePath + File.separator + "Default_Quadra_Genes_Contrast.csv";
+		StringBuilder sb = new StringBuilder();
+		sb.append("default.contrast <- getDefGeneOrthogonalContrastMatrix("
+				+ geneNumber + ");");
+		sb.append("write.csv(default.contrast$orthogonal.contrast.matrix,file=\"" +
+				fileName + "\", row.names=TRUE);");
+		try {
+			conn.eval(sb.toString());
+		} catch (RserveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}finally
+		{
+			conn.close();
+		}
+		return fileName;
+	}
 }
