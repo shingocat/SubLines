@@ -92,11 +92,6 @@ public class ContrastDefault {
 			refreshGrid();
 			file = new File(fileName);
 			refreshCsvData();
-			Map<String, Object> args = new HashMap<String, Object>();
-			args.put("Name", levelName);
-			args.put("FilePath", file.getAbsolutePath());
-			args.put("Factor", factor);
-			BindUtils.postGlobalCommand(null, null, "getUploadedContrastFiles", args);
 		}
 	}
 	

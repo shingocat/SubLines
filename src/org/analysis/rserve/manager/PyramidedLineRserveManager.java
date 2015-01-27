@@ -11,12 +11,12 @@ import org.strasa.web.analysis.view.model.AnalysisModel;
 import org.strasa.web.analysis.view.model.PyramidedLineAnalysisModel;
 
 public class PyramidedLineRserveManager extends JRServeMangerImpl{
-	
+
 	String logFile = "Log.txt";
 	String contrastFile = "ContrastAnalysis.txt";
 	String stabilityFile = "StabilityAnalysis.txt";
 	String multiplicativeFile = "MultiplicativeAnalysis.txt";
-	
+
 	@Override
 	public HashMap<String, String> doAnalysis(AnalysisModel model) {
 		PyramidedLineAnalysisModel plModel = (PyramidedLineAnalysisModel) model;
@@ -54,13 +54,12 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 		boolean isHistogramOnSingleEnv = model.isHistogramOnSingleEnv();
 		boolean isDiagnosticPlotOnSingleEnv = model.isDiagnosticPlotOnSingleEnv();
 		// comparing with recurrent 
-		String alpha = String.valueOf(model.getSignificantAlpha()); // default is 0.05
-		String recurrent = model.getRecurrentParent();
-		boolean isCompareWithRecurrent = model.isCompareWithRecurrent();
 		// specifying contrast
 		boolean isAcrossEnv = model.isAcrossEnv();
 		boolean isSpecifiedGenoContrast = model.isSpecifiedGenoContrast();
 		HashMap<String, String> genoContrastFiles = model.getGenotypeContrastFile();
+		boolean isDefaultGenoContrast = model.isDefaultGenoContrast();
+		HashMap<String, String> genoDefaultContrastFiles = model.getDefaultGenoContrastFile();
 		String respvarVector = getInputTransform().createRVector(respvars);
 
 		String designUsed = new String();
@@ -121,7 +120,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 		try{
 			String setWd = "setwd(\"" + resultFolderPath + "\")";
 			getConn().eval(setWd);
-			
+
 			String data = null;
 			data = "data <- try(read.csv(file=\"" + dataFileName + "\", header = TRUE, " +
 					"na.strings = c(\"NA\",\".\",\" \",\"\"), blank.lines.skip = TRUE),silent = TRUE);";
@@ -235,29 +234,9 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 					toreturn.put("Success", "FALSE");
 					toreturn.put("Message", "Do Single Environment Analysis Error!");
 					return toreturn;
-				}
-				//this if for contrast analysis
-				if(isCompareWithRecurrent)
+				} else
 				{
-					String doContrast = "outcomes.contrast.recurrent <- try(doContrast(outcomes, contrastOpt = \"RecurrentParent\","
-							+ "recurrentParent = \"" + recurrent + "\",alpha = as.numeric(\"" + alpha + "\")),silent=TRUE);";
-					getConn().eval(doContrast);
-					run = getConn().eval("class(outcomes.contrast.recurrent)").asString();
-					if(run != null && run.equalsIgnoreCase("try-error"))
-					{
-						StringBuilder error = new StringBuilder();
-						error.append("msg <- trimStrings(strsplit(outcomes.contrast.recurrent,\":\")[[1]]);");
-						error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
-						error.append("msg <- gsub(\"\\\"\",\"\",msg);");
-						error.append("capture.output(cat(\"****\nERROR in do.SEA() function:\n\",msg,"
-								+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
-						getConn().eval(error.toString());
-						toreturn.put("Success", "TRUE");
-						toreturn.put("Message", "Do contrast Failure!");
-					} else
-					{
-						getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.recurrent),file=\"" + contrastFile + "\", append=TRUE);");
-					}
+					getConn().eval("capture.output(print(outcomes,2),file=\"" + outFileName + "\", append=TRUE);");
 				}
 				if(isSpecifiedGenoContrast)
 				{
@@ -345,8 +324,28 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 						}
 					}
 				} 
-					
-				getConn().eval("capture.output(print(outcomes,2),file=\"" + outFileName + "\", append=TRUE);");
+
+				if(isDefaultGenoContrast)
+				{
+					String doContrast = "outcomes.contrast.default <- try(doContrast(outcomes, contrastOpt = \"Default\",),silent=TRUE);";
+					getConn().eval(doContrast);
+					run = getConn().eval("class(outcomes.contrast.default)").asString();
+					if(run != null && run.equalsIgnoreCase("try-error"))
+					{
+						StringBuilder error = new StringBuilder();
+						error.append("msg <- trimStrings(strsplit(outcomes.contrast.default,\":\")[[1]]);");
+						error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+						error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+						error.append("capture.output(cat(\"****\nERROR in doContrast() function:\n\",msg,"
+								+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+						getConn().eval(error.toString());
+						toreturn.put("Success", "TRUE");
+						toreturn.put("Message", "Do contrast default Failure!");
+					} else
+					{
+						getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.default),file=\"" + contrastFile + "\", append=TRUE);");
+					}
+				}
 
 				// the is for plot funcitons
 				if(isBoxplotOnSingleEnv)
@@ -486,7 +485,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 		String designUsed = new String();
 		String design = new String();
 		String designString = null;
-		
+
 
 		switch (designIndex) {
 		case 0: {
@@ -517,7 +516,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 			designUsed = "Row-Column";
 			design = "RowCol";
 			designString = "exptl.design = \"RowCol\", rep = \"" + rep + "\", row = \"" + row + "\", column = \"" 
-			+ column + "\", ";
+					+ column + "\", ";
 			break;
 		}
 		case 5: {
@@ -638,7 +637,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 						return toreturn;
 					}
 					getConn().eval("capture.output(print(outcomes,2),file=\"" + outFileName + "\", append=TRUE);");
-					
+
 					if(isCompareWithRecurrent)
 					{
 						String doContrast = "outcomes.contrast.recurrent <- try(doContrast(outcomes, contrastOpt = \"RecurrentParent\","
@@ -661,7 +660,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 							getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.recurrent),file=\"" + contrastFile + "\", append=TRUE);");
 						}
 					}
-					
+
 					if(isSpecifiedGenoContrast && isSpecifiedEnvContrast)
 					{	
 						String getGenoContrastList = "genoContrastList <- try(getContrastListFromFiles(\"" + genoContrastFiles.get("AcrossEnv")
@@ -719,7 +718,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 								}
 							}
 						}
-						
+
 					} else if(isSpecifiedGenoContrast && !isSpecifiedEnvContrast)
 					{
 						String getGenoContrastList = "genoContrastList <- try(getContrastListFromFiles(\"" + genoContrastFiles.get("AcrossEnv")
@@ -830,7 +829,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 							getConn().eval(sb.toString());
 						}
 					}
-					
+
 					if(isAMMI)
 					{
 						if(environmentLevels.length > 2)
@@ -870,7 +869,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 							getConn().eval(sb.toString());
 						}
 					}
-					
+
 					if(isGGE)
 					{
 						if(environmentLevels.length > 2)
@@ -908,7 +907,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 							getConn().eval(sb.toString());
 						}
 					}
-					
+
 					if(isDiagnosticPlotOnAcrossEnv)
 					{
 						String diagplot = "diagplot <- try(graph.diag(outcomes), silent=TRUE);";
@@ -927,7 +926,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 							toreturn.put("Message", toreturn.get("Message") + " Fail to graph diagplot!");
 						}
 					}
-					
+
 					if(isHistogramOnAcrossEnv)
 					{
 						String histplot = "histplot <- try(graph.hist(outcomes), silent=TRUE);";
@@ -946,7 +945,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 							toreturn.put("Message", toreturn.get("Message") + " Fail to graph histplot!");
 						}
 					}
-					
+
 					if(isBoxplotOnAcrossEnv)
 					{
 						String boxplot = "boxplot <- try(graph.boxplot(outcomes), silent=TRUE);";

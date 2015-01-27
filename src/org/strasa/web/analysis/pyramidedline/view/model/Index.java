@@ -62,7 +62,6 @@ public class Index {
 			@ContextParam(ContextType.VIEW)Component view, 
 			@BindingParam("Model") PyramidedLineAnalysisModel model)
 	{
-		System.out.println("running displaySSSLResult method...");
 		manager = new PyramidedLineRserveManager();
 		HashMap<String, String> outcomes = manager.doAnalysis(model);
 		if(outcomes.get("Success").equalsIgnoreCase("TRUE"))
@@ -83,11 +82,11 @@ public class Index {
 		newtab.setClosable(true);
 		
 //		Initialize view after view construction
-		Include studyInformationPage = new Include();
-		studyInformationPage.setParent(newpanel);
-		studyInformationPage.setDynamicProperty("outputFolderPath", 
+		Include inc = new Include();
+		inc.setParent(newpanel);
+		inc.setDynamicProperty("OutputFolderPath", 
 				model.getResultFolderPath().replace(StringConstants.BSLASH,StringConstants.FSLASH));
-		studyInformationPage.setSrc("/user/analysis/resultviewer.zul");
+		inc.setSrc("/user/analysis/resultviewer.zul");
 		
 		tabpanels.appendChild(newpanel);
 		tabs.appendChild(newtab);

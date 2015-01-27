@@ -194,8 +194,10 @@ public class Specifications {
 	private ListModelList<String> genoLevelsModel;
 	private boolean isSpecifyGenoContrast = false;
 	private boolean isSpecifyEnvContrast = false;
+	private boolean isDefaultGenoContrast = false;
 	private HashMap<String, String> genoContrastFiles = new HashMap<String, String>();
 	private HashMap<String, String> envContrastFiles = new HashMap<String, String>();
+	private HashMap<String, String> genoDefaultContrastFiles = new HashMap<String, String>();
 	private String errorMessage = null;
 
 	@Init
@@ -635,7 +637,7 @@ public class Specifications {
 		if (validatePLAanalysisModel()) {
 			Map<String, Object> args = new HashMap<String, Object>();
 			args.put("Model", this.model);
-			BindUtils.postGlobalCommand(null, null, "displaySSSLResult", args);
+			BindUtils.postGlobalCommand(null, null, "displayPyramidedLineResult", args);
 		} else {
 			showMessage(errorMessage);
 		}
@@ -643,7 +645,335 @@ public class Specifications {
 	
 	public boolean validatePLAanalysisModel()
 	{
+		if (fileName == null) {
+			errorMessage = "No Raw Data Selected!";
+			return false;
+		}
+		if (!validateSpecifyGenotypeContrast())
+			return false;
+		if(!validateSpecifyEnvContrast())
+			return false;
+
+		String folderPath = null;
+		if(analysisEnvType.equals("Single Environment"))
+			folderPath = AnalysisUtils.createOutputFolder(
+					fileName.replaceAll(" ", ""), "plAnalysisSEA");
+		else if(analysisEnvType.equals("Multi-Environment"))
+			folderPath = AnalysisUtils.createOutputFolder(
+					fileName.replaceAll(" ", ""), "plAnalysisMEA");
+		model.setResultFolderPath(folderPath);
+
+		userFileManager.moveUploadedFileToOutputFolder(folderPath,
+				fileName.replaceAll(" ", ""), uploadedFile);
+
+		model.setOutFileName(model
+				.getResultFolderPath() + "PyramidedLine_Analysis_Output.txt");
 		
+		// set Vars
+		if (!this.lstAnalysisEnvTypeCBB.getValue().isEmpty()) {
+			model.setAnalysisEnvType(analysisEnvType);
+		} else {
+			errorMessage = "Analysis Environment Type cannot be empty!";
+			return false;
+		}
+		if(geneNumber != null)
+		{
+			if(geneNumber.equals("Bi-Genes"))
+				model.setGeneNumber(2);
+			else if(geneNumber.equals("Tri-Genes"))
+				model.setGeneNumber(3);
+			else if(geneNumber.equals("Quadra-Genes"))
+				model.setGeneNumber(4);
+			else
+			{
+				errorMessage = "Number of Genes should be bi-, tri- or quadra- genes!";
+				return false;
+			}
+			
+		} else
+		{
+			errorMessage = "Number of Genes cannot be empty!";
+			return false;
+		}
+		if (!this.responseLB.getItems().isEmpty()) {
+			model.setResponseVars(this.responseModel
+					.toArray(new String[responseModel.size()]));
+		} else {
+			errorMessage = "Response Variable cannot be empty!";
+			return false;
+		}
+		if (!this.genotypeTB.getValue().isEmpty()) {
+			model.setGenotypeFactor(this.genotypeTB.getValue());
+			model.setGenotypeFactorLevels(genoLevels);
+		} else {
+			errorMessage = "Genotype cannot be empty!";
+			return false;
+		}
+
+		if (!this.envTB.getValue().isEmpty()) {
+			model.setEnvFactor(envTB.getValue());
+			model.setEnvFactorLevels(envLevels);
+			if(analysisEnvType == "Multi-Environment" && envLevels.length <= 1)
+			{
+				errorMessage = "It could not conduct multi-environment analysis on only one level of environment factor!";
+				return false;
+			}
+		} else if (this.lstAnalysisEnvTypeCBB.getValue().equals("Multi-Environment")) {
+			errorMessage = "Environment cannot be empty!";
+			return false;
+		}
+
+		if (!this.blockTB.getValue().isEmpty()) {
+			model.setBlockFactor(this.blockTB.getValue());
+			model.setBlockFactorLevels(manager.getLevels(
+					columnList, dataList, model.getBlockFactor()));
+		} else if (blockRow.isVisible()) {
+			errorMessage = "Block cannot be empty!";
+			return false;
+		}
+
+		if (!this.replicateTB.getValue().isEmpty()) {
+			model.setReplicateFactor(this.replicateTB.getValue());
+			model.setReplicateFactorLevels(manager
+					.getLevels(columnList, dataList,
+							model.getReplicateFactor()));
+		} else if (replicateRow.isVisible()) {
+			errorMessage = "Replicate cannot be empty!";
+			return false;
+		}
+
+		if (!this.columnTB.getValue().isEmpty()) {
+			model.setColumnFactor(this.columnTB.getValue());
+			model.setColumnFactorLevels(manager
+					.getLevels(columnList, dataList,
+							model.getColumnFactor()));
+		} else if (columnRow.isVisible()) {
+			errorMessage = "Column cannot be empty!";
+			return false;
+		}
+
+		if (!this.rowTB.getValue().isEmpty()) {
+			model.setRowFactor(this.rowTB.getValue());
+			model.setRowFactorLevels(manager.getLevels(
+					columnList, dataList, model.getRowFactor()));
+		} else if (rowRow.isVisible()) {
+			errorMessage = "Column cannot be empty!";
+			return false;
+		}
+
+		// set other options
+		if (this.descriptiveStatCB.isChecked()) {
+			model.setDescriptiveStat(true);
+		} else {
+			model.setDescriptiveStat(false);
+		}
+		if (this.varComponentCB.isChecked()) {
+			model.setVarComponent(true);
+		} else {
+			model.setVarComponent(false);
+		}
+		
+		// Here for define the contrast file for genotype and environment
+		if(isSpecifyGenoContrast)
+		{
+			model.setSpecifiedGenoContrast(true);
+			if(acrossEnvCB.isChecked())
+			{
+				model.setAcrossEnv(true);
+			} else
+			{
+				model.setAcrossEnv(false);
+			}
+			model.setGenotypeContrastFile(genoContrastFiles);
+			for(String s : genoContrastFiles.values())
+			{
+				userFileManager.moveContrastFileToOutputFolder(folderPath, s);
+			}
+		} else
+		{
+			model.setSpecifiedGenoContrast(false);
+			model.setGenotypeContrastFile(null);
+		}
+		if(isSpecifyEnvContrast)
+		{
+			model.setSpecifiedEnvContrast(true);
+			model.setEnvContrastFile(envContrastFiles);
+			for(String s : envContrastFiles.values())
+			{
+				userFileManager.moveContrastFileToOutputFolder(folderPath, s);
+			}
+		} else
+		{
+			model.setSpecifiedEnvContrast(false);
+			model.setEnvContrastFile(null);
+		}
+		if(isDefaultGenoContrast)
+		{
+			model.setDefaultGenoContrast(true);
+			model.setDefaultGenoContrastFile(genoDefaultContrastFiles);
+			for(String s : genoDefaultContrastFiles.values())
+				userFileManager.moveContrastFileToOutputFolder(folderPath, s);
+		} else
+		{
+			model.setDefaultGenoContrast(false);
+			model.setDefaultGenoContrastFile(null);
+		}
+		if (this.genotypeByEnvDiv.isVisible()
+				&& this.finlayWilkinsonModelCB.isChecked()) {
+			model.setFinlayWikinson(true);
+		} else {
+			model.setFinlayWikinson(false);
+		}
+		if (this.genotypeByEnvDiv.isVisible() && this.shuklaModelCB.isChecked()) {
+			model.setShukla(true);
+		} else {
+			model.setShukla(false);
+		}
+		if (this.genotypeByEnvDiv.isVisible() && this.ammiModelCB.isChecked()) {
+			model.setAMMI(true);
+		} else {
+			model.setAMMI(false);
+		}
+		if (this.genotypeByEnvDiv.isVisible() && this.ggeModelCB.isChecked()) {
+			model.setGGE(true);
+		} else {
+			model.setGGE(false);
+		}
+		// for graphic options
+		if (this.boxplotSingleEnvCB.isChecked()) {
+			model.setBoxplotOnSingleEnv(true);
+		} else {
+			model.setBoxplotOnSingleEnv(false);
+		}
+		if (this.histogramSingleEnvCB.isChecked()) {
+			model.setHistogramOnSingleEnv(true);
+		} else {
+			model.setHistogramOnSingleEnv(false);
+		}
+		if (this.diagnosticplotSingleEnvCB.isChecked()) {
+			model.setDiagnosticPlotOnSingleEnv(true);
+		} else {
+			model.setDiagnosticPlotOnSingleEnv(false);
+		}
+		if (this.acrossEnvOnGraphDiv.isVisible()
+				&& this.boxplotAcrossEnvCB.isChecked()) {
+			model.setBoxplotOnAcrossEnv(true);
+		} else {
+			model.setBoxplotOnAcrossEnv(false);
+		}
+		if (this.acrossEnvOnGraphDiv.isVisible()
+				&& this.histogramAcrossEnvCB.isChecked()) {
+			model.setHistogramOnAcrossEnv(true);
+		} else {
+			model.setHistogramOnAcrossEnv(false);
+		}
+		if (this.acrossEnvOnGraphDiv.isVisible()
+				&& this.diagnosticplotAcrossEnvCB.isChecked()) {
+			model.setDiagnosticPlotOnAcrossEnv(true);
+		} else {
+			model.setDiagnosticPlotOnAcrossEnv(false);
+		}
+		if (this.multiplicativeModelOnGraphDiv.isVisible()
+				&& this.adaptationMapCB.isChecked()) {
+			model.setAdaptationMap(true);
+		} else {
+			model.setAdaptationMap(false);
+		}
+		if (this.multiplicativeModelOnGraphDiv.isVisible()
+				&& this.ammiBiplotCB.isChecked()) {
+			model.setAMMI1Biplot(true);
+		} else {
+			model.setAMMI1Biplot(false);
+		}
+		if (this.multiplicativeModelOnGraphDiv.isVisible()
+				&& this.ammiBiplotPC1VsPC2CB.isChecked()) {
+			model.setAMMIBiplotPC1VsPC2(true);
+		} else {
+			model.setAMMIBiplotPC1VsPC2(false);
+		}
+		if (this.multiplicativeModelOnGraphDiv.isVisible()
+				&& this.ammiBiplotPC1VsPC3CB.isChecked()) {
+			model.setAMMIBiplotPC1VsPC3(true);
+		} else {
+			model.setAMMIBiplotPC1VsPC3(false);
+		}
+		if (this.multiplicativeModelOnGraphDiv.isVisible()
+				&& this.ammiBiplotPC2VsPC3CB.isChecked()) {
+			model.setAMMIBiplotPC2VsPC3(true);
+		} else {
+			model.setAMMIBiplotPC2VsPC3(false);
+		}
+		if (this.multiplicativeModelOnGraphDiv.isVisible()
+				&& this.ggeBiplotSymmetricViewCB.isChecked()) {
+			model.setGGEBiplotSymmetricView(true);
+		} else {
+			model.setGGEBiplotSymmetricView(false);
+		}
+		if (this.multiplicativeModelOnGraphDiv.isVisible()
+				&& this.ggeBiplotEnvironmentViewCB.isChecked()) {
+			model.setGGEBiplotEnvironmentView(true);
+		} else {
+			model.setGGEBiplotEnvironmentView(false);
+		}
+		if (this.multiplicativeModelOnGraphDiv.isVisible()
+				&& this.ggeBiplotGenotypeViewCB.isChecked()) {
+			model.setGGEBiplotGenotypeView(true);
+		} else {
+			model.setGGEBiplotGenotypeView(false);
+		}
+		return true;
+	}
+
+	private boolean validateSpecifyEnvContrast()
+	{
+		if(isSpecifyEnvContrast)
+		{
+			if(analysisEnvType == "Multi-Environment")
+			{
+				if(envTB.getValue().isEmpty())
+				{
+					errorMessage = "The environement factor could not be null!";
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean validateSpecifyGenotypeContrast()
+	{
+		if(isSpecifyGenoContrast)
+		{
+			if(envTB.getValue().isEmpty())
+			{
+				if(!genoContrastFiles.containsKey("AcrossEnv"))
+				{
+					errorMessage = "Do not specify genotype contrast from file(s)! Please upload contrast file(s)!";
+					return false;
+				}
+			} else
+			{
+				if(acrossEnvCB.isChecked())
+				{
+					if(!genoContrastFiles.containsKey("AcrossEnv"))
+					{
+						errorMessage = "Do not specify genotype contrast from file(s)! Please upload contrast file(s)!";
+						return false;
+					}
+				} else
+				{
+					for(String s : envLevels)
+					{
+						if(!genoContrastFiles.containsKey(s))
+						{
+							errorMessage = "Do not specify genotype contrast from file(s) on " + s + 
+									" ! Please upload contrast file(s)!";
+							return false;
+						}
+					}
+				}
+			}
+		}
 		return true;
 	}
 
@@ -1007,6 +1337,8 @@ public class Specifications {
 		this.contrastFromFileOnGenoBtn.setVisible(false);
 		this.contrastByManuallyOnGenoBtn.setVisible(false);
 		this.contrastResetOnGenoBtn.setVisible(true);
+		this.isDefaultGenoContrast = true;
+		this.genoDefaultContrastFiles.put(geneNumber, defaultContrastFile);
 	}
 
 	@NotifyChange("*")
@@ -1014,6 +1346,8 @@ public class Specifications {
 	public void resetContrastOnGeno() {
 		genoContrastFiles.clear();
 		model.setGenotypeContrastFile(null);
+		genoDefaultContrastFiles.clear();
+		model.setDefaultGenoContrastFile(null);
 		if (!this.contrastGridOnGenoDiv.getChildren().isEmpty())
 			this.contrastGridOnGenoDiv.getFirstChild().detach();
 		this.defaultGenesContrastBtn.setVisible(true);
@@ -1021,6 +1355,7 @@ public class Specifications {
 		this.contrastByManuallyOnGenoBtn.setVisible(true);
 		this.contrastResetOnGenoBtn.setVisible(false);
 		this.isSpecifyGenoContrast = false;
+		this.isDefaultGenoContrast = false;
 		if(!acrossEnvCB.isChecked())
 		{
 			this.acrossEnvCB.setChecked(true);
