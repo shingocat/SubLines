@@ -454,6 +454,7 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 		String column = model.getColumnFactor();
 		boolean isDescriptStat = model.isDescriptiveStat();
 		boolean isVarComponent = model.isVarComponent();
+		boolean isBoxplotOnSingleEnv = model.isBoxplotOnSingleEnv();
 		boolean isBoxplotOnAcrossEnv = model.isBoxplotOnAcrossEnv();
 		boolean isHistogramOnAcrossEnv = model.isHistogramOnAcrossEnv();
 		boolean isDiagnosticPlotOnAcrossEnv = model.isDiagnosticPlotOnAcrossEnv();
