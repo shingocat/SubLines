@@ -16,9 +16,9 @@
 									<label id="genoFileLb" value="@bind(vm.genoFileName)"
 										visible="false" />
 									<button sclass="btn-primary" id="selectGenoFromDBBtn"
-										onClick="@command(selectGenoFromDB)" label="From Database" />
+										onClick="@command(selectGenoFromDB)" label="Database" />
 									<button sclass="btn-primary" id="selectGenoFromFileBtn"
-										onUpload="@command(selectGenoFromFile)" label="From External"
+										onUpload="@command(selectGenoFromFile)" label="External"
 										upload="true" />
 									<button sclass="btn-danger" id="resetGenoBtn" label="Reset"
 										onClick="@command(resetGeno)" visible="false" />
@@ -29,9 +29,9 @@
 									<label id="phenoFileLb" value="@bind(vm.phenoFileName)"
 										visible="false" />
 									<button sclass="btn-primary" id="selectPhenoFromDBBtn"
-										onClick="@command(selectPhenoFromDB)" label="From Database" />
+										onClick="@command(selectPhenoFromDB)" label="Database" />
 									<button sclass="btn-primary" id="selectPhenoFromFileBtn"
-										onUpload="@command(selectPhenoFromFile)" label="From External"
+										onUpload="@command(selectPhenoFromFile)" label="External"
 										upload="true" />
 									<button sclass="btn-danger" id="resetPhenoBtn" label="Reset"
 										onClick="@command(resetPheno)" visible="false" />
@@ -42,10 +42,10 @@
 									<label id="mapFileLb" value="@bind(vm.mapFileName)"
 										visible="false" />
 									<button sclass="btn-primary" id="selectMapFromDBBtn"
-										onClick="@command(selectMapFromDB)" label="From Database"
+										onClick="@command(selectMapFromDB)" label="Database"
 										visible="false" />
 									<button sclass="btn-primary" id="selectMapFromFileBtn"
-										onUpload="@command(selectMapFromFile)" label="Select" upload="true" />
+										onUpload="@command(selectMapFromFile)" label="External" upload="true" />
 									<button sclass="btn-danger" id="resetMapBtn" label="Reset"
 										onClick="@command(resetMap)" visible="false" />
 								</hbox>
@@ -72,7 +72,7 @@
 								<hbox spacing="5">
 									<label value="Regression Method:" />
 									<radiogroup id="regMethodRG">
-										<radio id="lassRadio" label="LASSO" />
+										<radio id="lassoRadio" label="LASSO" />
 										<space />
 										<radio id="ridgeRadio" label="RIDGE REGRESSION" />
 										<space />
@@ -99,7 +99,7 @@
 									<decimalbox id="alphaDB" format="#.###" value="@bind(vm.alpha)" />
 									<space />
 									<label value="Bootstrap:" />
-									<intbox id="boostrapIB" value="@bind(vm.bootstrap)" />
+									<intbox id="bootstrapIB" value="@bind(vm.bootstrap)" />
 									<space />
 									<label value="nfolds:" />
 									<intbox id="nfoldsIB" value="@bind(vm.nfolds)" />
@@ -107,7 +107,7 @@
 								<separator />
 								<hbox spacing="5">
 									<label value="include.ht:" />
-									<checkbox id="inCludeHtOnMMCB" label="TRUE" />
+									<checkbox id="includeHtOnMMCB" label="TRUE" />
 									<space />
 									<label value="step:" />
 									<decimalbox id="stepDB" format="#.###" value="@bind(vm.step)" />
@@ -119,7 +119,7 @@
 							<div id="smaDiv" visible="false">
 								<hbox spacing="5">
 									<label value="include.ht:" />
-									<checkbox id="includeHtonSMCB" label="TRUE" />
+									<checkbox id="includeHtOnSMCB" label="TRUE" />
 									<space />
 								</hbox>
 								<separator />
@@ -139,7 +139,7 @@
 							<div id="csDiv" visible="false">
 								<hbox spacing="5">
 									<label value="include.ht:" />
-									<checkbox id="icludeHtOnCSCB" label="TRUE"></checkbox>
+									<checkbox id="includeHtOnCSCB" label="TRUE"></checkbox>
 								</hbox>
 								<separator />
 								<hbox spacing="5">
@@ -152,35 +152,29 @@
 								<separator />
 								<hbox spacing="5">
 									<label value="Reference matrix:" />
-									<button label="upload" id="uploadRefGenoMatrix" sclass="btn-info" />
+									<button label="upload" id="uploadRefGenoBtn" sclass="btn-info" />
 								</hbox>
 							</div>
 						</div>
 					</groupbox>
 				</div>
 			</div>
-			<div hflex="1" vflex="1">
-				<tabbox id="dataTB" mold="default" vflex="1" hflex="1">
+			<div>
+				<tabbox id="dataTB" height="600px">
 					<tabs id="dataTabs">
 						<tab id="genoDataTab" label="Genotypic Data" />
-						<tab id="PhenoDataTab" label="Phenotypic Data" />
+						<tab id="phenoDataTab" label="Phenotypic Data" />
 						<tab id="mapDataTab" label="Map Data" />
 					</tabs>
-					<tabpanels id="dataTabpanels">
-						<tabpanel id="genoDataTP">
-							<div vflex="1" hflex="1" style="overflow:auto;">
-								<include src="/user/analysis/introgressionline/genotypicdata.zul" />
-							</div>
+					<tabpanels id="dataTabpanels" style="overflow:auto">
+						<tabpanel id="genoDataTP" vflex="1" hflex="1" style="overflow:auto;">
+							<include src="/user/analysis/introgressionline/genotypicdata.zul" />
 						</tabpanel>
-						<tabpanel id="phenoDataTP">
-							<div vflex="1" hflex="1" style="overflow:auto;">
-								<include src="/user/analysis/introgressionline/phenotypicdata.zul"></include>
-							</div>
+						<tabpanel id="phenoDataTP" vflex="1" hflex="1" style="overflow:auto;">
+							<include src="/user/analysis/introgressionline/phenotypicdata.zul"></include>
 						</tabpanel>
-						<tabpanel id="mapDataTP">
-							<div vflex="1" hflex="1" style="overflow:auto;">
-								<include src="/user/analysis/introgressionline/mapdata.zul" />
-							</div>
+						<tabpanel id="mapDataTP" vflex="1" hflex="1" style="overflow:auto;">
+							<include src="/user/analysis/introgressionline/mapdata.zul" />
 						</tabpanel>
 					</tabpanels>
 				</tabbox>
@@ -194,6 +188,7 @@
 				</hlayout>
 				<label value="@bind(vm.resultRServe)" multiline="true" />
 			</div>
+			<separator height="10px"/>
 		</vlayout>
 	</div>
 </zk>

@@ -82,6 +82,26 @@ public class UserFileManager {
 		return renamedFile.getAbsolutePath();
 	}
 	
+	public String uploadFileForAnalysis(String fileName, File dataFile, String folderPath, String postfix)
+	{
+		File movedFile = null;
+		File renamedFile = null;
+		File BASE_FOLDER = new File(folderPath);
+		if(!BASE_FOLDER.exists())
+			BASE_FOLDER.mkdirs();
+		try{
+			FileUtils.copyFileToDirectory(dataFile, new File(BASE_FOLDER.getAbsolutePath() + File.separator), true);
+			movedFile = new File(BASE_FOLDER.getAbsolutePath() + File.separator + dataFile.getName());
+			renamedFile = new File(BASE_FOLDER.getAbsolutePath() + File.separator + 
+					fileName.replaceAll(".csv","") + "_" + postfix + ".csv");
+			movedFile.renameTo(renamedFile);
+		} catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		return renamedFile.getAbsolutePath();
+	}
+	
 	public void moveUploadedFileToOutputFolder(String resultFolderPath, String realName,File dataFile){
 		File movedFile= null;
 		File renamedFile = null;
@@ -154,5 +174,5 @@ public class UserFileManager {
 		return BASE_PATH + File.separator + userBasePath + File.separator + studyBasePath + File.separator +
 				filename + File.separator + String.valueOf(Calendar.getInstance().getTimeInMillis()) + File.separator;
 	}
-
+	
 }
