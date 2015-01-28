@@ -159,26 +159,26 @@
 					</groupbox>
 				</div>
 			</div>
-			<div>
-				<tabbox id="dataTB" mold="default">
+			<div hflex="1" vflex="1">
+				<tabbox id="dataTB" mold="default" vflex="1" hflex="1">
 					<tabs id="dataTabs">
 						<tab id="genoDataTab" label="Genotypic Data" />
 						<tab id="PhenoDataTab" label="Phenotypic Data" />
 						<tab id="mapDataTab" label="Map Data" />
 					</tabs>
 					<tabpanels id="dataTabpanels">
-						<tabpanel vflex="1" id="genoDataTP">
-							<div>
+						<tabpanel id="genoDataTP">
+							<div vflex="1" hflex="1" style="overflow:auto;">
 								<include src="/user/analysis/introgressionline/genotypicdata.zul" />
 							</div>
 						</tabpanel>
-						<tabpanel vflex="1" id="phenoDataTP">
-							<div>
+						<tabpanel id="phenoDataTP">
+							<div vflex="1" hflex="1" style="overflow:auto;">
 								<include src="/user/analysis/introgressionline/phenotypicdata.zul"></include>
 							</div>
 						</tabpanel>
-						<tabpanel vflex="1" id="mapDataTP">
-							<div>
+						<tabpanel id="mapDataTP">
+							<div vflex="1" hflex="1" style="overflow:auto;">
 								<include src="/user/analysis/introgressionline/mapdata.zul" />
 							</div>
 						</tabpanel>

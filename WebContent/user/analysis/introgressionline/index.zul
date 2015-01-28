@@ -3,11 +3,11 @@
 	<div id="mainIntrogressionLineWindow" apply="org.zkoss.bind.BindComposer" hflex="1" vflex="true"
 	 	style="overflow:auto;"
 		viewModel="@id('vm') @init('org.strasa.web.analysis.introgressionline.view.model.Index')">
-		<tabbox id="tabBox" sclass="page-content">
+		<tabbox id="tabBox" sclass="page-content" width="100%" height="100%">
 			<tabs id="tabs">
 				<tab label="Introgression Line Analysis" image="/images/find.png" />
 			</tabs>
-			<tabpanels id="tabPanels" width="98%">
+			<tabpanels id="tabPanels" >
 				<tabpanel id="specificationsPanel"/>
 			</tabpanels>
 		</tabbox>
