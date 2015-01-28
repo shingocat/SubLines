@@ -454,21 +454,16 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 		String column = model.getColumnFactor();
 		boolean isDescriptStat = model.isDescriptiveStat();
 		boolean isVarComponent = model.isVarComponent();
-		boolean isBoxplotOnSingleEnv = model.isBoxplotOnSingleEnv();
 		boolean isBoxplotOnAcrossEnv = model.isBoxplotOnAcrossEnv();
-		boolean isHistogramOnSingleEnv = model.isHistogramOnSingleEnv();
 		boolean isHistogramOnAcrossEnv = model.isHistogramOnAcrossEnv();
-		boolean isDiagnosticPlotOnSingleEnv = model.isDiagnosticPlotOnSingleEnv();
 		boolean isDiagnosticPlotOnAcrossEnv = model.isDiagnosticPlotOnAcrossEnv();
-		String alpha = String.valueOf(model.getSignificantAlpha());
-		String[] recurrentParent = new String[] { model.getRecurrentParent() };
-		boolean isCompareWithRecurrent = model.isCompareWithRecurrent();
 		boolean isSpecifiedGenoContrast = model.isSpecifiedGenoContrast();;
 		boolean isSpecifiedEnvContrast = model.isSpecifiedEnvContrast();
+		boolean isDefaultGenoContrast = model.isDefaultGenoContrast();
 		HashMap<String, String> genoContrastFiles = model.getGenotypeContrastFile();
 		HashMap<String, String> envContrastFiles = model.getEnvContrastFile();
+		HashMap<String, String> defaultGenoContrast = model.getDefaultGenoContrastFile();
 		String respvarVector = getInputTransform().createRVector(respvars);
-		String recurrent = getInputTransform().createRVector(recurrentParent);
 		boolean isFinlayWikinson = model.isFinlayWikinson();
 		boolean isShukla = model.isShukla();
 		boolean isAMMI = model.isAMMI();
@@ -638,28 +633,6 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 					}
 					getConn().eval("capture.output(print(outcomes,2),file=\"" + outFileName + "\", append=TRUE);");
 
-					if(isCompareWithRecurrent)
-					{
-						String doContrast = "outcomes.contrast.recurrent <- try(doContrast(outcomes, contrastOpt = \"RecurrentParent\","
-								+ "recurrentParent = " + recurrent + "),silent=TRUE);";
-						getConn().eval(doContrast);
-						run = getConn().eval("class(outcomes.contrast.recurrent)").asString();
-						if(run != null && run.equalsIgnoreCase("try-error"))
-						{
-							StringBuilder error = new StringBuilder();
-							error.append("msg <- trimStrings(strsplit(outcomes.contrast.recurrent,\":\")[[1]]);");
-							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
-							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
-							error.append("capture.output(cat(\"****\nERROR in doContrast() function:\n\",msg,"
-									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
-							getConn().eval(error.toString());
-							toreturn.put("Success", "TRUE");
-							toreturn.put("Message",  toreturn.get("Message") + "Do contrast Failure!");
-						} else
-						{
-							getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.recurrent),file=\"" + contrastFile + "\", append=TRUE);");
-						}
-					}
 
 					if(isSpecifiedGenoContrast && isSpecifiedEnvContrast)
 					{	
@@ -757,6 +730,67 @@ public class PyramidedLineRserveManager extends JRServeMangerImpl{
 							{
 								getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.custom),file=\"" + contrastFile + "\", append=TRUE);");
 							}
+						}
+					}
+
+					if(isDefaultGenoContrast && isSpecifiedEnvContrast)
+					{
+						String getEnvContrastList = "envContrastList <- try(getContrastListFromFiles(\"" + envContrastFiles.get("Environment") 
+								+ "\"), silent=TRUE);";
+						getConn().eval(getEnvContrastList);
+						run = getConn().eval("class(envContrastList)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(envContrastList,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in getContrastListFromFiles function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message",  toreturn.get("Message") + "Read Env Contrast Failure!");
+						} else
+						{
+							String doContrast = "outcomes.contrast.default <- try(doContrast(outcomes, contrastOpt = \"Default\","
+									+ "envContrast=envContrastList),silent=TRUE);";
+							getConn().eval(doContrast);
+							run = getConn().eval("class(outcomes.contrast.default)").asString();
+							if(run != null && run.equalsIgnoreCase("try-error"))
+							{
+								StringBuilder error = new StringBuilder();
+								error.append("msg <- trimStrings(strsplit(outcomes.contrast.default,\":\")[[1]]);");
+								error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+								error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+								error.append("capture.output(cat(\"****\nERROR in doContrast() function:\n\",msg,"
+										+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+								getConn().eval(error.toString());
+								toreturn.put("Success", "TRUE");
+								toreturn.put("Message",  toreturn.get("Message") + "Do contrast Failure!");
+							} else
+							{
+								getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.default),file=\"" + contrastFile + "\", append=TRUE);");
+							}
+						}
+					} else if(isDefaultGenoContrast && !isSpecifiedEnvContrast)
+					{
+						String doContrast = "outcomes.contrast.default <- try(doContrast(outcomes, contrastOpt = \"Default\",),silent=TRUE);";
+						getConn().eval(doContrast);
+						run = getConn().eval("class(outcomes.contrast.default)").asString();
+						if(run != null && run.equalsIgnoreCase("try-error"))
+						{
+							StringBuilder error = new StringBuilder();
+							error.append("msg <- trimStrings(strsplit(outcomes.contrast.default,\":\")[[1]]);");
+							error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]],collapse=\" \"));");
+							error.append("msg <- gsub(\"\\\"\",\"\",msg);");
+							error.append("capture.output(cat(\"****\nERROR in doContrast() function:\n\",msg,"
+									+ "\"\n***\n\n\", sep=\"\"), file=\"" + logFile + "\",append=TRUE);");
+							getConn().eval(error.toString());
+							toreturn.put("Success", "TRUE");
+							toreturn.put("Message", "Do contrast default Failure!");
+						} else
+						{
+							getConn().eval("capture.output(print.ContrastOutcomes(outcomes.contrast.default),file=\"" + contrastFile + "\", append=TRUE);");
 						}
 					}
 					//optional output if selected and if the number of environment

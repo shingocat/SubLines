@@ -86,7 +86,10 @@ public class ContrastManually {
 		String[] headers = new String[1 + columns.getChildren().size()];
 		for(int i = 0; i < columns.getChildren().size(); i ++)
 		{
-			headers[i] = ((Column)columns.getChildren().get(i)).getLabel();
+			if(i==0)
+				headers[i] = "Label";
+			else
+				headers[i] = ((Column)columns.getChildren().get(i)).getLabel();
 		}
 		dataList.add(headers);
 //		data value;
