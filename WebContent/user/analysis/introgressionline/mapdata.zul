@@ -1,0 +1,89 @@
+<?page title="MapData" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window apply="org.zkoss.bind.BindComposer" hflex="1" vflex="1"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.introgressionline.view.model.MapData')">
+		<vlayout>
+			<div id="specDiv" align="left">
+				<groupbox>
+					<hbox>
+						<div>
+							<listbox id="variableLB" width="300px"
+								checkmark="true" multiple="false">
+								<listhead>
+									<listheader label="Variable" />
+								</listhead>
+								<template name="model">
+									<listitem>
+										<listcell label="${each}" />
+									</listitem>
+								</template>
+							</listbox>
+						</div>
+						<space />
+						<div>
+							<grid width="300px">
+								<columns width="300px">
+									<column label="" width="150px" />
+									<column label="" />
+								</columns>
+								<rows>
+									<row>
+										<cell>
+											<hbox>
+												<image style="cursor:pointer;padding:10px" id="addMarImg"
+													src="/images/rightarrow_g.png" tooltip="Add Marker variable"
+													onClick="@command('chooseVariable', varTextBox=marTB, img=self)" />
+												<label value="Marker:" />
+											</hbox>
+										</cell>
+										<cell>
+											<textbox id="marTB" width="100px" readonly="true" tabindex="7"/>
+										</cell>
+									</row>
+									<row>
+										<cell>
+											<hbox>
+												<image style="cursor:pointer;padding:10px" id="addChrImg"
+													src="/images/rightarrow_g.png" tooltip="Add Chromosome variable"
+													onClick="@command('chooseVariable', varTextBox=chrTB, img=self)" />
+												<label value="Chromosome:" />
+											</hbox>
+										</cell>
+										<cell>
+											<textbox id="chrTB" width="100px" readonly="true" tabindex="7"/>
+										</cell>
+									</row>
+									<row>
+										<cell>
+											<hbox>
+												<image style="cursor:pointer;padding:10px" id="addPosImg"
+													src="/images/rightarrow_g.png" tooltip="Add Position variable"
+													onClick="@command('chooseVariable', varTextBox=posTB, img=self)" />
+												<label value="Position:" />
+											</hbox>
+										</cell>
+										<cell>
+											<textbox id="posTB" width="100px" readonly="true" tabindex="7"/>
+										</cell>
+									</row>
+								</rows>
+							</grid>
+						</div>
+					</hbox>
+					<separator />
+					<hbox>
+						<label value="Units:" />
+						<space />
+						<radiogroup id="unitsRG">
+							<radio label="centiMorgan(cM)" checked="true" />
+							<space />
+							<radio label="base pairs(bp)" />
+						</radiogroup>
+					</hbox>
+				</groupbox>
+			</div>
+			<div id="dataDiv">
+			</div>
+		</vlayout>
+	</window>
+</zk>

@@ -1,5 +1,14 @@
 <?page title="PhenotypicData" contentType="text/html;charset=UTF-8"?>
 <zk>
+<window apply="org.zkoss.bind.BindComposer" hflex="1" vflex="1"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.introgressionline.view.model.PhenotypicData')">
+	<vlayout>
+	<div id="specDiv">
+	</div>
+	<div id="dataDiv">
+	</div>
+	</vlayout>
+	</window>
 	<vlayout>
 		<div align="left">
 			<groupbox>

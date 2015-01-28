@@ -1,0 +1,48 @@
+<?page title="GenotypicData" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window apply="org.zkoss.bind.BindComposer" hflex="1" vflex="1"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.introgressionline.view.model.GenotypicData')">
+		<vlayout>
+			<div id="specDiv" align="left">
+				<groupbox>
+					<hbox>
+						<label value="Geno:" />
+						<combobox id="genoCBB" model="@load(vm.lstColumns)"
+							selectedItem="@bind(vm.genoCol)" readonly="true"
+							onChange="@command('updateGeno', selectedItem=self.value)">
+							<template name="model">
+								<comboitem label="@load(each)" />
+							</template>
+						</combobox>
+					</hbox>
+					<separator></separator>
+					<hbox>
+						<label value="dp.code:" />
+						<textbox id="dpCodeTB" value="@bind(vm.dpCode)"/>
+						<space></space>
+						<label value="rp.code:" />
+						<textbox id="rpCodeTB" value="@bind(vm.rpCode)" />
+					</hbox>
+					<separator></separator>
+					<hbox>
+						<label value="ht.code:" />
+						<textbox id="htCodeTB" value="@bind(vm.htCode)" />
+						<space />
+						<label value="na.code:" />
+						<textbox id="naCodeTB" value="@bind(vm.naCode)" />
+					</hbox>
+					<separator></separator>
+					<hbox>
+						<label value="BCn:" />
+						<intbox id="bcnIB" value="@bind(vm.bcn)"></intbox>
+						<space />
+						<label value="Fn:" />
+						<intbox id="fnIB" value="@bind(vm.fn)"></intbox>
+					</hbox>
+				</groupbox>
+			</div>
+			<div id="dataDiv">
+			</div>
+		</vlayout>
+	</window>
+</zk>

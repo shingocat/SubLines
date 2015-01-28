@@ -1,19 +1,14 @@
 <?page title="new page title" contentType="text/html;charset=UTF-8"?>
 <zk>
-	<div id="mainIntrogressionLineWindow" apply="org.zkoss.bind.BindComposer"
+	<div id="mainIntrogressionLineWindow" apply="org.zkoss.bind.BindComposer" hflex="1" vflex="true"
+	 	style="overflow:auto;"
 		viewModel="@id('vm') @init('org.strasa.web.analysis.introgressionline.view.model.Index')">
-
-		<separator height="5px"></separator>
-
-			<tabbox id="tabBox" sclass="page-content" height="1000px">
+		<tabbox id="tabBox" sclass="page-content">
 			<tabs id="tabs">
-				<tab label="Introgression Line Analysis"
-					image="/images/find.png" />
+				<tab label="Introgression Line Analysis" image="/images/find.png" />
 			</tabs>
-			<tabpanels id="tabPanels">
-				<tabpanel id="specificationsPanel">
-					<include id="includeSpecifications" src="/user/analysis/introgressionline/specifications.zul" />
-				</tabpanel>
+			<tabpanels id="tabPanels" width="98%">
+				<tabpanel id="specificationsPanel"/>
 			</tabpanels>
 		</tabbox>
 	</div>

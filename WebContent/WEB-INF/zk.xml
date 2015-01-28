@@ -14,6 +14,11 @@
 		</exception-type>
 		<location>/WEB-INF/errors/handleAccessDenied.zul</location>
 	</error-page>
+	
+	<library-property>
+		<name>org.zkoss.zul.nativebar</name>
+		<value>true</value>
+	</library-property>
 
 <!-- 	<library-property>
 		<name>org.zkoss.theme.preferred</name>
