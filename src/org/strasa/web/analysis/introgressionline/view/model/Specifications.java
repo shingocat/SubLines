@@ -10,8 +10,10 @@ import org.spring.security.model.SecurityUtil;
 import org.strasa.middleware.filesystem.manager.UserFileManager;
 import org.strasa.middleware.model.Study;
 import org.strasa.middleware.model.StudyDataSet;
+import org.strasa.web.analysis.view.model.ILAnalysisModel;
 import org.strasa.web.analysis.view.model.IntrogressionLineAnalysisModel;
 import org.strasa.web.analysis.view.model.PyramidedLineAnalysisModel;
+import org.strasa.web.utilities.AnalysisUtils;
 import org.strasa.web.utilities.FileUtilities;
 import org.zkoss.bind.BindContext;
 import org.zkoss.bind.BindUtils;
@@ -20,6 +22,7 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
@@ -111,6 +114,8 @@ public class Specifications {
 
 	String genoFileName;
 	File genoFile;
+	String genoRefFileName;
+	File genoRefFile;
 	String phenoFileName;
 	File phenoFile;
 	String mapFileName;
@@ -125,8 +130,22 @@ public class Specifications {
 	Integer digits;
 	Integer b;
 	String resultRServe;
-	UserFileManager userFileManager;
+	UserFileManager userFileManager = new UserFileManager();
 	String uploadedFileFolderPath;
+	boolean isSpecGenoFile;
+	boolean isSpecGenoRefFile;
+	boolean isSpecPhenoFile;
+	boolean isSpecMapFile;
+	ILAnalysisModel model = new ILAnalysisModel();
+	String genoCol;
+	String dpCode;
+	String rpCode;
+	String htCode;
+	String naCode;
+	Integer bcn;
+	Integer fn;
+	String errorMessage;
+
 	//setting the initiate variables
 	@Init
 	public void init(@ContextParam(ContextType.COMPONENT) Component component,
@@ -199,7 +218,7 @@ public class Specifications {
 		mapDataTP= (Tabpanel) component.getFellow("mapDataTP");
 		runBtn = (Button) component.getFellow("runBtn");
 		resetBtn = (Button) component.getFellow("resetBtn");
-		
+
 		this.buildUploadedFileFolderPath();
 	}
 
@@ -210,7 +229,7 @@ public class Specifications {
 
 	}
 
-	@NotifyChange
+	@NotifyChange("*")
 	@Command("selectGenoFromFile")
 	public void selectGenoFromFile(@ContextParam(ContextType.BIND_CONTEXT) BindContext bind,
 			@ContextParam(ContextType.VIEW)Component view)
@@ -236,19 +255,26 @@ public class Specifications {
 		selectGenoFromDBBtn.setVisible(false);
 		selectGenoFromFileBtn.setVisible(false);
 		resetGenoBtn.setVisible(true);
+		isSpecGenoFile = true;
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("FilePath", filepath);
 		BindUtils.postGlobalCommand(null, null, "getGenoFile", args);
 	}
 
-	@NotifyChange
-	@Command("resetGeno")
+	@NotifyChange("*")
+	@Command("resetGeno")	
 	public void resetGeno()
 	{
-
+		setGenoFileName(null);
+		genoFileLb.setVisible(false);
+		selectGenoFromDBBtn.setVisible(true);
+		selectGenoFromFileBtn.setVisible(true);
+		resetGenoBtn.setVisible(false);
+		isSpecGenoFile = false;
+		BindUtils.postGlobalCommand(null, null, "resetGenoFile", null);
 	}
 
-	@NotifyChange
+	@NotifyChange("*")
 	@Command("selectPhenoFromDB")
 	public void selectPhenoFromDB()
 	{
@@ -303,6 +329,7 @@ public class Specifications {
 				smaDiv.setVisible(false);
 			if(!csDiv.isVisible())
 				csDiv.setVisible(true);
+			model.setAnalysisType("Chisq");
 		} else if(method.equals("Single Marker Analysis"))
 		{
 			if(mmaDiv.isVisible())
@@ -311,6 +338,7 @@ public class Specifications {
 				smaDiv.setVisible(true);
 			if(csDiv.isVisible())
 				csDiv.setVisible(false);
+			model.setAnalysisType("SMA");
 		} else if(method.equals("Multi Marker Analysis"))
 		{
 			if(!mmaDiv.isVisible())
@@ -319,14 +347,218 @@ public class Specifications {
 				smaDiv.setVisible(false);
 			if(csDiv.isVisible())
 				csDiv.setVisible(true);
+			model.setAnalysisType("MMA");
 		}
 	}
 
 	@NotifyChange
 	@Command("validateILAnalysisInputs")
 	public void validateILAnalysisInputs()
-	{
+	{	
 
+		if(isSpecMapFile)
+		{
+			validateMapFile();
+		}
+		String resultFolderPath = null;
+		if(analysisMethod.equals("Chisq"))
+		{
+			if(!validateChisq())
+				return;
+			model.setIsIncludeHT(includeHtOnCSCB.isChecked());
+			model.setSimPvalueOnCS(simPvalueCB.isChecked());
+			model.setBootStrapTimesOnCS(bIB.getValue());
+			resultFolderPath = AnalysisUtils.createOutputFolder(
+					genoFileName.replaceAll(" ", ""), "ilChisq");
+			System.out.println("resultfolderpath" + resultFolderPath);
+			model.setOutFileName(resultFolderPath + File.separator + "Chisq_Analysis_Outcomes.txt");
+			model.setGenoFile(userFileManager.copyUploadedFileToOutputFolder(resultFolderPath, genoFileName, genoFile).getName());
+		} else if(analysisMethod.equals("Single Marker Analysis"))
+		{
+			if(!validateSMA())
+			{
+				return;
+			}
+			model.setAnalysisType("SMA");
+			resultFolderPath = AnalysisUtils.createOutputFolder(
+					phenoFileName.replaceAll(" ", ""), "ilSingleMarker");
+			model.setOutFileName(resultFolderPath + File.separator + "Single _Marker_Analysis_Outcomes.txt");
+		} else if(analysisMethod.equals("Multi Marker Analysis"))
+		{
+			if(!validateMMA())
+			{
+				return;
+			}
+			model.setAnalysisType("MMA");
+			resultFolderPath = AnalysisUtils.createOutputFolder(
+					phenoFileName.replaceAll(" ", ""), "ilMultiMarker");
+			model.setOutFileName(resultFolderPath + File.separator + "Multi_Marker_Analysis_Outcomes.txt");
+		}
+		model.setResultFolderPath(resultFolderPath);
+		HashMap<String, Object> args = new HashMap<String,Object>();
+		args.put("Model", model);
+		BindUtils.postGlobalCommand(null, null, "displayILResult", args);
+	}
+
+	@NotifyChange("*")
+	@GlobalCommand("getGenoFileValidated")
+	public void getGenoFileValidated(
+			@BindingParam("Geno") String genoCol,
+			@BindingParam("DpCode") String dpCode,
+			@BindingParam("RpCode") String rpCode,
+			@BindingParam("HtCode") String htCode,
+			@BindingParam("NaCode") String naCode,
+			@BindingParam("BCn") String bcn,
+			@BindingParam("Fn") String fn
+			)
+	{
+		this.genoCol = genoCol;
+		this.dpCode = dpCode;
+		this.rpCode = rpCode;
+		this.htCode = htCode;
+		this.naCode = naCode;
+		this.bcn = Integer.valueOf(bcn);
+		this.fn = Integer.valueOf(fn);
+	}
+
+	private boolean validateChisq()
+	{
+		if(isSpecGenoFile)
+		{
+			if(isSpecGenoRefFile)
+			{
+				Map<String, Object> args = new HashMap<String, Object>();
+				args.put("RefGenoFile", genoRefFileName);
+				BindUtils.postGlobalCommand(null, null, "validateGenoTap", args);
+			} else
+			{
+				BindUtils.postGlobalCommand(null, null, "validateGenoTap", null);
+			}
+			if(genoFile == null)
+			{
+				showMessage("Please select genotypic file!");
+				return false;
+			} else
+			{
+				model.setGenoFile(genoFile.getAbsolutePath());
+			}
+			if(!analysisMethod.equals("Chisq"))
+			{
+				showMessage("The analysis method should be chisq!");
+				return false;
+			} else
+			{
+				model.setAnalysisType("Chisq");
+			}
+			if(genoCol == null || genoCol.isEmpty())
+			{
+				showMessage("The Geno on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setGenoColumnOnGD(genoCol);
+			} 
+			if(dpCode == null || dpCode.isEmpty())
+			{
+				showMessage("The do.code on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setDpCodeOnGD(dpCode);
+			}
+			if(rpCode == null || rpCode.isEmpty())
+			{
+				showMessage("The rp.code on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setRpCodeOnGD(rpCode);
+			}
+			if(htCode == null || htCode.isEmpty())
+			{
+				showMessage("The ht.code on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setHtCodeOnGD(htCode);
+			}
+			if(naCode == null || naCode.isEmpty())
+			{
+				showMessage("The na.code on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setNaCodeOnGD(naCode);
+			}
+			if(bcn == null || String.valueOf(bcn).isEmpty())
+			{
+				showMessage("The BCn on Genoyptic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setBcnOnGD(bcn);
+			}
+			if(fn == null || String.valueOf(fn).isEmpty())
+			{
+				showMessage("The Fn on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setFnOnGD(fn);
+			}
+
+		} else
+		{
+			showMessage("Plase select genotypic file!");
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validateSMA()
+	{
+		if(isSpecGenoFile)
+		{
+			if(isSpecPhenoFile)
+			{
+				BindUtils.postGlobalCommand(null, null, "validatePhenoFile", null);
+			} else
+			{
+				showMessage("Please select phenotypic file!");
+				return false;
+			}
+		} else
+		{
+			showMessage("Please select genotypic file!");
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validateMMA()
+	{
+		if(isSpecGenoFile)
+		{
+			if(isSpecPhenoFile)
+			{
+				BindUtils.postGlobalCommand(null, null, "validatePhenoFile", null);
+			} else
+			{
+				showMessage("Please select phenotypic file!");
+				return false;
+			}
+		} else
+		{
+			showMessage("Please select genotypic file!");
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validateMapFile()
+	{
+		BindUtils.postGlobalCommand(null, null, "validateMapFile", null);
+		return false;
 	}
 
 	private void buildUploadedFileFolderPath()
@@ -361,7 +593,6 @@ public class Specifications {
 	public void setMapFileName(String mapFileName) {
 		this.mapFileName = mapFileName;
 	}
-
 	public List<String> getLstAnalysisMethod() {
 		if(lstAnalysisMethod == null)
 			lstAnalysisMethod = new ArrayList<String>();

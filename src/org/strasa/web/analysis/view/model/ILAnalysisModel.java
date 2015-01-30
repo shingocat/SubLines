@@ -377,7 +377,7 @@ public class ILAnalysisModel extends AnalysisModel {
 				+ "\n, rowFactOnPD=" + rowFactOnPD + "\n, colFactOnPD="
 				+ colFactOnPD + "\n, marColOnMD=" + marColOnMD + "\n, chrColOnMD="
 				+ chrColOnMD + "\n, posColOnMD=" + posColOnMD + "\n, unitOnMD="
-				+ unitOnMD + "]";
+				+ unitOnMD + "]\n" + "Analysis Model Attribue [" + super.toString() + "]";
 	}
 	
 	

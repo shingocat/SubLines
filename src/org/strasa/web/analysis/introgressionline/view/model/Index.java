@@ -55,7 +55,7 @@ public class Index {
 	
 	@GlobalCommand("displayILResult")
 	@NotifyChange("*")
-	public void displayPyramidedLineResult(
+	public void displayILResult(
 			@ContextParam(ContextType.COMPONENT) Component component, 
 			@ContextParam(ContextType.VIEW)Component view, 
 			@BindingParam("Model") ILAnalysisModel model)
@@ -75,7 +75,7 @@ public class Index {
 		
 		Tabpanel newpanel = new Tabpanel();
 		Tab newtab = new Tab();
-		
+	
 		newtab.setLabel(new File(model.getOutFileName()).getParentFile().getName());
 		newtab.setClosable(true);
 		

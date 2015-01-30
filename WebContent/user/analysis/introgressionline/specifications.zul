@@ -16,12 +16,12 @@
 									<label id="genoFileLb" value="@bind(vm.genoFileName)"
 										visible="false" />
 									<button sclass="btn-primary" id="selectGenoFromDBBtn"
-										onClick="@command(selectGenoFromDB)" label="Database" />
+										onClick="@command('selectGenoFromDB')" label="Database" />
 									<button sclass="btn-primary" id="selectGenoFromFileBtn"
-										onUpload="@command(selectGenoFromFile)" label="External"
-										upload="true" />
+										onUpload="@command('selectGenoFromFile')" label="External"
+										upload="true, maxsize=-1" />
 									<button sclass="btn-danger" id="resetGenoBtn" label="Reset"
-										onClick="@command(resetGeno)" visible="false" />
+										onClick="@command('resetGeno')" visible="false" />
 								</hbox>
 								<space bar="true" spacing="40px" />
 								<hbox>

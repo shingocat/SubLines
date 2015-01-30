@@ -140,7 +140,7 @@ public class AnalysisUtils {
 
 		if (outputFolder.exists())
 			return true;
-		return outputFolder.mkdir();
+		return outputFolder.mkdirs();
 	}
 
 	public static ArrayList<String> getVarNames(List<String> lstVarInfo) {

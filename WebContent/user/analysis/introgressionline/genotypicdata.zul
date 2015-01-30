@@ -7,12 +7,15 @@
 				<groupbox>
 					<hbox>
 						<label value="Geno:" />
-						<combobox id="genoCBB" model="@load(vm.lstColumns)"
-							selectedItem="@bind(vm.genoCol)" readonly="true"
-							onChange="@command('updateGeno', selectedItem=self.value)">
-							<template name="model">
-								<comboitem label="@load(each)" />
-							</template>
+<!-- 						<combobox id="genoCBB" model="@load(vm.columnList)" -->
+<!-- 							selectedItem="@bind(vm.genoCol)" readonly="true" -->
+<!-- 							onChange="@command('updateGeno', selectedItem=self.value)"> -->
+<!-- 							<template name="model"> -->
+<!-- 								<comboitem label="@load(each)" /> -->
+<!-- 							</template> -->
+<!-- 						</combobox> -->
+						<combobox id="genoCBB" model="@load(vm.columnList)"
+							selectedItem="@bind(vm.genoCol)" readonly="true">
 						</combobox>
 					</hbox>
 					<separator></separator>
@@ -41,7 +44,8 @@
 					</hbox>
 				</groupbox>
 			</div>
-			<div id="dataDiv">
+			<div id="dataDiv" hflex="1" vflex="1">
+				<grid id="dataGrid" height="400px" emptyMessage="No data..."/>
 			</div>
 		</vlayout>
 	</window>

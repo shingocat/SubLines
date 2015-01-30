@@ -20,10 +20,7 @@ import org.zkoss.zk.ui.Sessions;
 
 public class SSSLRserveManager extends JRServeMangerImpl {
 	
-	String logFile = "Log.txt";
-	String contrastFile = "ContrastAnalysis.txt";
-	String stabilityFile = "StabilityAnalysis.txt";
-	String multiplicativeFile = "MultiplicativeAnalysis.txt";
+	
 
 	public SSSLRserveManager() {
 		super();

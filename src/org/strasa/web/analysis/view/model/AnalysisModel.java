@@ -25,8 +25,8 @@ public class AnalysisModel {
 	}
 	@Override
 	public String toString() {
-		return "AnalysisModel [dataFileName=" + dataFileName
-				+ ", resultFolderPath=" + resultFolderPath + ", outFileName="
+		return "AnalysisModel [\ndataFileName=" + dataFileName
+				+ ", \nresultFolderPath=" + resultFolderPath + ", \noutFileName="
 				+ outFileName + "]";
 	}
 }

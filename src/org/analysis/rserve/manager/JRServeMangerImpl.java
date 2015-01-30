@@ -17,6 +17,10 @@ import org.strasa.web.utilities.InputTransform;
 public class JRServeMangerImpl implements IJRserveManager{
 	private RConnection conn;
 	private InputTransform inputTransform;
+	String logFile = "Log.txt";
+	String contrastFile = "ContrastAnalysis.txt";
+	String stabilityFile = "StabilityAnalysis.txt";
+	String multiplicativeFile = "MultiplicativeAnalysis.txt";
 	
 	public JRServeMangerImpl()
 	{

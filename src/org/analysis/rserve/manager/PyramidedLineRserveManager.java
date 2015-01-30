@@ -12,11 +12,6 @@ import org.strasa.web.analysis.view.model.PyramidedLineAnalysisModel;
 
 public class PyramidedLineRserveManager extends JRServeMangerImpl{
 
-	String logFile = "Log.txt";
-	String contrastFile = "ContrastAnalysis.txt";
-	String stabilityFile = "StabilityAnalysis.txt";
-	String multiplicativeFile = "MultiplicativeAnalysis.txt";
-
 	@Override
 	public HashMap<String, String> doAnalysis(AnalysisModel model) {
 		PyramidedLineAnalysisModel plModel = (PyramidedLineAnalysisModel) model;

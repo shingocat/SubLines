@@ -128,6 +128,7 @@ public class UserFileManager {
 		}
 	}
 	
+	
 //	Create by QIN MAO
 //	it is used to copy user uploaded file to result folder
 	public File copyUploadedFileToOutputFolder(String resultFolderPath, String realName, File dataFile)
