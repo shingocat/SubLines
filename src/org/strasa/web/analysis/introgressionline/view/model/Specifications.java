@@ -99,7 +99,9 @@ public class Specifications {
 	private Checkbox includeHtOnCSCB;
 	private Checkbox simPvalueCB;
 	private Intbox bIB;
+	private Label refGenoLb;
 	private Button uploadRefGenoBtn;
+	private Button resetRefGenoBtn;
 	private Tabbox dataTB;
 	private Tabs dataTabs;
 	private Tab genoDataTab;
@@ -144,6 +146,23 @@ public class Specifications {
 	String naCode;
 	Integer bcn;
 	Integer fn;
+	String genoRefCol;
+	String dpRefCode;
+	String rpRefCode;
+	String htRefCode;
+	String naRefCode;
+	Integer bcnRef;
+	Integer fnRef;
+	String dataTypeOnPD;
+	String naCodeOnPD;
+	String genotypeOnPD;
+	String environmentOnPD;
+	String blockOnPD;
+	String replicateOnPD;
+	String rowOnPD;
+	String columnOnPD;
+	String expDesignOnPD;
+	List<String> respVars;
 	String errorMessage;
 
 	//setting the initiate variables
@@ -152,7 +171,7 @@ public class Specifications {
 			@ContextParam(ContextType.VIEW) Component view)
 	{
 		//do nothing now
-		setAnalysisMethod("Multi Marker Analysis");
+		setAnalysisMethod("Chisq");
 	}
 
 	@AfterCompose
@@ -206,7 +225,9 @@ public class Specifications {
 		includeHtOnCSCB= (Checkbox) component.getFellow("includeHtOnCSCB");
 		simPvalueCB= (Checkbox) component.getFellow("simPvalueCB");
 		bIB= (Intbox) component.getFellow("bIB");
+		refGenoLb = (Label) component.getFellow("refGenoLb");
 		uploadRefGenoBtn= (Button) component.getFellow("uploadRefGenoBtn");
+		resetRefGenoBtn = (Button) component.getFellow("resetRefGenoBtn");
 		dataTB= (Tabbox) component.getFellow("dataTB");
 		dataTabs= (Tabs) component.getFellow("dataTabs");
 		genoDataTab= (Tab) component.getFellow("genoDataTab");
@@ -256,9 +277,67 @@ public class Specifications {
 		selectGenoFromFileBtn.setVisible(false);
 		resetGenoBtn.setVisible(true);
 		isSpecGenoFile = true;
+		dataTB.setSelectedTab(genoDataTab);
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("FilePath", filepath);
 		BindUtils.postGlobalCommand(null, null, "getGenoFile", args);
+	}
+
+	@NotifyChange("*")
+	@Command("uploadRefGenoFile")
+	public void uploadRefGenoFile(@ContextParam(ContextType.BIND_CONTEXT) BindContext bind,
+			@ContextParam(ContextType.VIEW)Component view)
+	{
+		UploadEvent event = (UploadEvent) bind.getTriggerEvent();
+		String name = event.getMedia().getName();
+		if(!name.endsWith(".csv"))
+		{
+			showMessage("File must be a text-based csv format!");
+			return;
+		}
+		// read all the content of upload to a new temp file
+		File tempFile = FileUtilities.getFileFromUpload(bind, view);
+		if(tempFile == null)
+			return;
+		BindUtils.postNotifyChange(null, null, this, "*");
+		userFileManager = new UserFileManager();
+		String filepath = userFileManager.uploadFileForAnalysis(name, tempFile, 
+				uploadedFileFolderPath, "RefGenoData");
+		genoRefFile = new File(filepath);
+		this.genoRefFileName = name;
+		isSpecGenoRefFile = true;
+		// initiated ref geno tab 
+		Tab tab = new Tab();
+		tab.setId("refGenoTab");
+		tab.setLabel("Reference Genotypic Data");
+		this.dataTabs.appendChild(tab);
+		Tabpanel tabpanel = new Tabpanel();
+		tabpanel.setId("refGenoTP");
+		Include inc = new Include();
+		inc.setSrc("/user/analysis/introgressionline/refgenotypicdata.zul");
+		inc.setDynamicProperty("FilePath", filepath);
+		inc.setParent(tabpanel);
+		dataTabpanels.appendChild(tabpanel);
+		dataTB.setSelectedTab(tab);
+		this.refGenoLb.setVisible(true);
+		this.uploadRefGenoBtn.setVisible(false);
+		this.resetRefGenoBtn.setVisible(true);
+	}
+
+	@NotifyChange("*")
+	@Command("resetRefGenoFile")
+	public void resetRefGenoFile()
+	{
+		this.genoRefFile = null;
+		this.genoRefFileName = "";
+		this.refGenoLb.setVisible(false);
+		this.uploadRefGenoBtn.setVisible(true);
+		this.resetRefGenoBtn.setVisible(false);
+		if(dataTabs.getFellow("refGenoTab") != null)
+			this.dataTabs.getFellow("refGenoTab").detach();
+		if(dataTabpanels.getFellow("refGenoTP") != null)
+			this.dataTabpanels.getFellow("refGenoTP").detach();
+		dataTB.setSelectedTab(phenoDataTab);
 	}
 
 	@NotifyChange("*")
@@ -267,11 +346,12 @@ public class Specifications {
 	{
 		setGenoFileName(null);
 		genoFileLb.setVisible(false);
-		selectGenoFromDBBtn.setVisible(true);
+		selectGenoFromDBBtn.setVisible(false);
 		selectGenoFromFileBtn.setVisible(true);
 		resetGenoBtn.setVisible(false);
 		isSpecGenoFile = false;
 		BindUtils.postGlobalCommand(null, null, "resetGenoFile", null);
+		dataTB.setSelectedTab(phenoDataTab);
 	}
 
 	@NotifyChange("*")
@@ -282,9 +362,33 @@ public class Specifications {
 
 	@NotifyChange
 	@Command("selectPhenoFromFile")
-	public void selectPhenoFromFile()
+	public void selectPhenoFromFile(@ContextParam(ContextType.BIND_CONTEXT) BindContext bind,
+			@ContextParam(ContextType.VIEW)Component view)
 	{
-
+		UploadEvent event = (UploadEvent) bind.getTriggerEvent();
+		String name = event.getMedia().getName();
+		if(!name.endsWith(".csv"))
+		{
+			showMessage("File must be a text-based csv format!");
+			return;
+		}
+		// read all the content of upload to a new temp file
+		File tempFile = FileUtilities.getFileFromUpload(bind, view);
+		if(tempFile == null)
+			return;
+		BindUtils.postNotifyChange(null, null, this, "*");
+		userFileManager = new UserFileManager();
+		String filepath = userFileManager.uploadFileForAnalysis(name, tempFile);
+		phenoFile = new File(filepath);
+		setPhenoFileName(phenoFile.getName());
+		phenoFileLb.setVisible(true);
+		selectPhenoFromDBBtn.setVisible(false);
+		selectPhenoFromFileBtn.setVisible(false);
+		resetPhenoBtn.setVisible(true);
+		isSpecPhenoFile = true;
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("FilePath", filepath);
+		BindUtils.postGlobalCommand(null, null, "getPhenoFile", args);
 
 	}
 
@@ -292,7 +396,14 @@ public class Specifications {
 	@Command("resetPheno")
 	public void resetPheno()
 	{
-
+		phenoFile = null;
+		setPhenoFileName(null);
+		phenoFileLb.setVisible(false);
+		selectPhenoFromDBBtn.setVisible(true);
+		selectPhenoFromFileBtn.setVisible(true);
+		resetPhenoBtn.setVisible(false);
+		isSpecPhenoFile = false;
+		BindUtils.postGlobalCommand(null, null, "resetPhenoFile", null);
 	}
 
 	@NotifyChange
@@ -304,9 +415,33 @@ public class Specifications {
 
 	@NotifyChange
 	@Command("selectMapFromFile")
-	public void selectMapFromFile()
+	public void selectMapFromFile(@ContextParam(ContextType.BIND_CONTEXT) BindContext bind,
+			@ContextParam(ContextType.VIEW)Component view)
 	{
-
+		UploadEvent event = (UploadEvent) bind.getTriggerEvent();
+		String name = event.getMedia().getName();
+		if(!name.endsWith(".csv"))
+		{
+			showMessage("File must be a text-based csv format!");
+			return;
+		}
+		// read all the content of upload to a new temp file
+		File tempFile = FileUtilities.getFileFromUpload(bind, view);
+		if(tempFile == null)
+			return;
+		BindUtils.postNotifyChange(null, null, this, "*");
+		userFileManager = new UserFileManager();
+		String filepath = userFileManager.uploadFileForAnalysis(name, tempFile);
+		mapFile = new File(filepath);
+		setMapFileName(name);
+		mapFileLb.setVisible(true);
+		selectMapFromDBBtn.setVisible(false);
+		selectMapFromFileBtn.setVisible(false);
+		resetMapBtn.setVisible(true);
+		isSpecMapFile = true;
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("FilePath", filepath);
+		BindUtils.postGlobalCommand(null, null, "getMapFile", args);
 	}
 
 	@NotifyChange
@@ -373,15 +508,21 @@ public class Specifications {
 			System.out.println("resultfolderpath" + resultFolderPath);
 			model.setOutFileName(resultFolderPath + File.separator + "Chisq_Analysis_Outcomes.txt");
 			model.setGenoFile(userFileManager.copyUploadedFileToOutputFolder(resultFolderPath, genoFileName, genoFile).getName());
+			if(isSpecGenoRefFile)
+				model.setRefGenoFile(userFileManager.copyUploadedFileToOutputFolder(resultFolderPath, genoRefFileName, genoRefFile).getName());
 		} else if(analysisMethod.equals("Single Marker Analysis"))
 		{
 			if(!validateSMA())
-			{
 				return;
-			}
-			model.setAnalysisType("SMA");
 			resultFolderPath = AnalysisUtils.createOutputFolder(
 					phenoFileName.replaceAll(" ", ""), "ilSingleMarker");
+			model.setIsIncludeHT(includeHtOnSMCB.isChecked());
+			model.setDigitsOnSM(digitsIB.getValue());
+			if(testRG.getSelectedItem()	!= null)
+				model.setTestOnSM(testRG.getSelectedItem().getLabel());
+			model.setAnalysisType("SMA");
+			model.setGenoFile(userFileManager.copyUploadedFileToOutputFolder(resultFolderPath, genoFileName, genoFile).getName());
+			model.setPhenoFile(userFileManager.copyUploadedFileToOutputFolder(resultFolderPath, phenoFileName, phenoFile).getName());
 			model.setOutFileName(resultFolderPath + File.separator + "Single _Marker_Analysis_Outcomes.txt");
 		} else if(analysisMethod.equals("Multi Marker Analysis"))
 		{
@@ -412,13 +553,111 @@ public class Specifications {
 			@BindingParam("Fn") String fn
 			)
 	{
-		this.genoCol = genoCol;
-		this.dpCode = dpCode;
-		this.rpCode = rpCode;
-		this.htCode = htCode;
-		this.naCode = naCode;
-		this.bcn = Integer.valueOf(bcn);
-		this.fn = Integer.valueOf(fn);
+		System.out.println("Genotypic File Validated!");
+		System.out.println("Geno Col " + genoCol);
+		System.out.println("DpCode " + dpCode);
+		System.out.println("RpCode " + rpCode);
+		System.out.println("HtCode " + htCode);
+		System.out.println("NaCode " + naCode);
+		System.out.println("BCn " + bcn);
+		System.out.println("Fn " + fn);
+		if(genoCol != null && !genoCol.isEmpty())
+			this.genoCol = genoCol;
+		if(dpCode != null && !dpCode.isEmpty())
+			this.dpCode = dpCode;
+		if(rpCode != null && !rpCode.isEmpty())
+			this.rpCode = rpCode;
+		if(htCode != null && !htCode.isEmpty())
+			this.htCode = htCode;
+		if(naCode != null && !naCode.isEmpty())
+			this.naCode = naCode;
+		if(bcn != null)
+			this.bcn = Integer.valueOf(bcn);
+		if(fn != null)
+			this.fn = Integer.valueOf(fn);
+	}
+
+	@NotifyChange("*")
+	@GlobalCommand("getRefGenoFileValidated")
+	public void getRefGenoFileValidated(
+			@BindingParam("Geno") String genoRefCol,
+			@BindingParam("DpCode") String dpRefCode,
+			@BindingParam("RpCode") String rpRefCode,
+			@BindingParam("HtCode") String htRefCode,
+			@BindingParam("NaCode") String naRefCode,
+			@BindingParam("BCn") String bcnRef,
+			@BindingParam("Fn") String fnRef
+			)
+	{
+		System.out.println("Genotypic Reference File Validated!");
+		System.out.println("Geno Col " + genoRefCol);
+		System.out.println("DpCode " + dpRefCode);
+		System.out.println("RpCode " + rpRefCode);
+		System.out.println("HtCode " + htRefCode);
+		System.out.println("NaCode " + naRefCode);
+		System.out.println("BCn " + bcnRef);
+		System.out.println("Fn " + fnRef);
+		if(genoRefCol != null && !genoRefCol.isEmpty())
+			this.genoRefCol = genoRefCol;
+		if(dpRefCode != null && !dpRefCode.isEmpty())
+			this.dpRefCode = dpRefCode;
+		if(rpRefCode != null && !rpRefCode.isEmpty())
+			this.rpRefCode = rpRefCode;
+		if(htRefCode != null && !htRefCode.isEmpty())
+			this.htRefCode = htRefCode;
+		if(naRefCode != null && !naRefCode.isEmpty())
+			this.naRefCode = naRefCode;
+		if(bcnRef != null)
+			this.bcnRef = Integer.valueOf(bcnRef);
+		if(fnRef != null)
+			this.fnRef = Integer.valueOf(fnRef);
+	}
+
+	@NotifyChange("*")
+	@GlobalCommand("getPhenoFileValidated")
+	public void getPhenoFileValidated(
+			@BindingParam("DataType") String dataType,
+			@BindingParam("ExpDesign") String expDesign,
+			@BindingParam("Genotype") String genotype,
+			@BindingParam("Envrionment") String environment,
+			@BindingParam("NaCode") String naCode,
+			@BindingParam("Block") String block,
+			@BindingParam("Replicate") String replicate,
+			@BindingParam("Row") String row,
+			@BindingParam("Column") String column,
+			@BindingParam("RespVars") List<String> respVars)
+	{
+		System.out.println("Method: getPhenoFileValidated");
+		System.out.println("DataType " + dataType);
+		System.out.println("ExpDesign " + expDesign);
+		System.out.println("Genotype " + genotype);
+		System.out.println("Environment " + environment);
+		System.out.println("NaCode " + naCode);
+		System.out.println("Block " + block);
+		System.out.println("Replicate " + replicate);
+		System.out.println("Row " + row);
+		System.out.println("Column " + column);
+		System.out.println("RespVars " + respVars);
+		if(dataType != null && !dataType.isEmpty())
+			dataTypeOnPD = dataType;
+		if(expDesign != null && !expDesign.isEmpty())
+			expDesignOnPD = expDesign;
+		if(genotype != null && !genotype.isEmpty())
+			genotypeOnPD = genotype;
+		if(environment != null && !environment.isEmpty())
+			environmentOnPD = environment;
+		if(naCode != null && !naCode.isEmpty())
+			naCodeOnPD = naCode;
+		if(block != null && !block.isEmpty())
+			blockOnPD = block;
+		if(replicate != null && !replicate.isEmpty())
+			replicateOnPD = replicate;
+		if(row != null && !row.isEmpty())
+			rowOnPD = row;
+		if(column != null && !column.isEmpty())
+			columnOnPD = column;
+		if(respVars != null && !respVars.isEmpty())
+			this.respVars = respVars;
 	}
 
 	private boolean validateChisq()
@@ -429,11 +668,75 @@ public class Specifications {
 			{
 				Map<String, Object> args = new HashMap<String, Object>();
 				args.put("RefGenoFile", genoRefFileName);
-				BindUtils.postGlobalCommand(null, null, "validateGenoTap", args);
-			} else
-			{
-				BindUtils.postGlobalCommand(null, null, "validateGenoTap", null);
-			}
+				BindUtils.postGlobalCommand(null, null, "validateRefGenoTap", args);
+				if(genoRefFile == null)
+				{
+					showMessage("Please select reference genotypic file!");
+				} else
+				{
+					model.setRefGenoFile(genoRefFile.getAbsolutePath());
+				}
+				if(genoRefCol == null || genoRefCol.isEmpty())
+				{
+					showMessage("The geno coolumn on Reference Genotypic Tab could not be empty!");
+					return false;
+				} else
+				{
+					model.setGenoColumnOnRGD(genoRefCol);
+				}
+				if(dpRefCode == null || dpRefCode.isEmpty())
+				{
+					showMessage("The dp.code on Reference Genotypic Tab could not be empty!");
+					return false;
+				} else
+				{
+					model.setDpCodeOnRGD(dpRefCode);
+				}
+				if(rpRefCode == null || rpRefCode.isEmpty())
+				{
+					showMessage("The rp.code on Reference Genotypic Tab could not be empty!");
+					return false;
+				} else
+				{
+					model.setRpCodeOnRGD(rpRefCode);
+				}
+				if(htRefCode == null || htRefCode.isEmpty())
+				{
+					showMessage("The ht.code on Reference Genotypic Tab could not be empty!");
+					return false;
+				} else
+				{
+					model.setHtCodeOnRGD(htRefCode);
+				}
+				if(naRefCode == null || naRefCode.isEmpty())
+				{
+					showMessage("The na.code on Reference Genotypic Tab could not be empty!");
+					return false;
+				} else
+				{
+					model.setNaCodeOnRGD(naRefCode);
+				}
+				if(bcnRef == null || String.valueOf(bcnRef).isEmpty())
+				{
+					showMessage("The BCn on Reference Genoyptic Tab could not be empty!");
+					return false;
+				} else
+				{
+					model.setBcnOnRGD(bcnRef);
+				}
+				if(fnRef == null || String.valueOf(fnRef).isEmpty())
+				{
+					showMessage("The Fn on Reference Genotypic Tab could not be empty!");
+					return false;
+				} else
+				{
+					model.setFnOnRGD(fnRef);
+				}
+
+			} 
+
+			BindUtils.postGlobalCommand(null, null, "validateGenoTap", null);
+
 			if(genoFile == null)
 			{
 				showMessage("Please select genotypic file!");
@@ -517,19 +820,274 @@ public class Specifications {
 
 	private boolean validateSMA()
 	{
-		if(isSpecGenoFile)
+		if(isSpecPhenoFile)
 		{
-			if(isSpecPhenoFile)
+			if(!isSpecGenoFile)
 			{
-				BindUtils.postGlobalCommand(null, null, "validatePhenoFile", null);
-			} else
-			{
-				showMessage("Please select phenotypic file!");
+				showMessage("Please select Genotypic file!");
 				return false;
 			}
+			BindUtils.postGlobalCommand(null, null, "validatePhenoFile", null);
+			BindUtils.postGlobalCommand(null, null, "validateGenoFile", null);
+
+			if(dataTypeOnPD == null || dataTypeOnPD.isEmpty())
+			{
+				showMessage("The data type in phenotypic tab could not be null!");
+				return false;
+			} else
+			{
+				model.setDataTypeOnPD(dataTypeOnPD);
+			}
+			if(dataTypeOnPD.equals("MEAN"))
+			{
+				if(genotypeOnPD == null || genotypeOnPD.isEmpty())
+				{
+					showMessage("The genotype in phenotypic tab could not be null!");
+					return false;
+				} else
+				{
+					model.setGenoFactOnPD(genotypeOnPD);
+				}
+				if(naCodeOnPD == null || naCodeOnPD.isEmpty())
+				{
+					showMessage("The na.code in phenotypic tab could not be null!");
+					return false;
+				} else
+				{
+					model.setNaCodeOnPD(naCodeOnPD);
+				}
+				if(respVars == null || respVars.isEmpty())
+				{
+					showMessage("The response variable(s) in phenotypic tab could not be null!");
+					return false;
+				} else
+				{
+					model.setRespsOnPD(respVars);
+				}
+
+			} else if(dataTypeOnPD.equals("RAW"))
+			{
+				if(genotypeOnPD == null || genotypeOnPD.isEmpty())
+				{
+					showMessage("The genotype in phenotypic tab could not be null!");
+					return false;
+				} else
+				{
+					model.setGenoFactOnPD(genotypeOnPD);
+				}
+				if(naCodeOnPD == null || naCodeOnPD.isEmpty())
+				{
+					showMessage("The na.code in phenotypic tab could not be null!");
+					return false;
+				} else
+				{
+					model.setNaCodeOnPD(naCodeOnPD);
+				}
+				if(respVars == null || respVars.isEmpty())
+				{
+					showMessage("The response variable(s) in phenotypic tab could not be null!");
+					return false;
+				} else
+				{
+					model.setRespsOnPD(respVars);
+				}
+				if(environmentOnPD != null  || !environmentOnPD.isEmpty())
+					model.setEnvFactOnPD(environmentOnPD);
+				if(expDesignOnPD == null || expDesignOnPD.isEmpty())
+				{
+					showMessage("The experimental design in phenotypic tab could not be null!");
+					return false;
+				} else
+				{
+					model.setExptlDesignOnPD(expDesignOnPD);
+				}
+				//				("Randomized Complete Block(RCB)");
+				//				("Augmented RCB");
+				//				("Augmented Latin Square");
+				//				("Alpha-Lattice");
+				//				("Row-Column");
+				//				("Latinized Alpha-Lattice");
+				//				("Latinized Row-Column");
+				if(expDesignOnPD.equals("Randomized Complete Block(RCB)") 
+						|| expDesignOnPD.equals("Augmented RCB"))
+				{
+					//0 or 1
+					if(blockOnPD == null || blockOnPD.isEmpty())
+					{
+						showMessage("The block in phenotyic tab could not be null!");
+						return false;
+					} else
+					{
+						model.setBlockFactOnPD(blockOnPD);
+					}
+				} else if(expDesignOnPD.equals("Augmented Latin Square"))
+				{
+					//2
+					if(rowOnPD == null || rowOnPD.isEmpty())
+					{
+						showMessage("The row in phenotypic tab could not be null!");
+						return false;
+					} else{
+						model.setRowFactOnPD(rowOnPD);
+					}
+					if(columnOnPD == null || columnOnPD.isEmpty())
+					{
+						showMessage("The column in phenotypic tab could not be null!");
+						return false;
+					} else
+					{
+						model.setColFactOnPD(columnOnPD);
+					}
+				} else if(expDesignOnPD.equals("Alpha-Lattice") 
+						|| expDesignOnPD.equals("Latinized Alpha-Lattice"))
+				{
+					//3 or 5
+					if(blockOnPD == null || blockOnPD.isEmpty())
+					{
+						showMessage("The block in phenotypic tab could not be null!");
+						return false;
+					} else
+					{
+						model.setBlockFactOnPD(blockOnPD);
+					}
+					if(replicateOnPD == null || replicateOnPD.isEmpty())
+					{
+						showMessage("The replicate in phenotypic tab could not be null!");
+						return false;
+					} else
+					{
+						model.setRepFactOnPD(replicateOnPD);
+					}
+				} else if(expDesignOnPD.equals("Row-Column"))
+				{
+					//4
+					if(blockOnPD == null || blockOnPD.isEmpty())
+					{
+						showMessage("The block in phenotypic tab could not be null!");
+						return false;
+					} else
+					{
+						model.setBlockFactOnPD(blockOnPD);
+					}
+					if(rowOnPD == null || rowOnPD.isEmpty())
+					{
+						showMessage("The row in phenotypic tab could not be null!");
+						return false;
+					} else{
+						model.setRowFactOnPD(rowOnPD);
+					}
+					if(columnOnPD == null || columnOnPD.isEmpty())
+					{
+						showMessage("The column in phenotypic tab could not be null!");
+						return false;
+					} else
+					{
+						model.setColFactOnPD(columnOnPD);
+					}
+				} else if(expDesignOnPD.equals("Latinized Row-Column"))
+				{
+					//6
+					if(replicateOnPD == null || replicateOnPD.isEmpty())
+					{
+						showMessage("The replicate in phenotypic tab could not be null!");
+						return false;
+					} else
+					{
+						model.setRepFactOnPD(replicateOnPD);
+					}
+					if(rowOnPD == null || rowOnPD.isEmpty())
+					{
+						showMessage("The row in phenotypic tab could not be null!");
+						return false;
+					} else{
+						model.setRowFactOnPD(rowOnPD);
+					}
+					if(columnOnPD == null || columnOnPD.isEmpty())
+					{
+						showMessage("The column in phenotypic tab could not be null!");
+						return false;
+					} else
+					{
+						model.setColFactOnPD(columnOnPD);
+					}
+				}
+
+			} else
+			{
+				showMessage("The data type on phenotypic tab could only be RAW or MEAN!");
+				return false;
+			}
+			
+			// validate genotypic data;
+			if(genoFile == null)
+			{
+				showMessage("Please select genotypic file!");
+				return false;
+			} else
+			{
+				model.setGenoFile(genoFile.getAbsolutePath());
+			}
+			
+			if(genoCol == null || genoCol.isEmpty())
+			{
+				showMessage("The Geno on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setGenoColumnOnGD(genoCol);
+			} 
+			if(dpCode == null || dpCode.isEmpty())
+			{
+				showMessage("The do.code on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setDpCodeOnGD(dpCode);
+			}
+			if(rpCode == null || rpCode.isEmpty())
+			{
+				showMessage("The rp.code on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setRpCodeOnGD(rpCode);
+			}
+			if(htCode == null || htCode.isEmpty())
+			{
+				showMessage("The ht.code on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setHtCodeOnGD(htCode);
+			}
+			if(naCode == null || naCode.isEmpty())
+			{
+				showMessage("The na.code on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setNaCodeOnGD(naCode);
+			}
+			if(bcn == null || String.valueOf(bcn).isEmpty())
+			{
+				showMessage("The BCn on Genoyptic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setBcnOnGD(bcn);
+			}
+			if(fn == null || String.valueOf(fn).isEmpty())
+			{
+				showMessage("The Fn on Genotypic Tab could not be empty!");
+				return false;
+			} else
+			{
+				model.setFnOnGD(fn);
+			}
+
 		} else
 		{
-			showMessage("Please select genotypic file!");
+			showMessage("Please select Phenotypic file!");
 			return false;
 		}
 		return true;
@@ -554,6 +1112,7 @@ public class Specifications {
 		}
 		return true;
 	}
+
 
 	private boolean validateMapFile()
 	{
@@ -677,6 +1236,14 @@ public class Specifications {
 
 	public void setResultRServe(String resultRServe) {
 		this.resultRServe = resultRServe;
+	}
+
+	public String getGenoRefFileName() {
+		return genoRefFileName;
+	}
+
+	public void setGenoRefFileName(String genoRefFileName) {
+		this.genoRefFileName = genoRefFileName;
 	}
 
 	private void showMessage(String message)

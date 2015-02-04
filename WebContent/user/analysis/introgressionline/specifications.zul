@@ -12,29 +12,29 @@
 						<div>
 							<hbox>
 								<hbox>
+									<label value="Phenotypic Data:" />
+									<label id="phenoFileLb" value="@bind(vm.phenoFileName)"
+										visible="false" />
+									<button sclass="btn-primary" id="selectPhenoFromDBBtn"
+										onClick="@command('selectPhenoFromDB')" label="Database" />
+									<button sclass="btn-primary" id="selectPhenoFromFileBtn"
+										onUpload="@command('selectPhenoFromFile')" label="External"
+										upload="true" />
+									<button sclass="btn-danger" id="resetPhenoBtn" label="Reset"
+										onClick="@command('resetPheno')" visible="false" />
+								</hbox>
+								<space bar="true" spacing="40px" />
+								<hbox>
 									<label value="Genotypic Data:" />
 									<label id="genoFileLb" value="@bind(vm.genoFileName)"
 										visible="false" />
 									<button sclass="btn-primary" id="selectGenoFromDBBtn"
-										onClick="@command('selectGenoFromDB')" label="Database" />
+										onClick="@command('selectGenoFromDB')" label="Database" visible="false"/>
 									<button sclass="btn-primary" id="selectGenoFromFileBtn"
 										onUpload="@command('selectGenoFromFile')" label="External"
 										upload="true, maxsize=-1" />
 									<button sclass="btn-danger" id="resetGenoBtn" label="Reset"
 										onClick="@command('resetGeno')" visible="false" />
-								</hbox>
-								<space bar="true" spacing="40px" />
-								<hbox>
-									<label value="Phenotypic Data:" />
-									<label id="phenoFileLb" value="@bind(vm.phenoFileName)"
-										visible="false" />
-									<button sclass="btn-primary" id="selectPhenoFromDBBtn"
-										onClick="@command(selectPhenoFromDB)" label="Database" />
-									<button sclass="btn-primary" id="selectPhenoFromFileBtn"
-										onUpload="@command(selectPhenoFromFile)" label="External"
-										upload="true" />
-									<button sclass="btn-danger" id="resetPhenoBtn" label="Reset"
-										onClick="@command(resetPheno)" visible="false" />
 								</hbox>
 								<space bar="true" spacing="40px" />
 								<hbox>
@@ -68,7 +68,7 @@
 						</hbox>
 						<separator />
 						<div id="analysisMethodDiv">
-							<div id="mmaDiv">
+							<div id="mmaDiv" visible="false">
 								<hbox spacing="5">
 									<label value="Regression Method:" />
 									<radiogroup id="regMethodRG">
@@ -128,7 +128,7 @@
 									<intbox id="digitsIB" value="@bind(vm.digits)" />
 								</hbox>
 								<separator></separator>
-								<hbox spacing="5">
+								<hbox spacing="5" visible="false">
 									<label value="Test:" />
 									<radiogroup id="testRG">
 										<radio id="ftestRadio" label="F Test" />
@@ -136,7 +136,7 @@
 									</radiogroup>
 								</hbox>
 							</div>
-							<div id="csDiv" visible="false">
+							<div id="csDiv" visible="true">
 								<hbox spacing="5">
 									<label value="include.ht:" />
 									<checkbox id="includeHtOnCSCB" label="TRUE"></checkbox>
@@ -152,7 +152,11 @@
 								<separator />
 								<hbox spacing="5">
 									<label value="Reference matrix:" />
-									<button label="upload" id="uploadRefGenoBtn" sclass="btn-info" />
+									<label id="refGenoLb" value="@bind(vm.genoRefFileName)" visible="false" />
+									<button label="Upload" id="uploadRefGenoBtn" sclass="btn-info" 
+										upload="true, maxsize=-1" onUpload="@command('uploadRefGenoFile')"/>
+									<button label="Reset" id="resetRefGenoBtn" sclass="btn-danger" visible="false"
+										onClick="@command('resetRefGenoFile')" />
 								</hbox>
 							</div>
 						</div>
@@ -162,16 +166,16 @@
 			<div>
 				<tabbox id="dataTB" height="600px">
 					<tabs id="dataTabs">
-						<tab id="genoDataTab" label="Genotypic Data" />
 						<tab id="phenoDataTab" label="Phenotypic Data" />
+						<tab id="genoDataTab" label="Genotypic Data" />
 						<tab id="mapDataTab" label="Map Data" />
 					</tabs>
 					<tabpanels id="dataTabpanels" style="overflow:auto">
-						<tabpanel id="genoDataTP" vflex="1" hflex="1" style="overflow:auto;">
-							<include src="/user/analysis/introgressionline/genotypicdata.zul" />
-						</tabpanel>
 						<tabpanel id="phenoDataTP" vflex="1" hflex="1" style="overflow:auto;">
 							<include src="/user/analysis/introgressionline/phenotypicdata.zul"></include>
+						</tabpanel>
+						<tabpanel id="genoDataTP" vflex="1" hflex="1" style="overflow:auto;">
+							<include src="/user/analysis/introgressionline/genotypicdata.zul" />
 						</tabpanel>
 						<tabpanel id="mapDataTP" vflex="1" hflex="1" style="overflow:auto;">
 							<include src="/user/analysis/introgressionline/mapdata.zul" />

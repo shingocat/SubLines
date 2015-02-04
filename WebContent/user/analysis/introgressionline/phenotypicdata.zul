@@ -16,7 +16,7 @@
 							</template>
 						</combobox>
 						<space />
-						<label value="Experimental Design:" />
+						<label id="expDesignLb" value="Experimental Design:" />
 						<space />
 						<combobox id="expDesignCBB" model="@load(vm.lstExpDesigns)"
 							selectedItem="@bind(vm.expDesign)" readonly="true"
@@ -70,7 +70,7 @@
 						<image style="cursor:pointer" id="toFactorBtn" src="/images/downarrow_g.png"
 							tooltip="set as Factor" onClick="@command('toFactor')" />
 					</hbox>
-					<hbox>
+					<hbox height="200px">
 						<div vflex="1">
 							<listbox id="factorLB" rows="4" checkmark="true"
 								multiple="true" width="300px">
@@ -96,7 +96,7 @@
 											<hlayout valign="middle">
 												<image style="cursor:pointer;padding:10px" id="addGenotypeBtn"
 													src="/images/rightarrow_g.png" tooltip="Add Genotype variable"
-													onClick="@command('chooseVariable', varTB=genotypeTB, imgButton=self)" />
+													onClick="@command('chooseVariable', varTextBox=genotypeTB, imgButton=self)" />
 												<label value="Genotype:" />
 											</hlayout>
 										</cell>
@@ -200,7 +200,9 @@
 					</hbox>
 				</groupbox>
 			</div>
-			<div id="dataDiv">
+			<div id="dataDiv" hflex="1" vflex="1" style="overflow:auto;">
+				<grid id="dataGrid" height="400px" sizedByContent="true" 
+					emptyMessage="No data..."/>
 			</div>
 			<separator height="20px" />
 		</vlayout>

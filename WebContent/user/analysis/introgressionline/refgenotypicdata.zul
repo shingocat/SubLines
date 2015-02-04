@@ -1,7 +1,7 @@
-<?page title="GenotypicData" contentType="text/html;charset=UTF-8"?>
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
 <zk>
-	<window apply="org.zkoss.bind.BindComposer" hflex="1" vflex="1"
-		viewModel="@id('vm') @init('org.strasa.web.analysis.introgressionline.view.model.GenotypicData')">
+<window apply="org.zkoss.bind.BindComposer" hflex="1" vflex="1"
+		viewModel="@id('vm') @init('org.strasa.web.analysis.introgressionline.view.model.RefGenotypicData')">
 		<vlayout>
 			<div id="specDiv" align="left">
 				<groupbox>
@@ -45,7 +45,7 @@
 					</hbox>
 				</groupbox>
 			</div>
-			<div id="dataDiv" hflex="1" vflex="1" style="overflow:auto;">
+			<div id="dataDiv" hflex="1" vflex="1" style="overflow:auto">
 				<grid id="dataGrid" height="400px" sizedByContent="true" emptyMessage="No data..."/>
 			</div>
 		</vlayout>

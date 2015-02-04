@@ -15,6 +15,7 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -28,7 +29,6 @@ import org.zkoss.zul.Grid;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
-import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Row;
@@ -37,8 +37,7 @@ import org.zkoss.zul.Textbox;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-public class GenotypicData {
-
+public class RefGenotypicData {
 	//component
 	Div specDiv;
 	Combobox genoCBB;
@@ -78,7 +77,8 @@ public class GenotypicData {
 
 	@AfterCompose
 	public void afterComposer(@ContextParam(ContextType.COMPONENT) Component component,
-			@ContextParam(ContextType.VIEW) Component view)
+			@ContextParam(ContextType.VIEW) Component view,
+			@ExecutionArgParam("FilePath") String filePath)
 	{
 		Selectors.wireComponents(component, this, false);
 		this.specDiv = (Div) component.getFellow("specDiv");
@@ -91,7 +91,9 @@ public class GenotypicData {
 		this.fnIB = (Intbox) component.getFellow("fnIB");
 		this.dataDiv = (Div) component.getFellow("dataDiv");
 		this.dataGrid = (Grid) component.getFellow("dataGrid");
-	//	refreshDataDiv();
+		dataFile = new File(filePath);
+		refreshCSVData();
+		refreshGrid();
 	}
 
 	@NotifyChange("*")
@@ -108,42 +110,14 @@ public class GenotypicData {
 		args.put("NaCode", naCode);
 		args.put("BCn", bcn);
 		args.put("Fn", fn);
-		BindUtils.postGlobalCommand(null, null, "getGenoFileValidated", args);
+		BindUtils.postGlobalCommand(null, null, "getRefGenoFileValidated", args);
 
-	}
-
-	@NotifyChange("*")
-	@GlobalCommand("resetGenoFile")
-	public void resetGenoFile()
-	{
-		if(!columnList.isEmpty())
-			columnList.clear();
-		if(!dataList.isEmpty())
-			dataList.clear();
-		refreshGenoCBB(null);
-		refreshGrid();
-//		refreshDataDiv();
-	}
-
-	@NotifyChange("*")
-	@GlobalCommand("getGenoFile")
-	public void getGenoFile(
-			@BindingParam("FilePath") String filePath)
-	{
-		if(!filePath.endsWith(".csv"))
-		{
-			showMessage("The file should be text-based csv format!");
-			return;
-		}
-		dataFile = new File(filePath);
-		refreshCSVData();
-		refreshGrid();
 	}
 		
+	
 	@NotifyChange("*")
-	@GlobalCommand("validateGenoTap")
-	public void validateGenoTap(
-			@BindingParam("RefGenoFile") String refGenoFile)
+	@GlobalCommand("validateRefGenoTap")
+	public void validateRefGenoTap()
 	{
 		if(genoCBB.getValue().isEmpty() || genoCol.length() == 0)
 		{
@@ -189,15 +163,16 @@ public class GenotypicData {
 		args.put("NaCode", naCode);
 		args.put("BCn", bcn);
 		args.put("Fn", fn);
-		BindUtils.postGlobalCommand(null, null, "getGenoFileValidated", args);
+		BindUtils.postGlobalCommand(null, null, "getRefGenoFileValidated", args);
 	}
 
+	
 	@NotifyChange("*")
 	public void refreshCSVData()
 	{
 		if(dataFile == null)
 		{
-			showMessage("The genotypic file is null!");
+			showMessage("The reference genotypic file is null!");
 			return;
 		}
 		CSVReader reader = null;
@@ -212,7 +187,6 @@ public class GenotypicData {
 				columnList.remove(columnList.size() - 1);
 			rawData.remove(0);
 			dataList = new ArrayList<String[]>(rawData);
-		//	refreshGenoCBB(columnList);
 		} catch(FileNotFoundException e)
 		{
 			e.printStackTrace();
@@ -221,26 +195,11 @@ public class GenotypicData {
 			e.printStackTrace();
 		}
 	}
-
-	@NotifyChange("*")
-	public void refreshGenoCBB(List<String> data)
-	{
-		if(!genoCBB.getChildren().isEmpty())
-			genoCBB.getChildren().clear();
-		ListModelList<String> lml = null;
-		if(data == null)
-			data = new ArrayList<String>();
-		lml = new ListModelList<String>(data);
-		genoCBB.setModel(lml);
-	}
+	
+	
 
 	public void refreshGrid()
 	{
-		if(!dataGrid.getChildren().isEmpty())
-		{
-			dataGrid.getColumns().detach();
-			dataGrid.getRows().detach();
-		}
 		Columns cols = new Columns();
 		cols.setSizable(true);
 		cols.setVflex("true");
@@ -267,78 +226,107 @@ public class GenotypicData {
 		dataGrid.appendChild(rows);
 	}
 	
+	@NotifyChange("*")
+	public void refreshGenoCBB(List<String> data)
+	{
+		ListModelList<String> lml = null;
+		if(data == null)
+			data = new ArrayList<String>();
+		lml = new ListModelList<String>(data);
+		genoCBB.setModel(lml);
+	}
+
+	
 	public String getGenoCol() {
 		return genoCol;
 	}
+	
 
 	public void setGenoCol(String genoCol) {
 		this.genoCol = genoCol;
 	}
 
+	
 	public String getDpCode() {
 		return dpCode;
 	}
 
+	
 	public void setDpCode(String dpCode) {
 		this.dpCode = dpCode;
 	}
 
+	
 	public String getRpCode() {
 		return rpCode;
 	}
 
+	
 	public void setRpCode(String rpCode) {
 		this.rpCode = rpCode;
 	}
 
+	
 	public String getHtCode() {
 		return htCode;
 	}
 
+	
 	public void setHtCode(String htCode) {
 		this.htCode = htCode;
 	}
 
+	
 	public String getNaCode() {
 		return naCode;
 	}
 
+	
 	public void setNaCode(String naCode) {
 		this.naCode = naCode;
 	}
 
+	
 	public Integer getBcn() {
 		return bcn;
 	}
 
+	
 	public void setBcn(Integer bcn) {
 		this.bcn = bcn;
 	}
 
+	
 	public Integer getFn() {
 		return fn;
 	}
 
+	
 	public void setFn(Integer fn) {
 		this.fn = fn;
 	}
 
+	
 	public List<String> getColumnList() {
 		return columnList;
 	}
 
+	
 	public void setColumnList(List<String> columnList) {
 		this.columnList = columnList;
 	}
 
+	
 	public List<String[]> getDataList() {
 		return dataList;
 	}
 
+	
 	public void setDataList(List<String[]> dataList) {
 		this.dataList = dataList;
 	}
 
+	
 	private void showMessage(String message)
 	{
 		Messagebox.show(message, "Warning", Messagebox.OK, Messagebox.INFORMATION);

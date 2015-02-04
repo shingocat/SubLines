@@ -1,6 +1,7 @@
 package org.strasa.web.analysis.view.model;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ILAnalysisModel extends AnalysisModel {
 	
@@ -32,10 +33,18 @@ public class ILAnalysisModel extends AnalysisModel {
 	private String naCodeOnGD;
 	private Integer bcnOnGD;
 	private Integer fnOnGD;
+	//ref genotypic data rgd;
+	private String genoColumnOnRGD;
+	private String dpCodeOnRGD;
+	private String rpCodeOnRGD;
+	private String htCodeOnRGD;
+	private String naCodeOnRGD;
+	private Integer bcnOnRGD;
+	private Integer fnOnRGD;
 	//phenotypic data (PD)
 	private String dataTypeOnPD;
 	private String naCodeOnPD;
-	private String [] respsOnPD;
+	private List<String> respsOnPD;
 	private String exptlDesignOnPD;
 	private String genoFactOnPD;
 	private String envFactOnPD;
@@ -257,11 +266,11 @@ public class ILAnalysisModel extends AnalysisModel {
 		this.naCodeOnPD = naCodeOnPD;
 	}
 
-	public String[] getRespsOnPD() {
+	public List<String> getRespsOnPD() {
 		return respsOnPD;
 	}
 
-	public void setRespsOnPD(String[] respsOnPD) {
+	public void setRespsOnPD(List<String> respsOnPD) {
 		this.respsOnPD = respsOnPD;
 	}
 
@@ -353,31 +362,91 @@ public class ILAnalysisModel extends AnalysisModel {
 		this.unitOnMD = unitOnMD;
 	}
 
+	public String getGenoColumnOnRGD() {
+		return genoColumnOnRGD;
+	}
+
+	public void setGenoColumnOnRGD(String genoColumnOnRGD) {
+		this.genoColumnOnRGD = genoColumnOnRGD;
+	}
+
+	public String getDpCodeOnRGD() {
+		return dpCodeOnRGD;
+	}
+
+	public void setDpCodeOnRGD(String dpCodeOnRGD) {
+		this.dpCodeOnRGD = dpCodeOnRGD;
+	}
+
+	public String getRpCodeOnRGD() {
+		return rpCodeOnRGD;
+	}
+
+	public void setRpCodeOnRGD(String rpCodeOnRGD) {
+		this.rpCodeOnRGD = rpCodeOnRGD;
+	}
+
+	public String getHtCodeOnRGD() {
+		return htCodeOnRGD;
+	}
+
+	public void setHtCodeOnRGD(String htCodeOnRGD) {
+		this.htCodeOnRGD = htCodeOnRGD;
+	}
+
+	public String getNaCodeOnRGD() {
+		return naCodeOnRGD;
+	}
+
+	public void setNaCodeOnRGD(String naCodeOnRGD) {
+		this.naCodeOnRGD = naCodeOnRGD;
+	}
+
+	public Integer getBcnOnRGD() {
+		return bcnOnRGD;
+	}
+
+	public void setBcnOnRGD(Integer bcnOnRGD) {
+		this.bcnOnRGD = bcnOnRGD;
+	}
+
+	public Integer getFnOnRGD() {
+		return fnOnRGD;
+	}
+
+	public void setFnOnRGD(Integer fnOnRGD) {
+		this.fnOnRGD = fnOnRGD;
+	}
+
 	@Override
 	public String toString() {
-		return "ILAnalysisModel [analysisType=" + analysisType + "\n, genoFile="
-				+ genoFile + "\n, phenoFile=" + phenoFile + "\n, mapFile="
-				+ mapFile + "\n, isIncludeHT=" + isIncludeHT + "\n, regMethodOnMM="
-				+ regMethodOnMM + "\n, pvalMethodOnMM=" + pvalMethodOnMM
-				+ "\n, alphaOnMM=" + alphaOnMM + "\n, bootstrapOnMM="
-				+ bootstrapOnMM + "\n, nfoldsOnMM=" + nfoldsOnMM + "\n, stepOnMM="
-				+ stepOnMM + "\n, maxTryOnMM=" + maxTryOnMM + "\n, simPvalueOnCS="
-				+ simPvalueOnCS + "\n, bootStrapTimesOnCS=" + bootStrapTimesOnCS
-				+ "\n, refGenoFile=" + refGenoFile + "\n, digitsOnSM=" + digitsOnSM
-				+ "\n, testOnSM=" + testOnSM + "\n, genoColumnOnGD="
-				+ genoColumnOnGD + "\n, dpCodeOnGD=" + dpCodeOnGD
-				+ "\n, rpCodeOnGD=" + rpCodeOnGD + "\n, htCodeOnGD=" + htCodeOnGD
-				+ "\n, naCodeOnGD=" + naCodeOnGD + "\n, bcnOnGD=" + bcnOnGD
-				+ "\n, fnOnGD=" + fnOnGD + "\n, dataTypeOnPD=" + dataTypeOnPD
-				+ "\n, naCodeOnPD=" + naCodeOnPD + "\n, respsOnPD="
-				+ Arrays.toString(respsOnPD) + ", exptlDesignOnPD="
-				+ exptlDesignOnPD + "\n, genoFactOnPD=" + genoFactOnPD
-				+ "\n, envFactOnPD=" + envFactOnPD + "\n, blockFactOnPD="
-				+ blockFactOnPD + "\n, repFactOnPD=" + repFactOnPD
-				+ "\n, rowFactOnPD=" + rowFactOnPD + "\n, colFactOnPD="
-				+ colFactOnPD + "\n, marColOnMD=" + marColOnMD + "\n, chrColOnMD="
-				+ chrColOnMD + "\n, posColOnMD=" + posColOnMD + "\n, unitOnMD="
-				+ unitOnMD + "]\n" + "Analysis Model Attribue [" + super.toString() + "]";
+		return "ILAnalysisModel [\nanalysisType=" + analysisType + ", \ngenoFile="
+				+ genoFile + ", \nphenoFile=" + phenoFile + ", \nmapFile="
+				+ mapFile + ", isIncludeHT=" + isIncludeHT + ", regMethodOnMM="
+				+ regMethodOnMM + ", \npvalMethodOnMM=" + pvalMethodOnMM
+				+ ", \nalphaOnMM=" + alphaOnMM + ", \nbootstrapOnMM="
+				+ bootstrapOnMM + ", \nnfoldsOnMM=" + nfoldsOnMM + ", \nstepOnMM="
+				+ stepOnMM + ", \nmaxTryOnMM=" + maxTryOnMM + ", \nsimPvalueOnCS="
+				+ simPvalueOnCS + ", \nbootStrapTimesOnCS=" + bootStrapTimesOnCS
+				+ ", \nrefGenoFile=" + refGenoFile + ", \ndigitsOnSM=" + digitsOnSM
+				+ ", \ntestOnSM=" + testOnSM + ", \ngenoColumnOnGD="
+				+ genoColumnOnGD + ", \ndpCodeOnGD=" + dpCodeOnGD
+				+ ", \nrpCodeOnGD=" + rpCodeOnGD + ", \nhtCodeOnGD=" + htCodeOnGD
+				+ ", \nnaCodeOnGD=" + naCodeOnGD + ", \nbcnOnGD=" + bcnOnGD
+				+ ", \nfnOnGD=" + fnOnGD + ", \ngenoColumnOnRGD=" + genoColumnOnRGD
+				+ ", \ndpCodeOnRGD=" + dpCodeOnRGD + ", \nrpCodeOnRGD="
+				+ rpCodeOnRGD + ", \nhtCodeOnRGD=" + htCodeOnRGD
+				+ ", \nnaCodeOnRGD=" + naCodeOnRGD + ", \nbcnOnRGD=" + bcnOnRGD
+				+ ", \nfnOnRGD=" + fnOnRGD + ", \ndataTypeOnPD=" + dataTypeOnPD
+				+ ", \nnaCodeOnPD=" + naCodeOnPD + ", \nrespsOnPD="
+				+ respsOnPD + ", \nexptlDesignOnPD="
+				+ exptlDesignOnPD + ", \ngenoFactOnPD=" + genoFactOnPD
+				+ ", \nenvFactOnPD=" + envFactOnPD + ", \nblockFactOnPD="
+				+ blockFactOnPD + ", \nrepFactOnPD=" + repFactOnPD
+				+ ", \nrowFactOnPD=" + rowFactOnPD + ", \ncolFactOnPD="
+				+ colFactOnPD + ", \nmarColOnMD=" + marColOnMD + ", \nchrColOnMD="
+				+ chrColOnMD + ", \nposColOnMD=" + posColOnMD + ", \nunitOnMD="
+				+ unitOnMD +"\n"+ super.toString() + "\n]";
 	}
 	
 	
