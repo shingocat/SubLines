@@ -154,6 +154,7 @@ public class Specifications {
 	Integer bcnRef;
 	Integer fnRef;
 	String dataTypeOnPD;
+	String envAnalysisTypeOnPD;
 	String naCodeOnPD;
 	String genotypeOnPD;
 	String environmentOnPD;
@@ -618,8 +619,9 @@ public class Specifications {
 	public void getPhenoFileValidated(
 			@BindingParam("DataType") String dataType,
 			@BindingParam("ExpDesign") String expDesign,
+			@BindingParam("EnvAnalysisType") String  envAnalysisType,
 			@BindingParam("Genotype") String genotype,
-			@BindingParam("Envrionment") String environment,
+			@BindingParam("Environment") String environment,
 			@BindingParam("NaCode") String naCode,
 			@BindingParam("Block") String block,
 			@BindingParam("Replicate") String replicate,
@@ -630,6 +632,7 @@ public class Specifications {
 		System.out.println("Method: getPhenoFileValidated");
 		System.out.println("DataType " + dataType);
 		System.out.println("ExpDesign " + expDesign);
+		System.out.println("EnvAnalysisType " + envAnalysisType);
 		System.out.println("Genotype " + genotype);
 		System.out.println("Environment " + environment);
 		System.out.println("NaCode " + naCode);
@@ -638,10 +641,13 @@ public class Specifications {
 		System.out.println("Row " + row);
 		System.out.println("Column " + column);
 		System.out.println("RespVars " + respVars);
+		System.out.println("-----------------------------");
 		if(dataType != null && !dataType.isEmpty())
 			dataTypeOnPD = dataType;
 		if(expDesign != null && !expDesign.isEmpty())
 			expDesignOnPD = expDesign;
+		if(envAnalysisType != null && !envAnalysisType.isEmpty())
+			envAnalysisTypeOnPD = envAnalysisType;
 		if(genotype != null && !genotype.isEmpty())
 			genotypeOnPD = genotype;
 		if(environment != null && !environment.isEmpty())
@@ -838,61 +844,56 @@ public class Specifications {
 			{
 				model.setDataTypeOnPD(dataTypeOnPD);
 			}
-			if(dataTypeOnPD.equals("MEAN"))
+			if(genotypeOnPD == null || genotypeOnPD.isEmpty())
 			{
-				if(genotypeOnPD == null || genotypeOnPD.isEmpty())
-				{
-					showMessage("The genotype in phenotypic tab could not be null!");
-					return false;
-				} else
-				{
-					model.setGenoFactOnPD(genotypeOnPD);
-				}
-				if(naCodeOnPD == null || naCodeOnPD.isEmpty())
-				{
-					showMessage("The na.code in phenotypic tab could not be null!");
-					return false;
-				} else
-				{
-					model.setNaCodeOnPD(naCodeOnPD);
-				}
-				if(respVars == null || respVars.isEmpty())
-				{
-					showMessage("The response variable(s) in phenotypic tab could not be null!");
-					return false;
-				} else
-				{
-					model.setRespsOnPD(respVars);
-				}
+				showMessage("The genotype in phenotypic tab could not be null!");
+				return false;
+			} else
+			{
+				model.setGenoFactOnPD(genotypeOnPD);
+			}
+			if(naCodeOnPD == null || naCodeOnPD.isEmpty())
+			{
+				showMessage("The na.code in phenotypic tab could not be null!");
+				return false;
+			} else
+			{
+				model.setNaCodeOnPD(naCodeOnPD);
+			}
+			if(respVars == null || respVars.isEmpty())
+			{
+				showMessage("The response variable(s) in phenotypic tab could not be null!");
+				return false;
+			} else
+			{
+				model.setRespsOnPD(respVars);
+			}
 
-			} else if(dataTypeOnPD.equals("RAW"))
+			if(dataTypeOnPD.equals("RAW"))
 			{
-				if(genotypeOnPD == null || genotypeOnPD.isEmpty())
+				if(envAnalysisTypeOnPD == null || envAnalysisTypeOnPD.isEmpty())
 				{
-					showMessage("The genotype in phenotypic tab could not be null!");
+					showMessage("The analysis type in phenotypic tab could not be null!");
 					return false;
 				} else
 				{
-					model.setGenoFactOnPD(genotypeOnPD);
+					model.setEnvAnalysisType(envAnalysisTypeOnPD);
 				}
-				if(naCodeOnPD == null || naCodeOnPD.isEmpty())
+				if(envAnalysisTypeOnPD.equals("Multi-Environment Analysis"))
 				{
-					showMessage("The na.code in phenotypic tab could not be null!");
-					return false;
+					if(environmentOnPD == null || environmentOnPD.isEmpty())
+					{
+						showMessage("The environment factor in phenotypic tab could not be null when analysis type is multi-environment!");
+					} else
+					{
+						model.setEnvFactOnPD(environmentOnPD);
+					}
 				} else
 				{
-					model.setNaCodeOnPD(naCodeOnPD);
+					if(environmentOnPD != null  && !environmentOnPD.isEmpty())
+						model.setEnvFactOnPD(environmentOnPD);
 				}
-				if(respVars == null || respVars.isEmpty())
-				{
-					showMessage("The response variable(s) in phenotypic tab could not be null!");
-					return false;
-				} else
-				{
-					model.setRespsOnPD(respVars);
-				}
-				if(environmentOnPD != null  || !environmentOnPD.isEmpty())
-					model.setEnvFactOnPD(environmentOnPD);
+				
 				if(expDesignOnPD == null || expDesignOnPD.isEmpty())
 				{
 					showMessage("The experimental design in phenotypic tab could not be null!");
@@ -901,13 +902,6 @@ public class Specifications {
 				{
 					model.setExptlDesignOnPD(expDesignOnPD);
 				}
-				//				("Randomized Complete Block(RCB)");
-				//				("Augmented RCB");
-				//				("Augmented Latin Square");
-				//				("Alpha-Lattice");
-				//				("Row-Column");
-				//				("Latinized Alpha-Lattice");
-				//				("Latinized Row-Column");
 				if(expDesignOnPD.equals("Randomized Complete Block(RCB)") 
 						|| expDesignOnPD.equals("Augmented RCB"))
 				{
@@ -1017,7 +1011,7 @@ public class Specifications {
 				showMessage("The data type on phenotypic tab could only be RAW or MEAN!");
 				return false;
 			}
-			
+
 			// validate genotypic data;
 			if(genoFile == null)
 			{
@@ -1027,7 +1021,7 @@ public class Specifications {
 			{
 				model.setGenoFile(genoFile.getAbsolutePath());
 			}
-			
+
 			if(genoCol == null || genoCol.isEmpty())
 			{
 				showMessage("The Geno on Genotypic Tab could not be empty!");
@@ -1112,7 +1106,6 @@ public class Specifications {
 		}
 		return true;
 	}
-
 
 	private boolean validateMapFile()
 	{

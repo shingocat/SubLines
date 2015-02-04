@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ILAnalysisModel extends AnalysisModel {
-	
+
 	private String analysisType; //chisq(CS), singlemarker(SM), multimarker(MM)
 	private String genoFile;
 	private String phenoFile;
@@ -43,6 +43,7 @@ public class ILAnalysisModel extends AnalysisModel {
 	private Integer fnOnRGD;
 	//phenotypic data (PD)
 	private String dataTypeOnPD;
+	private String envAnalysisType;
 	private String naCodeOnPD;
 	private List<String> respsOnPD;
 	private String exptlDesignOnPD;
@@ -57,7 +58,7 @@ public class ILAnalysisModel extends AnalysisModel {
 	private String chrColOnMD;
 	private String posColOnMD;
 	private String unitOnMD;
-	
+
 	public String getAnalysisType() {
 		return analysisType;
 	}
@@ -258,6 +259,14 @@ public class ILAnalysisModel extends AnalysisModel {
 		this.dataTypeOnPD = dataTypeOnPD;
 	}
 
+	public String getEnvAnalysisType() {
+		return envAnalysisType;
+	}
+
+	public void setEnvAnalysisType(String envAnalysisType) {
+		this.envAnalysisType = envAnalysisType;
+	}
+
 	public String getNaCodeOnPD() {
 		return naCodeOnPD;
 	}
@@ -438,7 +447,8 @@ public class ILAnalysisModel extends AnalysisModel {
 				+ rpCodeOnRGD + ", \nhtCodeOnRGD=" + htCodeOnRGD
 				+ ", \nnaCodeOnRGD=" + naCodeOnRGD + ", \nbcnOnRGD=" + bcnOnRGD
 				+ ", \nfnOnRGD=" + fnOnRGD + ", \ndataTypeOnPD=" + dataTypeOnPD
-				+ ", \nnaCodeOnPD=" + naCodeOnPD + ", \nrespsOnPD="
+				+ ", \nnaCodeOnPD=" + naCodeOnPD + ", \nenvAnalysisType ="  
+				+ envAnalysisType + ", \nrespsOnPD="
 				+ respsOnPD + ", \nexptlDesignOnPD="
 				+ exptlDesignOnPD + ", \ngenoFactOnPD=" + genoFactOnPD
 				+ ", \nenvFactOnPD=" + envFactOnPD + ", \nblockFactOnPD="
@@ -448,6 +458,6 @@ public class ILAnalysisModel extends AnalysisModel {
 				+ chrColOnMD + ", \nposColOnMD=" + posColOnMD + ", \nunitOnMD="
 				+ unitOnMD +"\n"+ super.toString() + "\n]";
 	}
-	
-	
+
+
 }

@@ -1,30 +1,46 @@
 <?page title="PhenotypicData" contentType="text/html;charset=UTF-8"?>
 <zk>
-	<window apply="org.zkoss.bind.BindComposer" height="900px" width="100%"
+	<window apply="org.zkoss.bind.BindComposer" height="900px"
+		width="100%"
 		viewModel="@id('vm') @init('org.strasa.web.analysis.introgressionline.view.model.PhenotypicData')">
 		<vlayout>
 			<div id="specDiv" align="left">
 				<groupbox>
 					<hbox>
-						<label value="Data Type:" />
+						<hbox>
+							<label value="Data Type:" />
+							<space />
+							<combobox id="dataTypeCBB" model="@load(vm.lstDataTypes)"
+								selectedItem="@bind(vm.dataType)" readonly="true"
+								onChange="@command('updateDataType', selectedItem=self.value)">
+								<template name="model">
+									<comboitem label="@load(each)" />
+								</template>
+							</combobox>
+						</hbox>
+						<hbox id="envAnalysisHB" visible="false">
+							<label value="Analysis Type:" />
+							<space />
+							<combobox id="envAnalysisCBB" model="@load(vm.lstEnvAnalysisTypes)"
+								selectedItem="@bind(vm.envAnalysisType)" readonly="true"
+								onChange="@command('updateEnvAnalysisType', selectedItem=self.value)">
+								<template name="model">
+									<comboitem label="@load(each)" />
+								</template>
+							</combobox>
+						</hbox>
 						<space />
-						<combobox id="dataTypeCBB" model="@load(vm.lstDataTypes)"
-							selectedItem="@bind(vm.dataType)" readonly="true"
-							onChange="@command('updateDataType', selectedItem=self.value)">
-							<template name="model">
-								<comboitem label="@load(each)" />
-							</template>
-						</combobox>
-						<space />
+						<hbox id="expDesignHB" visible="false">
 						<label id="expDesignLb" value="Experimental Design:" />
 						<space />
-						<combobox id="expDesignCBB" model="@load(vm.lstExpDesigns)"
-							selectedItem="@bind(vm.expDesign)" readonly="true"
-							onChange="@command('updateExpDesign', selectedItem=self.value)">
-							<template name="model">
-								<comboitem label="@load(each)" />
-							</template>
-						</combobox>
+							<combobox id="expDesignCBB" model="@load(vm.lstExpDesigns)"
+								selectedItem="@bind(vm.expDesign)" readonly="true"
+								onChange="@command('updateExpDesign', selectedItem=self.value)">
+								<template name="model">
+									<comboitem label="@load(each)" />
+								</template>
+							</combobox>
+						</hbox>
 						<space />
 						<label value="na.code:" />
 						<space />
@@ -32,8 +48,8 @@
 					</hbox>
 					<separator />
 					<hbox>
-						<listbox id="numericLB" vflex="true" checkmark="true" rows="4"
-							width="300px" multiple="true">
+						<listbox id="numericLB" vflex="true" checkmark="true"
+							rows="4" width="300px" multiple="true">
 							<listhead>
 								<listheader label="Numeric Variables" />
 							</listhead>
@@ -201,8 +217,8 @@
 				</groupbox>
 			</div>
 			<div id="dataDiv" hflex="1" vflex="1" style="overflow:auto;">
-				<grid id="dataGrid" height="400px" sizedByContent="true" 
-					emptyMessage="No data..."/>
+				<grid id="dataGrid" height="400px" sizedByContent="true"
+					emptyMessage="No data..." />
 			</div>
 			<separator height="20px" />
 		</vlayout>

@@ -16,7 +16,7 @@ public class ILRserveManager extends JRServeMangerImpl {
 	{
 		super();
 	}
-	
+
 	@Override
 	public HashMap<String, String> doAnalysis(AnalysisModel model)
 	{
@@ -229,20 +229,29 @@ public class ILRserveManager extends JRServeMangerImpl {
 		String resultFolderPath = model.getResultFolderPath();
 		String phenoFile = model.getPhenoFile();
 		String dataType = model.getDataTypeOnPD();
+		String naCode = model.getNaCodeOnPD();
 		String genotype = model.getGenoFactOnPD();
+		String environment = model.getEnvFactOnPD();
+		String expDesign = model.getExptlDesignOnPD();
+		String block = model.getBlockFactOnPD();
+		String replicate = model.getRepFactOnPD();
+		String row = model.getRowFactOnPD();
+		String column = model.getColFactOnPD();
+		String envAnalysisType = model.getEnvAnalysisType();
 		ArrayList<String> respvars = (ArrayList<String>) model.getRespsOnPD();
 		String[] respVars = new String[respvars.size()];
 		for(int i = 0 ; i < respvars.size() ; i++)
 		{
 			respVars[i] = respvars.get(i);
 		}
-
+		
 		try {
 			String setWd = "setwd(\"" + resultFolderPath + "\");";
 			getConn().eval(setWd);
 			StringBuilder phenoData = new StringBuilder();
 			phenoData.append("phenoData <- try(read.csv(\"" + phenoFile + 
-					"\",header = TRUE),silent=TRUE);");
+					"\",header = TRUE, na.strings = \""+ naCode + 
+					"\"),silent=TRUE);");
 			getConn().eval(phenoData.toString());
 			String run = getConn().eval("class(phenoData);").asString();
 			if(run != null && run.equals("try-error"))
@@ -282,9 +291,106 @@ public class ILRserveManager extends JRServeMangerImpl {
 					toreturn.put("Message", "Error Reading Pheno Data!");
 					return toreturn;
 				} 
-			} else
+			}else if(dataType.equals("RAW"))
 			{
-
+				StringBuilder sb = new StringBuilder();
+				sb.append("pheno <- try(read.pheno.data(phenoData, type=\"RAW\",");
+				sb.append("pop.type=\"IL\", geno = \"" + genotype + "\",");
+				sb.append("resp.var = " + this.getInputTransform().createRVector(respVars) + ",");
+				if(environment == null || environment.isEmpty())
+					sb.append("env = NULL,");
+				else
+					sb.append("env = \"" + environment + "\",");
+				if(expDesign.equals("Randomized Complete Block(RCB)"))
+				{//0
+					sb.append("exptl.design = \"RCB\",");
+					sb.append("block = \"" + block + "\",");
+				} else if(expDesign.equals("Augmented RCB"))
+				{//1
+					sb.append("exptl.design = \"AugRCB\",");
+					sb.append("block = \"" + block + "\",");
+				} else if(expDesign.equals("Augmented Latin Square"))
+				{//2
+					sb.append("exptl.design = \"AugLS\",");
+					sb.append("row = \"" + row + "\",");
+					sb.append("column = \"" + column + "\",");
+				} else if(expDesign.equals("Alpha-Lattice"))
+				{//3
+					sb.append("exptl.design = \"Alpha\",");
+					sb.append("block = \"" + block + "\",");
+					sb.append("rep = \"" + replicate + "\",");
+				} else if(expDesign.equals("Row-Column"))
+				{//4
+					sb.append("exptl.design = \"RowCol\",");
+					sb.append("block = \"" + block + "\",");
+					sb.append("row = \"" + row + "\",");
+					sb.append("column = \"" + column + "\",");
+				} else if(expDesign.equals("Latinized Alpha-Lattice"))
+				{//5
+					sb.append("exptl.design = \"LatinAlpha\",");
+					sb.append("block = \"" + block + "\",");
+					sb.append("rep = \"" + replicate + "\",");
+				} else if(expDesign.equals("Latinized Row-Column"))
+				{//6
+					sb.append("exptl.design = \"LatinRowCol\",");
+					sb.append("block = \"" + block + "\",");
+					sb.append("row = \"" + row + "\",");
+					sb.append("column = \"" + column + "\",");
+				}
+				sb.append("na.code = NA), silent=TRUE);");
+				getConn().eval(sb.toString());
+				run = getConn().eval("class(pheno);").asString();
+				if(run != null && run.equals("try-error"))
+				{
+					StringBuilder error = new StringBuilder();
+					error.append("msg <- trimStrings(strsplit(pheno,\":\")[[1]]);");
+					error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]], collapse=\" \"));");
+					error.append("msg <- gsub(\"\\\"\", \"\", msg);");
+					error.append("capture.output(cat(\"***\nError in read.pheno.data function:\n\"\n,msg, \"\n***\n\n\", sep=\"\"),"
+							+ "file=\"" + logFile + "\",append = TRUE);");
+					getConn().eval(error.toString());
+					toreturn.put("Success", "FALSE");
+					toreturn.put("Message", "Error Reading Pheno Data!");
+					return toreturn;
+				} 
+				sb = new StringBuilder();
+				if(envAnalysisType.equals("Single-Environment Analysis"))
+				{
+					sb.append("pheno <- try(doSEA(pheno), silent=T);");
+					getConn().eval(sb.toString());
+					run = getConn().eval("class(pheno);").asString();
+					if(run != null && run.equals("try-error"))
+					{
+						StringBuilder error = new StringBuilder();
+						error.append("msg <- trimStrings(strsplit(pheno,\":\")[[1]]);");
+						error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]], collapse=\" \"));");
+						error.append("msg <- gsub(\"\\\"\", \"\", msg);");
+						error.append("capture.output(cat(\"***\nError in doSMA function:\n\"\n,msg, \"\n***\n\n\", sep=\"\"),"
+								+ "file=\"" + logFile + "\",append = TRUE);");
+						getConn().eval(error.toString());
+						toreturn.put("Success", "FALSE");
+						toreturn.put("Message", "Error doSMA!");
+						return toreturn;
+					} 
+				} else
+				{
+					sb.append("pheno <- try(doMEA(pheno, is.EnvFixed=TRUE), silent=TRUE);");
+					getConn().eval(sb.toString());
+					run = getConn().eval("class(pheno);").asString();
+					if(run != null && run.equals("try-error"))
+					{
+						StringBuilder error = new StringBuilder();
+						error.append("msg <- trimStrings(strsplit(pheno,\":\")[[1]]);");
+						error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]], collapse=\" \"));");
+						error.append("msg <- gsub(\"\\\"\", \"\", msg);");
+						error.append("capture.output(cat(\"***\nError in doMEA function:\n\"\n,msg, \"\n***\n\n\", sep=\"\"),"
+								+ "file=\"" + logFile + "\",append = TRUE);");
+						getConn().eval(error.toString());
+						toreturn.put("Success", "FALSE");
+						toreturn.put("Message", "Error doMEA!");
+						return toreturn;
+					} 
+				}
 			}
 			getConn().eval("save.image();");
 		} catch (RserveException e) {
