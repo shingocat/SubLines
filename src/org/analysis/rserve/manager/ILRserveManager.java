@@ -44,6 +44,7 @@ public class ILRserveManager extends JRServeMangerImpl {
 		String refGenoFile = model.getRefGenoFile();
 		String resultFolderPath = model.getResultFolderPath();
 		String outFile = model.getOutFileName();
+		String mapFile = model.getMapFile();
 		try{
 			if(refGenoFile == null || refGenoFile.isEmpty())
 			{
@@ -53,6 +54,8 @@ public class ILRserveManager extends JRServeMangerImpl {
 					return toreturn;
 				} else
 				{
+					if(mapFile != null && !mapFile.isEmpty())
+						readMap(model);
 					String setWd = "setwd(\"" + resultFolderPath + "\");";
 					getConn().eval(setWd);
 					getConn().eval("load(\".RData\");");
@@ -88,20 +91,20 @@ public class ILRserveManager extends JRServeMangerImpl {
 						sb = new StringBuilder();
 						sb.append("capture.output(print(chisq), file=\"" + outFile + "\",append=TRUE)");
 						getConn().eval(sb.toString());
+						if(mapFile != null && !mapFile.isEmpty())
+							plotIL();
 					}
 				}
 			} else
 			{
 				toreturn = readGeno(model, false);
 				if(toreturn.get("Success").equals("FALSE"))
-				{
 					return toreturn;
-				}
 				toreturn = readRefGeno(model);
 				if(toreturn.get("Success").equals("FALSE"))
-				{
 					return toreturn;
-				}
+				if(mapFile != null && !mapFile.isEmpty())
+					readMap(model);
 				String setWd = "setwd(\"" + resultFolderPath + "\");";
 				getConn().eval(setWd);
 				getConn().eval("load(\".RData\")");
@@ -137,6 +140,8 @@ public class ILRserveManager extends JRServeMangerImpl {
 					sb = new StringBuilder();
 					sb.append("capture.output(print(chisq), file=\"" + outFile + "\",append=TRUE)");
 					getConn().eval(sb.toString());
+					if(mapFile != null && !mapFile.isEmpty())
+						plotIL();
 				}
 			}
 		} catch (RserveException e) {
@@ -162,6 +167,7 @@ public class ILRserveManager extends JRServeMangerImpl {
 		Boolean isIncludeHt = model.getIsIncludeHT();
 		Integer digits = model.getDigitsOnSM();
 		String test = model.getTestOnSM();
+		String mapFile = model.getMapFile();
 		try {
 			toreturn = readPheno(model);
 			if(toreturn.get("Success").equals("FALSE"))
@@ -169,6 +175,8 @@ public class ILRserveManager extends JRServeMangerImpl {
 			toreturn = readGeno(model, true);
 			if(toreturn.get("Success").equals("FALSE"))
 				return toreturn;
+			if(mapFile != null && !mapFile.isEmpty())
+				readMap(model);
 			String setWd = "setwd(\"" + resultFolderPath + "\");";
 			getConn().eval(setWd);
 			getConn().eval("load(\".RData\");");
@@ -199,6 +207,8 @@ public class ILRserveManager extends JRServeMangerImpl {
 			sb = new StringBuilder();
 			sb.append("capture.output(print(sma), file=\"" + outFile + "\",append=TRUE)");
 			getConn().eval(sb.toString());
+			if(mapFile != null && !mapFile.isEmpty())
+				plotIL();
 		} catch (RserveException e) {
 			e.printStackTrace();
 			toreturn.put("Success", "FALSE");
@@ -220,7 +230,93 @@ public class ILRserveManager extends JRServeMangerImpl {
 
 	private HashMap<String, String> doMultiMarker(ILAnalysisModel model)
 	{
-		return null;
+		HashMap<String, String> toreturn = new HashMap<String, String>();
+		String resultFolderPath = model.getResultFolderPath();
+		String outFile = model.getOutFileName();
+		String  method = model.getRegMethodOnMM();
+		Double siglevel = model.getAlphaOnMM();
+		Integer bootstrap = model.getBootstrapOnMM();
+		String pvalMet = model.getPvalMethodOnMM();
+		String family = "gaussian";
+		Boolean isIncludeHt = model.getIsIncludeHT();
+		Integer nfolds = model.getNfoldsOnMM();
+		Double step = model.getStepOnMM();
+		Integer maxTry = model.getMaxTryOnMM();
+		String mapFile = model.getMapFile();
+		try{
+			toreturn = readPheno(model);
+			if(toreturn.get("Success").equals("FALSE"))
+				return toreturn;
+			toreturn = readGeno(model, true);
+			if(toreturn.get("Success").equals("FALSE"))
+				return toreturn;
+			if(mapFile != null && !mapFile.isEmpty())
+				readMap(model);
+			String setWd = "setwd(\"" + resultFolderPath + "\");";
+			getConn().eval(setWd);
+			getConn().eval("load(\".RData\");");
+			StringBuilder sb = new StringBuilder();
+			sb.append("mma <- try(doMMA(");
+			if(method != null)
+				sb.append("method = \"" + method + "\",");
+			if(siglevel != null)
+				sb.append("siglevel = " + siglevel + ",");
+			if(bootstrap != null)
+				sb.append("bootstrap = " + bootstrap + ",");
+			if(pvalMet != null)
+				sb.append("pval.method = \"" + pvalMet + "\",");
+			if(family != null)
+				sb.append("family = \"" +  family + "\",");
+			if(isIncludeHt)
+				sb.append("include.ht = TRUE,");
+			else
+				sb.append("include.ht = FALSE,");
+			if(nfolds != null)
+				sb.append("nfolds = " + nfolds + ",");
+			if(step != null)
+				sb.append("step = " + step + ",");
+			if(maxTry != null)
+				sb.append("max.try = " + maxTry + ",");
+			sb.append("phenotypicData = pheno,");
+			sb.append("genotypicData = geno");
+			sb.append("), silent=TRUE);");
+			getConn().eval(sb.toString());
+			String run = getConn().eval("class(mma);").asString();
+			if(run != null && run.equals("try-error"))
+			{
+				StringBuilder error = new StringBuilder();
+				error.append("msg <- trimStrings(strsplit(mma,\":\")[[1]]);");
+				error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]], collapse=\" \"));");
+				error.append("msg <- gsub(\"\\\"\", \"\", msg);");
+				error.append("capture.output(cat(\"***\nError in do.MMA function:\n\"\n,msg, \"\n***\n\n\", sep=\"\"),"
+						+ "file=\"" + logFile + "\",append = TRUE);");
+				getConn().eval(error.toString());
+				toreturn.put("Success", "FALSE");
+				toreturn.put("Message", "Error in doMMA!");
+				return toreturn;
+			} 
+			sb = new StringBuilder();
+			sb.append("capture.output(print(mma, p.value=" + siglevel + "), file=\"" + outFile + "\",append=TRUE)");
+			getConn().eval(sb.toString());
+			if(mapFile != null && !mapFile.isEmpty())
+				plotIL();
+		} catch (RserveException e) {
+			e.printStackTrace();
+			toreturn.put("Success", "FALSE");
+			toreturn.put("Message", "R Serve Exception!");
+			return toreturn;
+		} catch (REXPMismatchException e) {
+			e.printStackTrace();
+			toreturn.put("Success", "FALSE");
+			toreturn.put("Message", "R Expression Exception!");
+			return toreturn;
+		}  finally
+		{
+			getConn().close();
+		}
+		toreturn.put("Success", "TRUE");
+		toreturn.put("Message", "Do Multi-Marker Analysis Done!");
+		return toreturn;
 	}
 
 	private HashMap<String, String> readPheno(ILAnalysisModel model)
@@ -561,6 +657,85 @@ public class ILRserveManager extends JRServeMangerImpl {
 
 	private HashMap<String, String> readMap(ILAnalysisModel model)
 	{
-		return null;
+		HashMap<String, String> toreturn = new HashMap<String, String>();
+		String resultFolderPath = model.getResultFolderPath();
+		String mapFile = model.getMapFile();
+		String marker = model.getMarColOnMD();
+		String chr = model.getChrColOnMD();
+		String pos = model.getPosColOnMD();
+		String unit = model.getUnitOnMD();
+		try
+		{
+			String setWd = "setwd(\"" + resultFolderPath + "\");";
+			getConn().eval(setWd);
+			getConn().eval("load(\".RData\")");
+			StringBuilder dataRef = new StringBuilder();
+			dataRef.append("mapData <- try(read.csv(\"" + mapFile + 
+					"\",header = TRUE),silent=TRUE);");
+			getConn().eval(dataRef.toString());
+			String run = getConn().eval("class(mapData);").asString();
+			if(run != null && run.equals("try-error"))
+			{
+				StringBuilder error = new StringBuilder();
+				error.append("msg <- trimStrings(strsplit(mapData,\":\")[[1]]);");
+				error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]], collapse=\" \"));");
+				error.append("msg <- gsub(\"\\\"\", \"\", msg);");
+				error.append("capture.output(cat(\"***\nError in read.csv function:\n\"\n,msg, \"\n***\n\n\", sep=\"\"),"
+						+ "file=\"" + logFile + "\",append = TRUE);");
+				getConn().eval(error.toString());
+				toreturn.put("Success", "FALSE");
+				toreturn.put("Message", "Error Reading CSV File map Data!");
+				return toreturn;
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("map <- try(read.map.data(mapData, marker = \"" + marker + "\"" +
+					",chr = \"" + chr + "\", pos = \"" + pos + "\"" +
+					",units = \"" + unit + "\"),silent=TRUE);");
+			getConn().eval(sb.toString());
+			run = getConn().eval("class(map);").asString();
+			if(run != null && run.equals("try-error"))
+			{
+				StringBuilder error = new StringBuilder();
+				error.append("msg <- trimStrings(strsplit(map,\":\")[[1]]);");
+				error.append("msg <- trimStrings(paste(strsplit(msg,\"\\n\")[[length(msg)]], collapse=\" \"));");
+				error.append("msg <- gsub(\"\\\"\", \"\", msg);");
+				error.append("capture.output(cat(\"***\nError in read.map.data function:\n\"\n,msg, \"\n***\n\n\", sep=\"\"),"
+						+ "file=\"" + logFile + "\",append = TRUE);");
+				getConn().eval(error.toString());
+				toreturn.put("Success", "FALSE");
+				toreturn.put("Message", "Error Reading Map Data!");
+				return toreturn;
+			}
+			getConn().eval("save.image();");
+			
+		} catch (RserveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			toreturn.put("Success", "FALSE");
+			toreturn.put("Message", "R Serve Error!");
+			return toreturn;
+		} catch (REXPMismatchException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			toreturn.put("Success", "FALSE");
+			toreturn.put("Message", "R Expression Error!");
+			return toreturn;
+		} 
+		
+		toreturn.put("Success", "TRUE");
+		toreturn.put("Message", "Read Map Done!");
+		return toreturn;
+	}
+	
+	private void plotIL()
+	{
+		try{
+			StringBuilder sb = new StringBuilder();
+			sb.append("graph.il(geno, map, plt.png=TRUE)");
+			getConn().eval(sb.toString());
+		}catch (RserveException e) {
+			e.printStackTrace();
+		}
 	}
 }

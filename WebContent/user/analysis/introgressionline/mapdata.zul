@@ -75,14 +75,15 @@
 						<label value="Units:" />
 						<space />
 						<radiogroup id="unitsRG">
-							<radio label="centiMorgan(cM)" checked="true" />
+							<radio label="centiMorgan(cM)" value="cM" checked="true" />
 							<space />
-							<radio label="base pairs(bp)" />
+							<radio label="base pairs(bp)" value="bp" />
 						</radiogroup>
 					</hbox>
 				</groupbox>
 			</div>
-			<div id="dataDiv">
+			<div id="dataDiv" hflex="1" vflex="1" style="overflow:auto;">
+				<grid id="dataGrid" height="400px" sizedByContent="true" emptyMessage="No data..."/>
 			</div>
 			<separator height="20px" />
 		</vlayout>

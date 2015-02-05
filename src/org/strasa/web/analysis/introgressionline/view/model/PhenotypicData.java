@@ -97,7 +97,7 @@ public class PhenotypicData {
 	List<String> respvars = new ArrayList<String>();
 	List<String> columnList = new ArrayList<String>();
 	List<String[]> dataList = new ArrayList<String[]>();
-	ILRserveManager manager = new ILRserveManager();
+	ILRserveManager manager;
 	int fileFormat = 1;
 	String separator = "NULL";
 
@@ -182,6 +182,7 @@ public class PhenotypicData {
 			this.envRow.setVisible(true);
 			//			this.updateExpDesign(expDesign);
 		}
+//		this.validatePhenoFile();
 		HashMap<String, Object> args = new HashMap<String, Object>();
 		args.put("DataType", dataType);
 		BindUtils.postGlobalCommand(null, null, "getPhenoFileValidated", args);
@@ -193,6 +194,7 @@ public class PhenotypicData {
 			@BindingParam("selectedItem") String selectedItem)
 	{
 		System.out.println("Env Analysis Type is " + selectedItem);
+//		this.validatePhenoFile();
 		HashMap<String, Object> args = new HashMap<String, Object>();
 		args.put("EnvAnalysisType", envAnalysisType);
 		BindUtils.postGlobalCommand(null, null, "getPhenoFileValidated", args);
@@ -247,6 +249,7 @@ public class PhenotypicData {
 			rowRow.setVisible(true);
 			columnRow.setVisible(true);
 		}
+//		this.validatePhenoFile();
 		HashMap<String, Object> args = new HashMap<String, Object>();
 		args.put("ExpDesign", expDesign);
 		BindUtils.postGlobalCommand(null, null, "getPhenoFileValidated", args);
@@ -311,7 +314,21 @@ public class PhenotypicData {
 				varTB.setValue(selectedItem);
 				factorModel.remove(selectedItem);
 			}
-
+//			this.validatePhenoFile();
+			HashMap<String, Object> args = new HashMap<String, Object>();
+			if(varTB.getId().equals("genotypeT") && !varTB.getValue().isEmpty())
+				args.put("Genotype", varTB.getValue());
+			else if(varTB.getId().equals("envTB") && !varTB.getValue().isEmpty())
+				args.put("Environment", varTB.getValue());
+			else if(varTB.getId().equals("blockTB") && !blockTB.getValue().isEmpty())
+				args.put("Block", blockTB.getValue());
+			else if(varTB.getId().equals("repTB") && !repTB.getValue().isEmpty())
+				args.put("Replicate", repTB.getValue());
+			else if(varTB.getId().equals("rowTB") && !rowTB.getValue().isEmpty())
+				args.put("Row", rowTB.getValue());
+			else if(varTB.getId().equals("columnTB") && !columnTB.getValue().isEmpty())
+				args.put("Column", columnTB.getValue());
+			BindUtils.postGlobalCommand(null, null, "getPhenoFileValidated", args);
 			imgBtn.setSrc("/images/leftarrow_g.png");
 			return true;
 		} else if (!varTB.getValue().isEmpty()) {
@@ -522,6 +539,7 @@ public class PhenotypicData {
 	public void getPhenoFile(
 			@BindingParam("FilePath") String filePath)
 	{
+		manager = new ILRserveManager();
 		lstVarInfo = manager.getVariableInfo(filePath.replace("//", "/"), fileFormat, separator);
 		if(lstVarInfo == null || lstVarInfo.size() == 0)
 		{

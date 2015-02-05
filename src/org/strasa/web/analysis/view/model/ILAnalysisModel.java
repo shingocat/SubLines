@@ -1,5 +1,6 @@
 package org.strasa.web.analysis.view.model;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -119,8 +120,8 @@ public class ILAnalysisModel extends AnalysisModel {
 		return alphaOnMM;
 	}
 
-	public void setAlphaOnMM(Double alphaOnMM) {
-		this.alphaOnMM = alphaOnMM;
+	public void setAlphaOnMM(Double alpha) {
+		this.alphaOnMM = alpha;
 	}
 
 	public Integer getBootstrapOnMM() {

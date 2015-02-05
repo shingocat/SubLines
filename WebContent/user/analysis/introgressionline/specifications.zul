@@ -45,9 +45,9 @@
 										onClick="@command(selectMapFromDB)" label="Database"
 										visible="false" />
 									<button sclass="btn-primary" id="selectMapFromFileBtn"
-										onUpload="@command(selectMapFromFile)" label="External" upload="true" />
+										onUpload="@command('selectMapFromFile')" label="External" upload="true" />
 									<button sclass="btn-danger" id="resetMapBtn" label="Reset"
-										onClick="@command(resetMap)" visible="false" />
+										onClick="@command('resetMap')" visible="false" />
 								</hbox>
 							</hbox>
 						</div>
@@ -72,11 +72,11 @@
 								<hbox spacing="5">
 									<label value="Regression Method:" />
 									<radiogroup id="regMethodRG">
-										<radio id="lassoRadio" label="LASSO" />
+										<radio id="lassoRadio" label="LASSO" value="LASSO" checked="true"/>
 										<space />
-										<radio id="ridgeRadio" label="RIDGE REGRESSION" />
+										<radio id="ridgeRadio" label="RIDGE REGRESSION" value="RIDGE_REGRESSION"/>
 										<space />
-										<radio id="elesticRadio" label="ELESTIC NET" />
+										<radio id="elesticRadio" label="ELESTIC NET" value="ELASTIC_NET"/>
 									</radiogroup>
 								</hbox>
 								<separator />
@@ -84,13 +84,13 @@
 									<label value="P-Value method:" />
 									<separator />
 									<radiogroup id="pvalueRG">
-										<radio id="medianRadio" label="MEDIAN" />
+										<radio id="medianRadio" label="MEDIAN" value="median" checked="true"/>
 										<space></space>
-										<radio id="fdrRadio" label="FDR" />
+										<radio id="fdrRadio" label="FDR" value="fdr"/>
 										<space />
-										<radio id="holmRadio" label="HOLM" />
+										<radio id="holmRadio" label="HOLM" value="holm"/>
 										<space />
-										<radio id="QARadio" label="QA" />
+										<radio id="QARadio" label="QA" value="QA" />
 									</radiogroup>
 								</hbox>
 								<separator />

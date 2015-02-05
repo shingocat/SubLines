@@ -163,6 +163,10 @@ public class Specifications {
 	String rowOnPD;
 	String columnOnPD;
 	String expDesignOnPD;
+	String markerOnMD;
+	String chromosomeOnMD;
+	String positionOnMD;
+	String unitOnMD;
 	List<String> respVars;
 	String errorMessage;
 
@@ -173,6 +177,11 @@ public class Specifications {
 	{
 		//do nothing now
 		setAnalysisMethod("Chisq");
+		setAlpha(0.05);
+		setBootstrap(10);
+		setNfolds(3);
+		setStep(0.1);
+		setMaxTry(10);
 	}
 
 	@AfterCompose
@@ -340,7 +349,7 @@ public class Specifications {
 			this.dataTabpanels.getFellow("refGenoTP").detach();
 		dataTB.setSelectedTab(phenoDataTab);
 	}
-
+	
 	@NotifyChange("*")
 	@Command("resetGeno")	
 	public void resetGeno()
@@ -351,8 +360,18 @@ public class Specifications {
 		selectGenoFromFileBtn.setVisible(true);
 		resetGenoBtn.setVisible(false);
 		isSpecGenoFile = false;
-		BindUtils.postGlobalCommand(null, null, "resetGenoFile", null);
+//		BindUtils.postGlobalCommand(null, null, "resetGenoFile", null);
 		dataTB.setSelectedTab(phenoDataTab);
+		resetGenoTabpanel();
+	}
+	
+	public void resetGenoTabpanel()
+	{
+		if(!genoDataTP.getChildren().isEmpty())
+			genoDataTP.getChildren().get(0).detach();
+		Include inc = new Include();
+		inc.setSrc("/user/analysis/introgressionline/genotypicdata.zul");
+		inc.setParent(genoDataTP);
 	}
 
 	@NotifyChange("*")
@@ -404,9 +423,19 @@ public class Specifications {
 		selectPhenoFromFileBtn.setVisible(true);
 		resetPhenoBtn.setVisible(false);
 		isSpecPhenoFile = false;
-		BindUtils.postGlobalCommand(null, null, "resetPhenoFile", null);
+		resetPhenoTabpanel();
+//		BindUtils.postGlobalCommand(null, null, "resetPhenoFile", null);
 	}
 
+	public void resetPhenoTabpanel()
+	{
+		if(!phenoDataTP.getChildren().isEmpty())
+			phenoDataTP.getChildren().get(0).detach();
+		Include inc = new Include();
+		inc.setSrc("/user/analysis/introgressionline/phenotypicdata.zul");
+		inc.setParent(phenoDataTP);
+	}
+	
 	@NotifyChange
 	@Command("selectMapFromDB")
 	public void selectMapFromDB()
@@ -432,9 +461,10 @@ public class Specifications {
 			return;
 		BindUtils.postNotifyChange(null, null, this, "*");
 		userFileManager = new UserFileManager();
-		String filepath = userFileManager.uploadFileForAnalysis(name, tempFile);
+		String filepath = userFileManager.uploadFileForAnalysis(name, tempFile, 
+				uploadedFileFolderPath, "MapData");
 		mapFile = new File(filepath);
-		setMapFileName(name);
+		setMapFileName(mapFile.getName());
 		mapFileLb.setVisible(true);
 		selectMapFromDBBtn.setVisible(false);
 		selectMapFromFileBtn.setVisible(false);
@@ -443,13 +473,30 @@ public class Specifications {
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("FilePath", filepath);
 		BindUtils.postGlobalCommand(null, null, "getMapFile", args);
+		dataTB.setSelectedTab(mapDataTab);
 	}
 
 	@NotifyChange
 	@Command("resetMap")
 	public void resetMap()
 	{
-
+		mapFile = null;
+		setMapFileName(null);
+		mapFileLb.setVisible(false);
+		selectMapFromDBBtn.setVisible(false);
+		selectMapFromFileBtn.setVisible(true);
+		resetMapBtn.setVisible(false);
+		isSpecMapFile = false;
+		resetMapTabpanel();
+	}
+	
+	public void resetMapTabpanel()
+	{
+		if(!mapDataTP.getChildren().isEmpty())
+			mapDataTP.getChildren().get(0).detach();
+		Include inc = new Include();
+		inc.setSrc("/user/analysis/introgressionline/mapdata.zul");
+		inc.setParent(mapDataTP);
 	}
 
 	@NotifyChange
@@ -482,7 +529,7 @@ public class Specifications {
 			if(smaDiv.isVisible())
 				smaDiv.setVisible(false);
 			if(csDiv.isVisible())
-				csDiv.setVisible(true);
+				csDiv.setVisible(false);
 			model.setAnalysisType("MMA");
 		}
 	}
@@ -491,11 +538,6 @@ public class Specifications {
 	@Command("validateILAnalysisInputs")
 	public void validateILAnalysisInputs()
 	{	
-
-		if(isSpecMapFile)
-		{
-			validateMapFile();
-		}
 		String resultFolderPath = null;
 		if(analysisMethod.equals("Chisq"))
 		{
@@ -528,13 +570,43 @@ public class Specifications {
 		} else if(analysisMethod.equals("Multi Marker Analysis"))
 		{
 			if(!validateMMA())
-			{
 				return;
-			}
 			model.setAnalysisType("MMA");
 			resultFolderPath = AnalysisUtils.createOutputFolder(
 					phenoFileName.replaceAll(" ", ""), "ilMultiMarker");
+			if(regMethodRG.getSelectedItem() == null)
+			{
+				showMessage("The regression method of multi-marker could not be null!");
+				return;
+			}
+			model.setRegMethodOnMM((String)regMethodRG.getSelectedItem().getValue());
+			if(pvalueRG.getSelectedItem() == null)
+			{
+				showMessage("The pvalue method of multi-marker could not be null!");
+				return;
+			}
+			model.setPvalMethodOnMM((String)pvalueRG.getSelectedItem().getValue());
+			
+			if(alpha != null)
+				model.setAlphaOnMM(alpha);
+			if(bootstrap != null)
+				model.setBootstrapOnMM(bootstrap);
+			if(nfolds != null)
+				model.setNfoldsOnMM(nfolds);
+			model.setIsIncludeHT(includeHtOnMMCB.isChecked());
+			if(step != null)
+				model.setStepOnMM(step);
+			if(maxTry != null)
+				model.setMaxTryOnMM(maxTry);
+			model.setGenoFile(userFileManager.copyUploadedFileToOutputFolder(resultFolderPath, genoFileName, genoFile).getName());
+			model.setPhenoFile(userFileManager.copyUploadedFileToOutputFolder(resultFolderPath, phenoFileName, phenoFile).getName());
 			model.setOutFileName(resultFolderPath + File.separator + "Multi_Marker_Analysis_Outcomes.txt");
+		}
+		if(isSpecMapFile)
+		{
+			if(!validateMapFile())
+				return;
+			model.setMapFile(userFileManager.copyUploadedFileToOutputFolder(resultFolderPath, mapFileName, mapFile).getName());
 		}
 		model.setResultFolderPath(resultFolderPath);
 		HashMap<String, Object> args = new HashMap<String,Object>();
@@ -664,6 +736,30 @@ public class Specifications {
 			columnOnPD = column;
 		if(respVars != null && !respVars.isEmpty())
 			this.respVars = respVars;
+	}
+	
+	@NotifyChange("*")
+	@GlobalCommand("getMapFileValidated")
+	public void getMapFileValidated(
+			@BindingParam("Marker") String marker,
+			@BindingParam("Chromosome") String chromosome,
+			@BindingParam("Position") String  position,
+			@BindingParam("Unit") String unit)
+	{
+		System.out.println("Method: getMapFileValidated");
+		System.out.println("Marker " + marker);
+		System.out.println("Chromosome " + chromosome);
+		System.out.println("Position " + position);
+		System.out.println("Unit " + unit);
+		System.out.println("-----------------------------");
+		if(marker != null && !marker.isEmpty())
+			markerOnMD = marker;
+		if(chromosome != null && !chromosome.isEmpty())
+			chromosomeOnMD = chromosome;
+		if(position != null && !position.isEmpty())
+			positionOnMD = position;
+		if(unit != null && !unit.isEmpty())
+			unitOnMD = unit;
 	}
 
 	private boolean validateChisq()
@@ -1006,10 +1102,6 @@ public class Specifications {
 					}
 				}
 
-			} else
-			{
-				showMessage("The data type on phenotypic tab could only be RAW or MEAN!");
-				return false;
 			}
 
 			// validate genotypic data;
@@ -1089,28 +1181,47 @@ public class Specifications {
 
 	private boolean validateMMA()
 	{
-		if(isSpecGenoFile)
-		{
-			if(isSpecPhenoFile)
-			{
-				BindUtils.postGlobalCommand(null, null, "validatePhenoFile", null);
-			} else
-			{
-				showMessage("Please select phenotypic file!");
-				return false;
-			}
-		} else
-		{
-			showMessage("Please select genotypic file!");
-			return false;
-		}
-		return true;
+		return validateSMA();
 	}
 
 	private boolean validateMapFile()
 	{
-		BindUtils.postGlobalCommand(null, null, "validateMapFile", null);
-		return false;
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("MapFile", mapFileName);
+		BindUtils.postGlobalCommand(null, null, "validateMapTap", args);
+		if(markerOnMD == null || markerOnMD.isEmpty())
+		{
+			showMessage("The marker is not specified on map tab!");
+			return false;
+		} else
+		{
+			model.setMarColOnMD(markerOnMD);
+		}
+		if(chromosomeOnMD == null || chromosomeOnMD.isEmpty())
+		{
+			showMessage("The chromosome is not specified on map tab!");
+			return false;
+		} else
+		{
+			model.setChrColOnMD(chromosomeOnMD);
+		}
+		if(positionOnMD == null || positionOnMD.isEmpty())
+		{
+			showMessage("The position is not specified on map tab!");
+			return false;
+		} else
+		{
+			model.setPosColOnMD(positionOnMD);
+		}
+		if(unitOnMD == null || unitOnMD.isEmpty())
+		{
+			showMessage("The unit is not specified on map tab!");
+			return false;
+		} else
+		{
+			model.setUnitOnMD(unitOnMD);
+		}
+		return true;
 	}
 
 	private void buildUploadedFileFolderPath()
@@ -1145,6 +1256,7 @@ public class Specifications {
 	public void setMapFileName(String mapFileName) {
 		this.mapFileName = mapFileName;
 	}
+	
 	public List<String> getLstAnalysisMethod() {
 		if(lstAnalysisMethod == null)
 			lstAnalysisMethod = new ArrayList<String>();
