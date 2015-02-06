@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?page title="import germplasm" contentType="text/html;charset=UTF-8"?>
 <zk>
 	<style src="../css/main.css" />
 	<style>
@@ -8,12 +8,10 @@
 	</style>
 	<script src="http://stanlemon.net/javascript/jquery.jgrowl.js" />
 	<style src="http://stanlemon.net/stylesheet/jquery.jgrowl.css" />
-
 	<div sclass="page-header">
 		<label value="Upload/Modify Germplasm" />
-		<!-- <a label="overview &amp; stats" iconSclass="z-icon-angle-double-right" sclass="subtitle"/> -->
 	</div>
-	<div id="mainDiv" width="100%" apply="org.zkoss.bind.BindComposer"
+	<div id="mainDiv" style="overflow:auto;" apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('org.strasa.web.managegermplasm.view.model.Index')"
 		sclass="page-content">
 		<div align="left">
@@ -29,33 +27,17 @@
 				</div>
 			</hlayout>
 		</div>
-		<separator height="15px"></separator>
-		<columnlayout id="colLayout1" vflex="1">
-			<columnchildren width="70%" height="1000px">
-				<vlayout id="tableLayout" height="1000px">
-					<groupbox mold="3d" id="gbUnknownGermplasm"
-						hflex="1" height="100%">
-<!-- 						<caption
-							label="@load(vm.totalUnknownGermplasm)" /> -->
-													<caption
-							label="List of Germplasm To  Import" />
-						<vlayout vflex="1">
-							<!-- 	<button label="Submit"
-								onClick="@command('saveData')" sclass="btn-blue"
-								image="/images/save16.png" /> -->
-
-							<!-- 							<div align="center">
-								<button label="Save"
-								image="/images/save16.png"
-								onClick="@command('saveData')"
-								sclass="btn-warning" height="40px" width="150px">
-								</button>
-								</div> -->
-							<listbox zclass="none" oddRowSclass="odd"
-								checkmark="true" multiple="false" id="tblStudyGerm"
-								sizedByContent="true" hflex="1"
+		<separator height="15px"/>
+		<columnlayout id="colLayout1">
+			<columnchildren width="69%">
+				<vlayout id="tableLayout">
+					<groupbox mold="3d" id="gbUnknownGermplasm" >
+						<caption label="List of Germplasm To Import" />
+						<vlayout>
+							<listbox id="tblStudyGerm" zclass="none" oddRowSclass="odd" checkmark="true" nonselectableTags="*"
+								multiple="false" sizedByContent="true"  mold="paging" pageSize="10"
 								model="@load(vm.lstStudyGermplasm) @template(each.templateMode)"
-								rows="7" selectedItem="@bind(vm.selectedGermplasm)">
+								selectedItem="@bind(vm.selectedGermplasm)" span="true">
 								<auxhead sclass="category-center">
 									<auxheader colspan="1">
 										<image src="/images/filter.png" />
@@ -91,11 +73,9 @@
 											width="100px" />
 									</auxheader>
 								</auxhead>
-								<listhead menupopup="auto"
-									columnsgroup="false">
+								<listhead>
 									<listheader label="GName"
-										sort="auto(germplasmname)" style="color:red" hflex="1"
-										width="19%" />
+										sort="auto(germplasmname)" style="color:red" hflex="min" />
 									<listheader label="GermplasmType"
 										style="color:red" hflex="1" width="19%" />
 									<listheader label="Breeder"
@@ -233,12 +213,10 @@
 								<listfooter>
 									<label value="@load(vm.totalUnknownGermplasm)"  style="font-weight:bold" />
 								</listfooter>
-								
 							</listfoot>
 							</listbox>
-
 						</vlayout>
-					<separator height="10px"></separator>
+						<separator height="10px" />
 						<div align="center">
 							<button label="Save"
 								image="/images/save16.png" onClick="@command('saveData')"
@@ -246,12 +224,12 @@
 							</button>
 						</div>
 					</groupbox>
-					<groupbox id="gbKnownGermplasm">
-						<!-- <caption label="@load(vm.totalKnownGermplasm)" /> -->
-						<listbox id="tblKnownGerm" oddRowSclass="odd"
-							sizedByContent="true" hflex="1"
+					<separator height="10px" />
+					<groupbox mold="3d" id="gbKnownGermplasm">
+						<caption label="List of Known Germplasm" />
+						<listbox id="tblKnownGerm" oddRowSclass="odd" emptyMessage="No Known Germplasms..."
+							sizedByContent="true"  mold="paging" pageSize="10" 
 							model="@load(vm.lstKnownGermplasm) @template((each.known) ? 'display' : 'editable')"
-							sclass="gridMaxBodyHeight550" rows="7"
 							selectedItem="@bind(vm.selectedGermplasm)">
 							<auxhead sclass="category-center">
 								<auxheader colspan="1">
@@ -289,24 +267,19 @@
 								</auxheader>
 								<auxheader colspan="1"></auxheader>
 							</auxhead>
-							<listhead menupopup="auto"
-								columnsgroup="false">
+							<listhead >
 								<listheader label="GName"
-									sort="auto(germplasmname)" style="color:red" hflex="1"
-									width="19%" />
+									sort="auto(germplasmname)" style="color:red" hflex="min"/>
 								<listheader label="GermplasmType"
-									style="color:red" hflex="1" width="19%" />
-								<listheader label="Breeder"
-									style="color:red" hflex="1" width="19%" />
-								<listheader label="Female Parent"
-									style="color:red" hflex="1" width="19%" />
-								<listheader label="Male Parent"
-									style="color:red" hflex="1" width="16%" />
-								<listheader label="Actions" hflex="1"
-									width="8%" />
+									style="color:red" hflex="1" sort="auto(selectedGermplasmType.germplasmtype)"/>
+								<listheader label="Breeder" sort="auto(breeder)"
+									style="color:red" hflex="1" />
+								<listheader label="Female Parent" sort="auto(femaleparent)"
+									style="color:red" hflex="1" />
+								<listheader label="Male Parent" sort="auto(maleparent)"
+									style="color:red" hflex="1"/>
+								<listheader label="Actions" hflex="1"/>
 							</listhead>
-
-
 							<template name="display">
 								<listitem
 									onClick="@command('selectGermplasm', germplasm = each)">
@@ -363,9 +336,9 @@
 									</listcell>
 									<listcell>
 										<label
-											value="@bind(each.breeder)" width="85%" />
+											value="@bind(each.breeder)" width="50%" />
 										<textbox
-											value="@bind(each.newBreeder)" width="15%"
+											value="@bind(each.newBreeder)" width="50%"
 											onClick="@command('selectGermplasm', germplasm = each)" />
 									</listcell>
 									<listcell>
@@ -390,20 +363,21 @@
 									</listcell>
 								</listitem>
 							</template>
-							<listfoot>
-								<listfooter>
-									<label value="@load(vm.totalKnownGermplasm)"  style="font-weight:bold" />
-								</listfooter>
-								
-							</listfoot>
+<!-- 							<listfoot> -->
+<!-- 								<listfooter> -->
+<!-- 									<label value="@load(vm.totalKnownGermplasm)"  style="font-weight:bold" /> -->
+<!-- 								</listfooter> -->
+<!-- 							</listfoot> -->
 						</listbox>
 					</groupbox>
-					<separator spacing="20px" />
+
 				</vlayout>
 			</columnchildren>
+			<columnchildren width="1%" />
 			<columnchildren width="30%">
-				<vlayout vflex="1">
-					<groupbox width="100%" mold="3d">
+				<vlayout >
+					<separator height="10px" />
+					<groupbox mold="3d">
 						<caption label="Other Information" />
 						<grid vflex="1" oddRowSclass="odd">
 							<columns>
@@ -502,7 +476,5 @@
 			</columnchildren>
 		</columnlayout>
 		<separator />
-		<!-- 		</groupbox> -->
-		<hlayout width="" />
 	</div>
 </zk>

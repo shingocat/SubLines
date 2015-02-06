@@ -312,7 +312,6 @@ public class Index {
 		Clients.resize(mainView.getFellow("gbKnownGermplasm"));
 		Clients.resize(mainView.getFellow("tblStudyGerm"));
 		Clients.resize(mainView.getFellow("tableLayout"));
-
 		Clients.resize(mainView.getFellow("tableLayout"));
 	}
 
@@ -443,8 +442,6 @@ public class Index {
 
 		UploadEvent event = (UploadEvent) ctx.getTriggerEvent();
 
-		// //System.out.println(event.getMedia().getStringData());
-
 		String name = event.getMedia().getName();
 		if (!name.endsWith(".csv")) {
 			Messagebox.show("Error: File must be a text-based CSV  format", "Upload Error", Messagebox.OK, Messagebox.ERROR);
@@ -500,12 +497,12 @@ public class Index {
 			lstKnownGermplasm.clear();
 			for (GermplasmDeepInfoModel germData : tempKnown) {
 				lstKnownGermplasm.put(germData.getGermplasmname(), germData);
-
 			}
 
 			gbUnknownGermplasm.setVisible(true);
 			gbKnownGermplasm.setVisible(true);
 			view.getFellow("divUploadOption").setVisible(true);
+			view.getFellow("uploadGenotypeData").setVisible(false);
 			resetSize();
 			if (!lstInvalidCharacteristics.isEmpty()) {
 				Map<String, Object> params = new HashMap<String, Object>();
@@ -571,6 +568,7 @@ public class Index {
 		gbUnknownGermplasm.setVisible(false);
 		gbKnownGermplasm.setVisible(true);
 		divUploadOption.setVisible(false);
+		mainView.getFellow("uploadGenotypeData").setVisible(true);
 		init();
 		BindUtils.postNotifyChange(null, null, this, "*");
 
@@ -731,13 +729,12 @@ public class Index {
 			tblStudyGerm.setSelectedIndex(model.rowIndex);
 	}
 
-	@Command
+	@NotifyChange("*")
+	@Command("saveData")
 	public void saveData() {
-
 		// Validation
-		if (!validateStudyGermplasm()) {
+		if (!validateStudyGermplasm()) 
 			return;
-		}
 
 		StudyGermplasmManagerImpl studyGermplasmMan = new StudyGermplasmManagerImpl();
 		GermplasmManagerImpl germplasmManagerImpl = new GermplasmManagerImpl();

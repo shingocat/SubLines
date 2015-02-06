@@ -320,7 +320,6 @@ public class GermplasmManagerImpl {
 
 			for (GermplasmDeepInfoModel record : collection) {
 				System.out.print(record.toString());
-
 				GermplasmExample example = new GermplasmExample();
 				example.createCriteria().andGermplasmnameEqualTo(record.getGermplasmname()).andUseridEqualTo(userid);
 				if (record.getId() == null) {
@@ -332,7 +331,6 @@ public class GermplasmManagerImpl {
 					}
 				} else {
 					modifyGermplasm(record);
-
 				}
 			}
 			session.commit();
