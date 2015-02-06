@@ -69,7 +69,7 @@ public class BrowseGermplasmManagerImpl {
 		List<StudySearchResultModel> lstSSRM = new ArrayList<StudySearchResultModel>();
 		if(lstGermplasm != null && lstGermplasm.size() != 0)
 			lstSSRM =  this.getStudyWithGermplasmTested(lstGermplasm.get(0), userId);
-		if(lstSSRM.size() == 0)
+		if(lstSSRM == null || lstSSRM.size() == 0)
 			return null;
 		else
 			return lstSSRM;

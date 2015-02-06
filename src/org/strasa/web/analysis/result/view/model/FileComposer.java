@@ -199,6 +199,10 @@ public class FileComposer extends SelectorComposer<Component> {
 			treeItem.setOpen(ctn.isOpen());
 
 			if (!isFolder(filename)) { // Contact Row
+				if(filename.getFilename().equals(".RData"))
+					return;
+				if(filename.getFilename().endsWith(".zip"))
+					return;
 				Hlayout hl = new Hlayout();
 				hl.appendChild(new Image("/images/" + filename.getFileicon()));
 				hl.appendChild(new Label(filename.getFilename()));

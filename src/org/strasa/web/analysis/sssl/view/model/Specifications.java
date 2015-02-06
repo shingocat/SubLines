@@ -500,8 +500,9 @@ public class Specifications {
 	public void selectFromDatabase(
 			@ContextParam(ContextType.BIND_CONTEXT) BindContext bindContext,
 			@ContextParam(ContextType.VIEW) Component view) {
-		lstStudy = studyManagerImpl.getStudiesByUserID(SecurityUtil.getDbUser()
-				.getId());
+//		lstStudy = studyManagerImpl.getStudiesByUserID(SecurityUtil.getDbUser()
+//				.getId());
+		lstStudy = studyManagerImpl.getStudiesByUserIdAndStudyType(SecurityUtil.getDbUser().getId(), "SSSL");
 		selectDataBtn.setVisible(false);
 		studiesCombobox.setVisible(true);
 		resetBtn.setVisible(true);

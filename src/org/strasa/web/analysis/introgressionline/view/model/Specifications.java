@@ -8,7 +8,12 @@ import java.util.Map;
 
 import org.spring.security.model.SecurityUtil;
 import org.strasa.middleware.filesystem.manager.UserFileManager;
+import org.strasa.middleware.manager.BrowseStudyManagerImpl;
+import org.strasa.middleware.manager.StudyDataColumnManagerImpl;
+import org.strasa.middleware.manager.StudyDataSetManagerImpl;
+import org.strasa.middleware.manager.StudyManagerImpl;
 import org.strasa.middleware.model.Study;
+import org.strasa.middleware.model.StudyDataColumn;
 import org.strasa.middleware.model.StudyDataSet;
 import org.strasa.web.analysis.view.model.ILAnalysisModel;
 import org.strasa.web.analysis.view.model.IntrogressionLineAnalysisModel;
@@ -63,6 +68,8 @@ public class Specifications {
 	private Button resetGenoBtn;
 	private Label phenoFileLb;
 	private Button selectPhenoFromDBBtn;
+	private Combobox studiesCBB;
+	private Combobox dataSetCBB;
 	private Button selectPhenoFromFileBtn;
 	private Button resetPhenoBtn;
 	private Label mapFileLb;
@@ -169,6 +176,13 @@ public class Specifications {
 	String unitOnMD;
 	List<String> respVars;
 	String errorMessage;
+	List<Study> lstStudy;
+	Study selectedStudy; 
+	List<StudyDataSet> lstDataSet;
+	StudyDataSet selectedDataSet;
+	StudyManagerImpl studyManagerImpl;
+	StudyDataSetManagerImpl studyDataSetManagerImpl;
+	BrowseStudyManagerImpl browseStudyManagerImpl;
 
 	//setting the initiate variables
 	@Init
@@ -200,6 +214,8 @@ public class Specifications {
 		this.resetGenoBtn = (Button) component.getFellow("resetGenoBtn");
 		this.phenoFileLb = (Label) component.getFellow("phenoFileLb");
 		this.selectPhenoFromDBBtn = (Button) component.getFellow("selectPhenoFromDBBtn");
+		this.studiesCBB = (Combobox) component.getFellow("studiesCBB");
+		this.dataSetCBB = (Combobox) component.getFellow("dataSetCBB");
 		this.selectPhenoFromFileBtn = (Button) component.getFellow("selectPhenoFromFileBtn");
 		this.resetPhenoBtn = (Button) component.getFellow("resetPhenoBtn");
 		this.mapFileLb = (Label) component.getFellow("mapFileLb");
@@ -249,8 +265,6 @@ public class Specifications {
 		mapDataTP= (Tabpanel) component.getFellow("mapDataTP");
 		runBtn = (Button) component.getFellow("runBtn");
 		resetBtn = (Button) component.getFellow("resetBtn");
-
-		this.buildUploadedFileFolderPath();
 	}
 
 	@NotifyChange
@@ -376,11 +390,88 @@ public class Specifications {
 
 	@NotifyChange("*")
 	@Command("selectPhenoFromDB")
-	public void selectPhenoFromDB()
+	public void selectPhenoFromDB(
+			@ContextParam(ContextType.BIND_CONTEXT) BindContext bindContext,
+			@ContextParam(ContextType.VIEW) Component view) 
 	{
+		if(isSpecPhenoFile)
+			resetPheno();
+		studyManagerImpl = new StudyManagerImpl();
+		lstStudy = studyManagerImpl.getStudiesByUserIdAndStudyType(SecurityUtil.getDbUser()
+				.getId(), "IL");
+		selectPhenoFromDBBtn.setVisible(false);
+		selectPhenoFromFileBtn.setVisible(false);
+		studiesCBB.setVisible(true);
+		resetPhenoBtn.setVisible(true);
 	}
-
-	@NotifyChange
+	
+	@NotifyChange("*")
+	@Command("updateDataSetList")
+	public void updateDataSetList()
+	{
+		dataSetCBB.setSelectedItem(null);
+		dataSetCBB.setVisible(false);
+		studyDataSetManagerImpl = new StudyDataSetManagerImpl();
+		List<StudyDataSet> dataSet = studyDataSetManagerImpl
+				.getDataSetsByStudyId(selectedStudy.getId());
+		if (!dataSet.isEmpty()) {
+			dataSetCBB.setVisible(true);
+			setLstDataSet(dataSet);
+			BindUtils.postNotifyChange(null, null, this, "*");
+		} else {
+			showMessage("Please choose a different study");
+		}
+	}
+	
+	@NotifyChange("*")
+	@Command("displaySelectedDataSet")
+	public void displaySelectedDataSet(
+			@ContextParam(ContextType.BIND_CONTEXT) BindContext bindContext,
+			@ContextParam(ContextType.VIEW) Component view) {
+		// clear before status of columnList and dataList
+		selectPhenoFromDBBtn.setVisible(false);
+		selectPhenoFromFileBtn.setVisible(false);
+		phenoFileLb.setVisible(false);
+		studiesCBB.setVisible(false);
+		resetPhenoBtn.setVisible(true);
+		List<HashMap<String, String>> toreturn = browseStudyManagerImpl
+				.getStudyData(selectedStudy.getId(),
+						selectedDataSet.getDatatype(),
+						selectedDataSet.getId());
+		List<String> columnList = new ArrayList<String>();
+		List<String[]> dataList = new ArrayList<String[]>();
+		List<StudyDataColumn> columns = new StudyDataColumnManagerImpl()
+		.getStudyDataColumnByStudyId(selectedStudy.getId(),
+				selectedDataSet.getDatatype(),
+				selectedDataSet.getId());
+		for (StudyDataColumn d : columns) {
+			columnList.add(d.getColumnheader());
+		}
+		for (HashMap<String, String> rec : toreturn) {
+			ArrayList<String> newRow = new ArrayList<String>();
+			for (StudyDataColumn d : columns) {
+				String value = rec.get(d.getColumnheader());
+				newRow.add(value);
+			}
+			dataList.add(newRow.toArray(new String[newRow.size()]));
+		}
+		//set fileName to study.name_dataset.tile
+		phenoFileName = selectedStudy.getName() + "_" + selectedDataSet.getTitle().replaceAll(" ", "");
+		// set BASE_FOLDER to /UPLOADS/UserId_DatasetId/Userid_DatasetId
+		buildUploadedFileFolderPath(selectedDataSet.getId());
+		String createFile = uploadedFileFolderPath + File.separator + phenoFileName + "(Dataset).csv";
+		// write the columnList and dataList value to the uploadedFile
+		phenoFile = FileUtilities.createFileFromDatabase(columnList,dataList, createFile);
+		if (phenoFile == null)
+			return;
+		
+		System.out.println("Uploaded File Folder Path : " + uploadedFileFolderPath);
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("FilePath", phenoFile.getAbsolutePath());
+		BindUtils.postGlobalCommand(null, null,"getPhenoFile", args);
+	}
+	
+	@NotifyChange("*")
 	@Command("selectPhenoFromFile")
 	public void selectPhenoFromFile(@ContextParam(ContextType.BIND_CONTEXT) BindContext bind,
 			@ContextParam(ContextType.VIEW)Component view)
@@ -409,7 +500,6 @@ public class Specifications {
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("FilePath", filepath);
 		BindUtils.postGlobalCommand(null, null, "getPhenoFile", args);
-
 	}
 
 	@NotifyChange
@@ -419,6 +509,8 @@ public class Specifications {
 		phenoFile = null;
 		setPhenoFileName(null);
 		phenoFileLb.setVisible(false);
+		studiesCBB.setVisible(false);
+		dataSetCBB.setVisible(false);
 		selectPhenoFromDBBtn.setVisible(true);
 		selectPhenoFromFileBtn.setVisible(true);
 		resetPhenoBtn.setVisible(false);
@@ -1224,9 +1316,14 @@ public class Specifications {
 		return true;
 	}
 
-	private void buildUploadedFileFolderPath()
+	private void buildUploadedFileFolderPath(int dataSetId)
 	{
-		String temp = UserFileManager.buildUserPath(SecurityUtil.getDbUser().getId(),0, "IL_Analysis");
+		String temp = null;
+		if(dataSetId == 0)
+			temp = UserFileManager.buildUserPath(SecurityUtil.getDbUser().getId(),0, "IL_Analysis");
+		else
+			temp = UserFileManager.buildUserPath(SecurityUtil.getDbUser().getId(),dataSetId, "IL_Analysis");
+
 		File BASE_FOLDER = new File(temp);
 		if (!BASE_FOLDER.exists())
 			BASE_FOLDER.mkdirs();
@@ -1349,6 +1446,38 @@ public class Specifications {
 
 	public void setGenoRefFileName(String genoRefFileName) {
 		this.genoRefFileName = genoRefFileName;
+	}
+	
+	public List<Study> getLstStudy() {
+		return lstStudy;
+	}
+
+	public void setLstStudy(List<Study> lstStudy) {
+		this.lstStudy = lstStudy;
+	}
+
+	public Study getSelectedStudy() {
+		return selectedStudy;
+	}
+
+	public void setSelectedStudy(Study selectedStudy) {
+		this.selectedStudy = selectedStudy;
+	}
+
+	public List<StudyDataSet> getLstDataSet() {
+		return lstDataSet;
+	}
+
+	public void setLstDataSet(List<StudyDataSet> lstDataSet) {
+		this.lstDataSet = lstDataSet;
+	}
+
+	public StudyDataSet getSelectedDataSet() {
+		return selectedDataSet;
+	}
+
+	public void setSelectedDataSet(StudyDataSet selectedDataSet) {
+		this.selectedDataSet = selectedDataSet;
 	}
 
 	private void showMessage(String message)

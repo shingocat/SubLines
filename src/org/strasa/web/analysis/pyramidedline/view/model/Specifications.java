@@ -468,7 +468,8 @@ public class Specifications {
 	@NotifyChange("*")
 	@Command("selectFromDatabase")
 	public void selectFromDatabase(@ContextParam(ContextType.BIND_CONTEXT)BindContext bindContext, @ContextParam(ContextType.VIEW) Component view) {
-		lstStudy = studyManagerImpl.getStudiesByUserID(SecurityUtil.getDbUser().getId());
+//		lstStudy = studyManagerImpl.getStudiesByUserID(SecurityUtil.getDbUser().getId());
+		lstStudy = studyManagerImpl.getStudiesByUserIdAndStudyType(SecurityUtil.getDbUser().getId(), "PL");
 		this.selectDataBtn.setVisible(false);
 		this.studiesCombobox.setVisible(true);
 		this.resetBtn.setVisible(true);

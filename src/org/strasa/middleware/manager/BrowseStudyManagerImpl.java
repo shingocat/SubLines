@@ -61,19 +61,19 @@ public class BrowseStudyManagerImpl {
 				rec.setStudyCount(studyCount.get(0).getStudyCount());
 
 				// count StypeType PVS
-				rec.setStudyPVS(1);
-				List<StudySummaryModel> pvs = mapper.selectCountOfStudyByStudyType(p.getProgramId(), rec.getStudyPVS(), SecurityUtil.getDbUser().getId());
-				rec.setCountStudyPVS(pvs.get(0).getCountStudyTypeId());
+				rec.setStudySSSL(1);
+				List<StudySummaryModel> pvs = mapper.selectCountOfStudyByStudyType(p.getProgramId(), rec.getStudySSSL(), SecurityUtil.getDbUser().getId());
+				rec.setCountStudySSSL(pvs.get(0).getCountStudyTypeId());
 
 				// count StypeType OYT
-				rec.setStudyOYT(2);
-				List<StudySummaryModel> oyt = mapper.selectCountOfStudyByStudyType(p.getProgramId(), rec.getStudyOYT(), SecurityUtil.getDbUser().getId());
-				rec.setCountStudyOYT(oyt.get(0).getCountStudyTypeId());
+				rec.setStudyPL(2);
+				List<StudySummaryModel> oyt = mapper.selectCountOfStudyByStudyType(p.getProgramId(), rec.getStudyPL(), SecurityUtil.getDbUser().getId());
+				rec.setCountStudyPL(oyt.get(0).getCountStudyTypeId());
 
 				// count StypeType PYT
-				rec.setStudyPYT(3);
-				List<StudySummaryModel> pyt = mapper.selectCountOfStudyByStudyType(p.getProgramId(), rec.getStudyPYT(), SecurityUtil.getDbUser().getId());
-				rec.setCountStudyPYT(pyt.get(0).getCountStudyTypeId());
+				rec.setStudyIL(3);
+				List<StudySummaryModel> pyt = mapper.selectCountOfStudyByStudyType(p.getProgramId(), rec.getStudyIL(), SecurityUtil.getDbUser().getId());
+				rec.setCountStudyIL(pyt.get(0).getCountStudyTypeId());
 
 				// count StypeType AYT
 				rec.setStudyAYT(4);

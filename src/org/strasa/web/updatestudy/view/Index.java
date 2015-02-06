@@ -36,6 +36,7 @@ import org.strasa.middleware.model.Program;
 import org.strasa.middleware.model.Project;
 import org.strasa.middleware.model.Study;
 import org.strasa.middleware.model.StudyDataSet;
+import org.strasa.middleware.model.StudyType;
 import org.strasa.web.common.api.ProcessTabViewModel;
 import org.strasa.web.uploadstudy.view.model.AddProgram;
 import org.strasa.web.uploadstudy.view.model.AddProject;
@@ -75,7 +76,96 @@ public class Index {
 
 	Tab tabMergedRaw;
 	Tab tabMergedDerived;
+	
+	private String txtStudyName = new String();
+	private String txtStudyType = new String();
+	private int startYear = Calendar.getInstance().get(Calendar.YEAR);
+	private int endYear = Calendar.getInstance().get(Calendar.YEAR);
+	private boolean isNewDataSet;
+	private int datasetinc = 1;
+	private String mergeRawID;
+	private String mergeDerivedID;
+	ArrayList<Tabpanel> arrTabPanels = new ArrayList<Tabpanel>();
+	private UploadData uploadData;
+	private int selectedIndex = 1;
+	private boolean[] tabDisabled = { false, true, true, true, true };
+	private Tab firstRawTab, firstDerivedTab, firstGenotypeTab;
+	private boolean isRaw;
+	private ProcessTabViewModel uploadModel;
+	private int datasetCount;
+	// imported in UploadData.java
+	private Study study;
+	private ArrayList<Program> programList = new ArrayList<Program>();
+	private ArrayList<Project> projectList = new ArrayList<Project>();
+	private ArrayList<String> studyTypeList = new ArrayList<String>();
+	private HashMap<String, tabObject> tabMap = new HashMap<String, tabObject>();
+	private Program txtProgram = new Program();
+	private Project txtProject = new Project();
+	private boolean isDataUploaded = false;
+	private String studyDescription;
+	private boolean hasRawTabLoaded, hasDerivedLoaded, hasGenotypeLoaded;
 
+	@AfterCompose
+	public void afterCompose(@ContextParam(ContextType.VIEW) Component view) {
+
+		Selectors.wireComponents(view, this, false);
+		// wire event listener
+		// Selectors.wireEventListeners(view, this);
+		boolean rawLoaded = false, derivedLoaded = false;
+		int raw = 0, der = 0;
+		List<StudyDataSet> studyDataSets = new StudyDataSetManagerImpl().getDataSetsByStudyId(this.uploadModel.studyID);
+		for (StudyDataSet datasetNum : studyDataSets) {
+
+			if (datasetNum.getDatatype().equals("rd")) {
+				if (!rawLoaded) {
+					rawLoaded = true;
+
+				}
+				raw++;
+			} else {
+				if (!derivedLoaded) {
+					derivedLoaded = true;
+
+				}
+				der++;
+			}
+			initializeDataSetTab(datasetNum, true, datasetNum.getDatatype().equals("rd"), false, false);
+
+		}
+
+		if (der > 1) {
+			initializeDataSetTab(new StudyDataSet(), true, false, false, true);
+		}
+		if (raw > 1) {
+			initializeDataSetTab(new StudyDataSet(), true, true, false, true);
+		}
+
+		// if(derivedDataTab.getTabs().getChildren().isEmpty())initializeDataSetTab(new
+		// StudyDataSet(), false, false);
+		// if(rawDataTab.getTabs().getChildren().isEmpty())initializeDataSetTab(new
+		// StudyDataSet(), false, true);
+
+		//
+		// if(derivedLoaded){
+		// derivedDataTab.getChildren().remove(0);
+		// }
+		// if(rawLoaded){
+		// rawDataTab.getChildren().remove(0);
+		// }
+
+		if (firstRawTab != null) {
+			firstRawTab.setSelected(true);
+			Events.sendEvent("onClick", firstRawTab, firstRawTab);
+		}
+		if(studyTypeList == null)
+			studyTypeList = new ArrayList<String>();
+		studyTypeList.clear();
+		StudyTypeManagerImpl stMan = new StudyTypeManagerImpl();
+		List<StudyType> lstStudyType = stMan.getAllStudyType();
+		for(StudyType st : lstStudyType)
+			studyTypeList.add(st.getStudytype());
+	}
+	
 	@Command("addProgram")
 	public void addProgram(@ContextParam(ContextType.VIEW) Component view) {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -106,26 +196,6 @@ public class Index {
 		popup.doModal();
 	}
 
-	ArrayList<Tabpanel> arrTabPanels = new ArrayList<Tabpanel>();
-	private UploadData uploadData;
-	private int selectedIndex = 1;
-	private boolean[] tabDisabled = { false, true, true, true, true };
-	private Tab firstRawTab, firstDerivedTab, firstGenotypeTab;
-	private boolean isRaw;
-	private ProcessTabViewModel uploadModel;
-	private int datasetCount;
-	// imported in UploadData.java
-	private Study study;
-	private ArrayList<Program> programList = new ArrayList<Program>();
-	private ArrayList<Project> projectList = new ArrayList<Project>();
-	private ArrayList<String> studyTypeList = new ArrayList<String>();
-	private HashMap<String, tabObject> tabMap = new HashMap<String, tabObject>();
-	private Program txtProgram = new Program();
-	private Project txtProject = new Project();
-	private boolean isDataUploaded = false;
-	private String studyDescription;
-	private boolean hasRawTabLoaded, hasDerivedLoaded, hasGenotypeLoaded;
-
 	public boolean isDataUploaded() {
 		return isDataUploaded;
 	}
@@ -148,18 +218,6 @@ public class Index {
 	public void setTxtProject(Project txtProject) {
 		this.txtProject = txtProject;
 	}
-
-	private String txtStudyName = new String();
-	private String txtStudyType = new String();
-	private int startYear = Calendar.getInstance().get(Calendar.YEAR);
-	private int endYear = Calendar.getInstance().get(Calendar.YEAR);
-	private boolean isNewDataSet;
-
-	private int datasetinc = 1;
-
-	private String mergeRawID;
-
-	private String mergeDerivedID;
 
 	public ArrayList<Program> getProgramList() {
 		return programList;
@@ -316,9 +374,7 @@ public class Index {
 		projectList.addAll(programMan.getProjectList(selected));
 
 	}
-
 	// end
-
 	public int getSelectedIndex() {
 		return selectedIndex;
 	}
@@ -367,16 +423,16 @@ public class Index {
 			return;
 		}
 
-		if (startYear < Calendar.getInstance().get(Calendar.YEAR)) {
-			Messagebox.show("Error: Invalid start year. Year must be greater or equal than the present year(" + Calendar.getInstance().get(Calendar.YEAR) + " )", "Upload Error", Messagebox.OK, Messagebox.ERROR);
-
-			return;
-		}
-		if (endYear < Calendar.getInstance().get(Calendar.YEAR)) {
-			Messagebox.show("Error: Invalid end year. Year must be greater or equal than the present year(" + Calendar.getInstance().get(Calendar.YEAR) + " )", "Upload Error", Messagebox.OK, Messagebox.ERROR);
-
-			return;
-		}
+//		if (startYear < Calendar.getInstance().get(Calendar.YEAR)) {
+//			Messagebox.show("Error: Invalid start year. Year must be greater or equal than the present year(" + Calendar.getInstance().get(Calendar.YEAR) + " )", "Upload Error", Messagebox.OK, Messagebox.ERROR);
+//
+//			return;
+//		}
+//		if (endYear < Calendar.getInstance().get(Calendar.YEAR)) {
+//			Messagebox.show("Error: Invalid end year. Year must be greater or equal than the present year(" + Calendar.getInstance().get(Calendar.YEAR) + " )", "Upload Error", Messagebox.OK, Messagebox.ERROR);
+//
+//			return;
+//		}
 
 		if (study == null) {
 			study = new Study();
@@ -438,62 +494,6 @@ public class Index {
 		refreshProjectList(new ProgramManagerImpl().getProgramById(study.getProgramid()));
 		this.txtProject = new ProjectManagerImpl().getProjectById(study.getProjectid());
 
-	}
-
-	@AfterCompose
-	public void afterCompose(@ContextParam(ContextType.VIEW) Component view) {
-
-		Selectors.wireComponents(view, this, false);
-
-		// wire event listener
-		// Selectors.wireEventListeners(view, this);
-
-		boolean rawLoaded = false, derivedLoaded = false;
-		int raw = 0, der = 0;
-		List<StudyDataSet> studyDataSets = new StudyDataSetManagerImpl().getDataSetsByStudyId(this.uploadModel.studyID);
-		for (StudyDataSet datasetNum : studyDataSets) {
-
-			if (datasetNum.getDatatype().equals("rd")) {
-				if (!rawLoaded) {
-					rawLoaded = true;
-
-				}
-				raw++;
-			} else {
-				if (!derivedLoaded) {
-					derivedLoaded = true;
-
-				}
-				der++;
-			}
-			initializeDataSetTab(datasetNum, true, datasetNum.getDatatype().equals("rd"), false, false);
-
-		}
-
-		if (der > 1) {
-			initializeDataSetTab(new StudyDataSet(), true, false, false, true);
-		}
-		if (raw > 1) {
-			initializeDataSetTab(new StudyDataSet(), true, true, false, true);
-		}
-
-		// if(derivedDataTab.getTabs().getChildren().isEmpty())initializeDataSetTab(new
-		// StudyDataSet(), false, false);
-		// if(rawDataTab.getTabs().getChildren().isEmpty())initializeDataSetTab(new
-		// StudyDataSet(), false, true);
-
-		//
-		// if(derivedLoaded){
-		// derivedDataTab.getChildren().remove(0);
-		// }
-		// if(rawLoaded){
-		// rawDataTab.getChildren().remove(0);
-		// }
-
-		if (firstRawTab != null) {
-			firstRawTab.setSelected(true);
-			Events.sendEvent("onClick", firstRawTab, firstRawTab);
-		}
 	}
 
 	@GlobalCommand("checkMerge")
@@ -711,7 +711,6 @@ public class Index {
 		Events.sendEvent("onClick", firstRawTab, firstRawTab);
 		hasRawTabLoaded = true;
 		System.out.println("RAW TAB SELECTED!!");
-
 	}
 
 	@Command
@@ -728,7 +727,6 @@ public class Index {
 	public void loadGenotypeDataTab() {
 		if (hasGenotypeLoaded)
 			return;
-
 		showzulfile("/user/updatestudy/genotypicdata.zul", tabGenotype);
 		hasGenotypeLoaded = true;
 	}
@@ -739,9 +737,7 @@ public class Index {
 		if (panel != null && panel.getChildren().isEmpty()) {
 			Map arg = new HashMap();
 			arg.put("uploadModel", uploadModel);
-
 			Executions.createComponents(zulFileName, panel, arg);
-
 		}
 	}
 

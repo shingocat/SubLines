@@ -26,27 +26,27 @@ public class Summary {
 	private ProjectManagerImpl projectMan;
 	private StudyTypeManagerImpl studyTypeMan;
 	private BrowseStudyManagerImpl studyQueryManagerImpl;
-	
+
 	private List<StudySummaryModel> summary;
 	private List<Program> programList;
 	private List<Project> projectList;
 	private List<StudyType> studyTypeList;
-	
+
 	@Init
 	public void init(){
-		 programMan = new ProgramManagerImpl();
-		 projectMan = new ProjectManagerImpl();
+		programMan = new ProgramManagerImpl();
+		projectMan = new ProjectManagerImpl();
 
-			 studyTypeMan = new StudyTypeManagerImpl();
-			 studyQueryManagerImpl= new BrowseStudyManagerImpl();
-			
-			 summary= studyQueryManagerImpl.getStudySummary();
-		 programList = programMan.getAllProgram();
-			 projectList = projectMan.getAllProject();
-			 studyTypeList = studyTypeMan.getAllStudyType();
+		studyTypeMan = new StudyTypeManagerImpl();
+		studyQueryManagerImpl= new BrowseStudyManagerImpl();
+
+		summary= studyQueryManagerImpl.getStudySummary();
+		programList = programMan.getAllProgram();
+		projectList = projectMan.getAllProject();
+		studyTypeList = studyTypeMan.getAllStudyType();
 	}
-	
-	
+
+
 	@NotifyChange("*")
 	@Command("updateSearchFilter")
 	public void updateSearchFilter(){

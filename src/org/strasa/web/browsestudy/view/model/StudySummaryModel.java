@@ -21,16 +21,16 @@ public class StudySummaryModel {
 	int countLab;
 	
 	
-	int studyPVS;
-	int studyOYT;
-	int studyPYT;
+	int studySSSL;
+	int studyPL;
+	int studyIL;
 	int studyAYT;
 	int studyIAT;
 	int studyGenetics;
 	
-	int countStudyPVS;
-	int countStudyOYT;
-	int countStudyPYT;
+	int countStudySSSL;
+	int countStudyPL;
+	int countStudyIL;
 	int countStudyAYT;
 	int countStudyIAT;
 	int countStudyGenetics;
@@ -143,23 +143,23 @@ public class StudySummaryModel {
 		this.countLab = countLab;
 	}
 
-	public int getStudyPVS() {
-		return studyPVS;
+	public int getStudySSSL() {
+		return studySSSL;
 	}
-	public void setStudyPVS(int studyPVS) {
-		this.studyPVS = studyPVS;
+	public void setStudySSSL(int studySSSL) {
+		this.studySSSL = studySSSL;
 	}
-	public int getStudyOYT() {
-		return studyOYT;
+	public int getStudyPL() {
+		return studyPL;
 	}
-	public void setStudyOYT(int studyOYT) {
-		this.studyOYT = studyOYT;
+	public void setStudyPL(int studyPL) {
+		this.studyPL = studyPL;
 	}
-	public int getStudyPYT() {
-		return studyPYT;
+	public int getStudyIL() {
+		return studyIL;
 	}
-	public void setStudyPYT(int studyPYT) {
-		this.studyPYT = studyPYT;
+	public void setStudyIL(int studyIL) {
+		this.studyIL = studyIL;
 	}
 	public int getStudyAYT() {
 		return studyAYT;
@@ -179,23 +179,23 @@ public class StudySummaryModel {
 	public void setStudyGenetics(int studyGenetics) {
 		this.studyGenetics = studyGenetics;
 	}
-	public int getCountStudyPVS() {
-		return countStudyPVS;
+	public int getCountStudySSSL() {
+		return countStudySSSL;
 	}
-	public void setCountStudyPVS(int countStudyPVS) {
-		this.countStudyPVS = countStudyPVS;
+	public void setCountStudySSSL(int countStudySSSL) {
+		this.countStudySSSL = countStudySSSL;
 	}
-	public int getCountStudyOYT() {
-		return countStudyOYT;
+	public int getCountStudyPL() {
+		return countStudyPL;
 	}
-	public void setCountStudyOYT(int countStudyOYT) {
-		this.countStudyOYT = countStudyOYT;
+	public void setCountStudyPL(int countStudyPL) {
+		this.countStudyPL = countStudyPL;
 	}
-	public int getCountStudyPYT() {
-		return countStudyPYT;
+	public int getCountStudyIL() {
+		return countStudyIL;
 	}
-	public void setCountStudyPYT(int countStudyPYT) {
-		this.countStudyPYT = countStudyPYT;
+	public void setCountStudyIL(int countStudyIL) {
+		this.countStudyIL = countStudyIL;
 	}
 	public int getCountStudyAYT() {
 		return countStudyAYT;

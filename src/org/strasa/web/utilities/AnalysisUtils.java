@@ -123,7 +123,7 @@ public class AnalysisUtils {
 		{
 			userFolderPath = Sessions.getCurrent().getWebApp().getRealPath("resultanalysis") 
 					+ FILE_SEPARATOR + SecurityUtil.getDbUser().getUsername()
-					+ FILE_SEPARATOR + "IL_Analysis" + FILE_SEPARATOR + "Multi_Makrer";
+					+ FILE_SEPARATOR + "IL_Analysis" + FILE_SEPARATOR + "Multi_Marker";
 		}
 
 		String outputStudyPath = userFolderPath + FILE_SEPARATOR

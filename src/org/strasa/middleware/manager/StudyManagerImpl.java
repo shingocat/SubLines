@@ -243,6 +243,30 @@ public class StudyManagerImpl {
 			session.close();
 		}
 	}
+	
+	public List<Study> getStudiesByUserIdAndStudyType(int userID, String studyType)
+	{
+		SqlSession session = connectionFactory.sqlSessionFactory.openSession();
+		StudyMapper mapper = session.getMapper(StudyMapper.class);
+		int typeId = 1;
+		if(studyType.equals("SSSL"))
+			typeId = 1;
+		else if(studyType.equals("PL"))
+			typeId = 2;
+		else if(studyType.equals("IL"))
+			typeId = 3;
+		try{
+			StudyExample example = new StudyExample();
+			example.createCriteria().andUseridEqualTo(userID).andStudytypeidEqualTo(typeId);
+			List<Study> lstStudy = mapper.selectByExample(example);
+			if(lstStudy == null || lstStudy.size() == 0)
+				return null;
+			return lstStudy;
+		} finally
+		{
+			session.close();
+		}
+	}
 
 	public void deleteStudyById(Integer studyId) {
 		// TODO Auto-generated method stub
