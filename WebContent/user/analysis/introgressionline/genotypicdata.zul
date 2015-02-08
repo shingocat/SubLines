@@ -7,14 +7,14 @@
 				<groupbox>
 					<hbox>
 						<label value="Geno:" />
-<!-- 						<combobox id="genoCBB" model="@load(vm.columnList)" -->
-<!-- 							selectedItem="@bind(vm.genoCol)" readonly="true" -->
-<!-- 							onChange="@command('updateGeno', selectedItem=self.value)"> -->
-<!-- 							<template name="model"> -->
-<!-- 								<comboitem label="@load(each)" /> -->
-<!-- 							</template> -->
-<!-- 						</combobox> -->
-						<combobox id="genoCBB" model="@load(vm.columnList)"
+						<!-- <combobox id="genoCBB" model="@load(vm.columnList)" -->
+						<!-- selectedItem="@bind(vm.genoCol)" readonly="true" -->
+						<!-- onChange="@command('updateGeno', selectedItem=self.value)"> -->
+						<!-- <template name="model"> -->
+						<!-- <comboitem label="@load(each)" /> -->
+						<!-- </template> -->
+						<!-- </combobox> -->
+						<combobox id="genoCBB"  model="@load(vm.displayColumnList)"
 							selectedItem="@bind(vm.genoCol)" readonly="true"
 							onChange="@command('updateGeno', selectedItem=self.value)">
 						</combobox>
@@ -22,7 +22,7 @@
 					<separator></separator>
 					<hbox>
 						<label value="dp.code:" />
-						<textbox id="dpCodeTB" value="@bind(vm.dpCode)"/>
+						<textbox id="dpCodeTB" value="@bind(vm.dpCode)" />
 						<space></space>
 						<label value="rp.code:" />
 						<textbox id="rpCodeTB" value="@bind(vm.rpCode)" />
@@ -45,8 +45,24 @@
 					</hbox>
 				</groupbox>
 			</div>
-			<div id="dataDiv" hflex="1" vflex="1" style="overflow:auto;">
-				<grid id="dataGrid" height="400px" sizedByContent="true" emptyMessage="No data..."/>
+			<div id="dataDiv" align="left">
+				<hbox>
+					<label value="Belowed grid only showed 50 columns and 20 rows of genotypic data!"/>
+					<space />
+					<button sclass="btn-info" label="More Info..." onClick="@command('showGenotypicDetail')"/>
+				</hbox>
+				<grid id="dataGrid" model="@bind(vm.displayDataList)" mold="paging" pageSize="10" emptyMessage="No data...">
+					<columns children="@load(vm.displayColumnList)" sizable="true">
+						<template name="children">
+							<column hflex="min" label="@load(each)" />
+						</template>
+					</columns>
+					<template name="model" var="data">
+						<row>
+							<label forEach="${data}" value="${each}" />
+						</row>
+					</template>
+				</grid>
 			</div>
 		</vlayout>
 	</window>

@@ -49,7 +49,7 @@
 					<separator />
 					<hbox>
 						<listbox id="numericLB" vflex="true" checkmark="true"
-							rows="4" width="300px" multiple="true">
+							rows="4" width="300px" multiple="false">
 							<listhead>
 								<listheader label="Numeric Variables" />
 							</listhead>
@@ -68,7 +68,7 @@
 								tooltip="Remove response variable" onClick="@command('removeResponse')" />
 						</vlayout>
 						<space width="10px"></space>
-						<listbox id="responseLB" multiple="true" rows="4"
+						<listbox id="responseLB" multiple="false" rows="4"
 							checkmark="true" width="300px">
 							<listhead>
 								<listheader label="Response Variable" />
@@ -89,7 +89,7 @@
 					<hbox height="200px">
 						<div vflex="1">
 							<listbox id="factorLB" rows="4" checkmark="true"
-								multiple="true" width="300px">
+								multiple="false" width="300px">
 								<listhead>
 									<listheader label="Factor Variables" />
 								</listhead>
@@ -216,9 +216,19 @@
 					</hbox>
 				</groupbox>
 			</div>
-			<div id="dataDiv" hflex="1" vflex="1" style="overflow:auto;">
-				<grid id="dataGrid" height="400px" sizedByContent="true"
-					emptyMessage="No data..." />
+			<div id="dataDiv">
+				<grid id="dataGrid" model="@bind(vm.dataList)" mold="paging" pageSize="8" emptyMessage="No data...">
+					<columns children="@load(vm.columnList)" sizable="true">
+						<template name="children">
+							<column hflex="min" label="@load(each)" />
+						</template>
+					</columns>
+					<template name="model" var="data">
+						<row>
+							<label forEach="${data}" value="${each}" />
+						</row>
+					</template>
+				</grid>
 			</div>
 			<separator height="20px" />
 		</vlayout>

@@ -1,6 +1,8 @@
 package org.strasa.web.analysis.introgressionline.view.model;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.strasa.middleware.util.Runtimer;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
@@ -18,22 +21,28 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.media.AMedia;
+import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zul.Column;
 import org.zkoss.zul.Columns;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.Iframe;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Popup;
 import org.zkoss.zul.Row;
 import org.zkoss.zul.Rows;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -53,6 +62,8 @@ public class GenotypicData {
 	//values
 	List<String> columnList = new ArrayList<String>();
 	List<String[]> dataList = new ArrayList<String[]>();
+	List<String> displayColumnList = new ArrayList<String>();
+	List<String[]> displayDataList = new ArrayList<String[]>();
 	String genoCol;
 	String dpCode;
 	String rpCode;
@@ -61,6 +72,9 @@ public class GenotypicData {
 	Integer bcn;
 	Integer fn;
 	File dataFile;
+	Component component;
+	int displayColSize = 50;
+	int displayRowSize = 20;
 
 
 	@Init
@@ -91,7 +105,8 @@ public class GenotypicData {
 		this.fnIB = (Intbox) component.getFellow("fnIB");
 		this.dataDiv = (Div) component.getFellow("dataDiv");
 		this.dataGrid = (Grid) component.getFellow("dataGrid");
-	//	refreshDataDiv();
+		this.component = component;
+		//	refreshDataDiv();
 	}
 
 	@NotifyChange("*")
@@ -122,7 +137,7 @@ public class GenotypicData {
 			dataList.clear();
 		refreshGenoCBB(null);
 		refreshGrid();
-//		refreshDataDiv();
+		//		refreshDataDiv();
 	}
 
 	@NotifyChange("*")
@@ -137,9 +152,9 @@ public class GenotypicData {
 		}
 		dataFile = new File(filePath);
 		refreshCSVData();
-		refreshGrid();
+		//refreshGrid();
 	}
-		
+
 	@NotifyChange("*")
 	@GlobalCommand("validateGenoTap")
 	public void validateGenoTap(
@@ -180,7 +195,7 @@ public class GenotypicData {
 			showMessage("The Fn could not be empty!");
 			return;
 		}
-		
+
 		HashMap<String, Object> args = new HashMap<String, Object>();
 		args.put("Geno", genoCol);
 		args.put("DpCode", dpCode);
@@ -193,6 +208,36 @@ public class GenotypicData {
 	}
 
 	@NotifyChange("*")
+	@Command("showGenotypicDetail")
+	public void showGenotypicDetail()
+	{
+		if(dataFile == null)
+		{
+			showMessage("Do not select genotypic file!");
+			return;
+		}
+		try {
+			byte[] buffer = new byte[(int) dataFile.length()];
+			FileInputStream fs = new FileInputStream(dataFile);
+			fs.read(buffer);
+			fs.close();
+			ByteArrayInputStream is = new ByteArrayInputStream(buffer);
+			AMedia fileContent = new AMedia("report", "text", "text/plain", is);
+			HashMap<String, AMedia> args = new HashMap<String, AMedia>();
+			args.put("DataFile", fileContent);
+			Window window = (Window) Executions.createComponents("/user/analysis/introgressionline/genotypicdetail.zul",
+					null, args);
+			window.doModal();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@NotifyChange("*")
 	public void refreshCSVData()
 	{
 		if(dataFile == null)
@@ -200,6 +245,8 @@ public class GenotypicData {
 			showMessage("The genotypic file is null!");
 			return;
 		}
+		Runtimer timer = new Runtimer();
+		timer.start();
 		CSVReader reader = null;
 		try{
 			reader = new CSVReader(new FileReader(dataFile.getAbsolutePath()));
@@ -212,7 +259,41 @@ public class GenotypicData {
 				columnList.remove(columnList.size() - 1);
 			rawData.remove(0);
 			dataList = new ArrayList<String[]>(rawData);
-		//	refreshGenoCBB(columnList);
+			//only display the first 50 column of genotypic data
+			if(displayColumnList == null)
+				displayColumnList = new ArrayList<String>();
+			displayColumnList.clear();
+			if(displayDataList == null)
+				displayDataList = new ArrayList<String[]>();
+				displayDataList.clear();
+				if(columnList.size() >= displayColSize)
+				{
+					displayColumnList.addAll(columnList.subList(0, displayColSize));
+					if(dataList.size() >= displayRowSize)
+					{
+						for(int i = 0; i < displayRowSize; i++)
+						{
+							String [] temp = dataList.get(i);
+							displayDataList.add(Arrays.copyOfRange(temp, 0, displayColSize));
+						}
+					}else{
+						for(int i = 0; i < dataList.size(); i++)
+						{
+							String [] temp = dataList.get(i);
+							displayDataList.add(Arrays.copyOfRange(temp, 0, displayColSize));
+						}
+					}
+				}else
+				{
+					displayColumnList.addAll(columnList);
+					if(dataList.size() >= displayRowSize)
+						displayDataList.addAll(dataList.subList(0, displayRowSize));
+					else
+						displayDataList.addAll(dataList);
+				}
+
+
+				//	refreshGenoCBB(columnList);
 		} catch(FileNotFoundException e)
 		{
 			e.printStackTrace();
@@ -220,6 +301,7 @@ public class GenotypicData {
 		{
 			e.printStackTrace();
 		}
+		timer.end();
 	}
 
 	@NotifyChange("*")
@@ -236,18 +318,22 @@ public class GenotypicData {
 
 	public void refreshGrid()
 	{
+		if(dataGrid == null)
+			dataGrid = (Grid) component.getFellow("dataGrid");
 		if(!dataGrid.getChildren().isEmpty())
 		{
-			dataGrid.getColumns().detach();
-			dataGrid.getRows().detach();
+			if(dataGrid.getColumns() != null)
+				dataGrid.getColumns().detach();
+			if(dataGrid.getRows() != null)
+				dataGrid.getRows().detach();
 		}
 		Columns cols = new Columns();
 		cols.setSizable(true);
-		cols.setVflex("true");
+		//cols.setHflex("true");
 		for(String s : columnList)
 		{
 			Column col = new Column();
-			col.setHflex("1");
+			col.setHflex("min");
 			col.setLabel(s);
 			col.setParent(cols);
 		}
@@ -266,7 +352,7 @@ public class GenotypicData {
 		dataGrid.appendChild(cols);
 		dataGrid.appendChild(rows);
 	}
-	
+
 	public String getGenoCol() {
 		return genoCol;
 	}
@@ -337,6 +423,30 @@ public class GenotypicData {
 
 	public void setDataList(List<String[]> dataList) {
 		this.dataList = dataList;
+	}
+
+	public List<String> getDisplayColumnList() {
+		return displayColumnList;
+	}
+
+	public void setDisplayColumnList(List<String> displayColumnList) {
+		this.displayColumnList = displayColumnList;
+	}
+
+	public List<String[]> getDisplayDataList() {
+		return displayDataList;
+	}
+
+	public void setDisplayDataList(List<String[]> displayDataList) {
+		this.displayDataList = displayDataList;
+	}
+
+	public File getDataFile() {
+		return dataFile;
+	}
+
+	public void setDataFile(File dataFile) {
+		this.dataFile = dataFile;
 	}
 
 	private void showMessage(String message)

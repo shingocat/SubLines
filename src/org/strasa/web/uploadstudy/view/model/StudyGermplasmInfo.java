@@ -305,7 +305,8 @@ public class StudyGermplasmInfo extends ProcessTabViewModel {
 	}
 
 	@Init
-	public void init(@ExecutionArgParam("uploadModel") ProcessTabViewModel uploadModel) {
+	public void init(
+			@ExecutionArgParam("uploadModel") ProcessTabViewModel uploadModel) {
 
 		initValues(uploadModel);
 		// @Init
@@ -389,7 +390,12 @@ public class StudyGermplasmInfo extends ProcessTabViewModel {
 		ArrayList<GermplasmDeepInfoModel> allData = new ArrayList<GermplasmDeepInfoModel>();
 		allData.addAll(lstKnownGermplasm.values());
 		allData.addAll(lstStudyGermplasm.values());
-
+		
+		if(allData.isEmpty())
+		{
+			showMessage("There are not germplasm info in your study! Please upload germplasm info first!");
+			return;
+		}
 		selectedGermplasm = allData.get(0);
 		timer.end();
 	}
@@ -606,7 +612,6 @@ public class StudyGermplasmInfo extends ProcessTabViewModel {
 		}
 		if (!validateStudyGermplasm()) {
 			new ListBoxValidationUtility(tblStudyGerm, new ArrayList<Integer>(Arrays.asList(0, 1, 3, 4))).validateAll();
-			;
 
 			return false;
 		}
@@ -659,6 +664,11 @@ public class StudyGermplasmInfo extends ProcessTabViewModel {
 			return (endTime - startTime) / 1000000000.0;
 		}
 
+	}
+	
+	public void showMessage(String message)
+	{
+		Messagebox.show(message, "Warning", Messagebox.OK, Messagebox.INFORMATION);
 	}
 
 }

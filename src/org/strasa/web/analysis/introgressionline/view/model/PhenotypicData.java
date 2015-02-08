@@ -556,7 +556,7 @@ public class PhenotypicData {
 		this.responseLB.setModel(responseModel);
 
 		refreshCSVData();
-		refreshGrid();
+		//refreshGrid();
 	}
 
 	@NotifyChange("*")

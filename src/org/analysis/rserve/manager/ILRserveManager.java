@@ -205,7 +205,7 @@ public class ILRserveManager extends JRServeMangerImpl {
 				return toreturn;
 			} 
 			sb = new StringBuilder();
-			sb.append("capture.output(print(sma), file=\"" + outFile + "\",append=TRUE)");
+			sb.append("capture.output(print(sma), file=\"" + outFile + "\",append=TRUE);");
 			getConn().eval(sb.toString());
 			if(mapFile != null && !mapFile.isEmpty())
 				plotIL();
@@ -347,7 +347,7 @@ public class ILRserveManager extends JRServeMangerImpl {
 			StringBuilder phenoData = new StringBuilder();
 			phenoData.append("phenoData <- try(read.csv(\"" + phenoFile + 
 					"\",header = TRUE, na.strings = \""+ naCode + 
-					"\"),silent=TRUE);");
+					"\", check.names=FALSE),silent=TRUE);");
 			getConn().eval(phenoData.toString());
 			String run = getConn().eval("class(phenoData);").asString();
 			if(run != null && run.equals("try-error"))
@@ -526,7 +526,7 @@ public class ILRserveManager extends JRServeMangerImpl {
 				getConn().eval("load(\".RData\");");
 			StringBuilder data = new StringBuilder();
 			data.append("genoData <- try(read.csv(\"" + genoFile + 
-					"\",header = TRUE, na.strings = \"" + naCode + "\"),silent=TRUE);");
+					"\",header = TRUE, na.strings = \"" + naCode + "\", check.names=FALSE),silent=TRUE);");
 			getConn().eval(data.toString());
 			String run = getConn().eval("class(genoData);").asString();
 			if(run != null && run.equals("try-error"))
@@ -600,7 +600,7 @@ public class ILRserveManager extends JRServeMangerImpl {
 			getConn().eval("load(\".RData\")");
 			StringBuilder dataRef = new StringBuilder();
 			dataRef.append("genoRefData <- try(read.csv(\"" + genoRefFile + 
-					"\",header = TRUE, na.strings = \"" + naRefCode + "\"),silent=TRUE);");
+					"\",header = TRUE, na.strings = \"" + naRefCode + "\", check.names=FALSE),silent=TRUE);");
 			getConn().eval(dataRef.toString());
 			String run = getConn().eval("class(genoRefData);").asString();
 			if(run != null && run.equals("try-error"))
@@ -671,7 +671,7 @@ public class ILRserveManager extends JRServeMangerImpl {
 			getConn().eval("load(\".RData\")");
 			StringBuilder dataRef = new StringBuilder();
 			dataRef.append("mapData <- try(read.csv(\"" + mapFile + 
-					"\",header = TRUE),silent=TRUE);");
+					"\",header = TRUE, check.names=FALSE),silent=TRUE);");
 			getConn().eval(dataRef.toString());
 			String run = getConn().eval("class(mapData);").asString();
 			if(run != null && run.equals("try-error"))

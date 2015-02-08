@@ -448,6 +448,7 @@ public class Specifications {
 	public void setPyramidedLineAnalysisModelListVariables(@BindingParam("FilePath") String filePath)
 	{
 		model.setDataFileName(filePath.replace(StringConstants.BSLASH, StringConstants.FSLASH));
+		manager = new PyramidedLineRserveManager();
 		lstVarInfo = manager.getVariableInfo(
 				filePath.replace("//", "/"), fileFormat, separator);
 		if(lstVarInfo == null || lstVarInfo.isEmpty())

@@ -316,14 +316,22 @@ public class GermplasmManagerImpl {
 	public void addGermplasmListNoRepeat(Collection<GermplasmDeepInfoModel> collection, Integer userid) {
 		SqlSession session = connectionFactory.sqlSessionFactory.openSession();
 		GermplasmMapper mapper = session.getMapper(GermplasmMapper.class);
+		GermplasmExample example = new GermplasmExample();
 		try {
 
 			for (GermplasmDeepInfoModel record : collection) {
-				System.out.print(record.toString());
-				GermplasmExample example = new GermplasmExample();
-				example.createCriteria().andGermplasmnameEqualTo(record.getGermplasmname()).andUseridEqualTo(userid);
+				System.out.println(record.toString());
+				example.clear();
+				example.createCriteria().andGermplasmnameEqualTo(record.getGermplasmname())
+					.andUseridEqualTo(userid)
+					.andGermplasmtypeidEqualTo(record.getGermplasmtypeid())
+					.andBreederEqualTo(record.getBreeder())
+					.andFemaleparentEqualTo(record.getFemaleparent())
+					.andMaleparentEqualTo(record.getMaleparent())
+					.andGidEqualTo(record.getGid());
 				if (record.getId() == null) {
-					if (mapper.countByExample(example) > 0) {
+					int number = mapper.countByExample(example);
+					if (number > 0) {
 						record.setId(mapper.selectByExample(example).get(0).getId());
 						mapper.updateByPrimaryKey(record);
 					} else {

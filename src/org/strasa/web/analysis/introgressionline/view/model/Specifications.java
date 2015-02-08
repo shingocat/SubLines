@@ -292,6 +292,8 @@ public class Specifications {
 			return;
 		BindUtils.postNotifyChange(null, null, this, "*");
 		userFileManager = new UserFileManager();
+		if(uploadedFileFolderPath == null || uploadedFileFolderPath.isEmpty())
+			this.buildUploadedFileFolderPath(0);
 		String filepath = userFileManager.uploadFileForAnalysis(name, tempFile, 
 				uploadedFileFolderPath, "GenotypicData");
 		genoFile = new File(filepath);
@@ -434,6 +436,8 @@ public class Specifications {
 		phenoFileLb.setVisible(false);
 		studiesCBB.setVisible(false);
 		resetPhenoBtn.setVisible(true);
+		if(browseStudyManagerImpl == null)
+			browseStudyManagerImpl = new BrowseStudyManagerImpl();
 		List<HashMap<String, String>> toreturn = browseStudyManagerImpl
 				.getStudyData(selectedStudy.getId(),
 						selectedDataSet.getDatatype(),
@@ -464,7 +468,7 @@ public class Specifications {
 		phenoFile = FileUtilities.createFileFromDatabase(columnList,dataList, createFile);
 		if (phenoFile == null)
 			return;
-		
+		isSpecPhenoFile = true;
 		System.out.println("Uploaded File Folder Path : " + uploadedFileFolderPath);
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("FilePath", phenoFile.getAbsolutePath());
